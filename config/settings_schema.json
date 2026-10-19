@@ -147,6 +147,21 @@
     ]
   },
   {
+    "name": "Typography (Cyrillic)",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Shopify's font library only includes Latin letters, so Bulgarian text would fall back to system fonts. When this is on, the store uses self-hosted Cormorant Garamond (headings) and Jost (body), which render Latin and Cyrillic in the same design, and the Typography font pickers are ignored."
+      },
+      {
+        "type": "checkbox",
+        "id": "rons_custom_fonts",
+        "label": "Use Ron's Pijamas fonts (Latin + Cyrillic)",
+        "default": true
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.layout.name",
     "settings": [
       {
@@ -1467,14 +1482,15 @@
         "type": "checkbox",
         "id": "rons_free_shipping_enable",
         "label": "Show free delivery progress bar",
-        "default": true
+        "default": false,
+        "info": "Only turn on once the threshold below matches a free shipping rate in Settings > Shipping and delivery."
       },
       {
         "type": "number",
         "id": "rons_free_shipping_threshold",
         "label": "Free delivery threshold",
-        "info": "In your store's default currency, e.g. 60. Match this to your shipping rates. Hidden for customers shopping in another currency.",
-        "default": 60
+        "info": "In your store's default currency, e.g. 60. Must match the minimum order value of your free shipping rate in Settings > Shipping and delivery. The bar stays hidden while this is 0, and for customers shopping in another currency.",
+        "default": 0
       },
       {
         "type": "text",
@@ -1503,7 +1519,7 @@
         "type": "text",
         "id": "rons_cart_trust_2",
         "label": "Reassurance line 2",
-        "default": "30-day free returns"
+        "info": "Only state what your published policies guarantee."
       },
       {
         "type": "checkbox",

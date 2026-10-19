@@ -62,32 +62,31 @@
           "type": "item",
           "settings": {
             "icon": "truck",
-            "heading": "Free delivery",
-            "text": "On all orders over €60"
+            "heading": "Delivery",
+            "text": "Options and costs shown at checkout"
           }
         },
         "trust-2": {
           "type": "item",
           "settings": {
             "icon": "return",
-            "heading": "30-day returns",
-            "text": "Easy, free exchanges"
+            "heading": "Returns",
+            "text": "See our refund policy"
           }
         },
         "trust-3": {
           "type": "item",
           "settings": {
-            "icon": "leaf",
-            "heading": "Premium fabrics",
-            "text": "Soft cotton, satin and modal"
+            "icon": "lock",
+            "heading": "Secure checkout"
           }
         },
         "trust-4": {
           "type": "item",
           "settings": {
-            "icon": "lock",
-            "heading": "Secure checkout",
-            "text": "Cards, Apple Pay and Google Pay"
+            "icon": "chat_bubble",
+            "heading": "Customer care",
+            "text": "Questions? We are here to help"
           }
         }
       },
@@ -103,7 +102,8 @@
         "color_scheme": "scheme-1",
         "padding_top": 28,
         "padding_bottom": 28
-      }
+      },
+      "disabled": true
     },
     "bestsellers": {
       "type": "featured-collection",
@@ -236,45 +236,20 @@
         "desktop_content_position": "middle",
         "desktop_content_alignment": "left",
         "mobile_content_alignment": "left",
-        "section_color_scheme": "scheme-2",
-        "color_scheme": "scheme-2",
+        "section_color_scheme": "scheme-3",
+        "color_scheme": "scheme-3",
         "padding_top": 0,
         "padding_bottom": 0
       }
     },
     "reviews": {
       "type": "rons-testimonials",
-      "blocks": {
-        "review-1": {
-          "type": "review",
-          "settings": {
-            "quote": "The softest pyjamas I have ever owned. They feel luxurious and still look beautiful after many washes.",
-            "author": "Maria K."
-          }
-        },
-        "review-2": {
-          "type": "review",
-          "settings": {
-            "quote": "Elegant enough to wear all weekend. The fit is perfect and the fabric is so breathable.",
-            "author": "Elena P."
-          }
-        },
-        "review-3": {
-          "type": "review",
-          "settings": {
-            "quote": "Beautifully packaged and arrived in two days. I bought a second set as a gift for my sister.",
-            "author": "Daniela S."
-          }
-        }
-      },
-      "block_order": [
-        "review-1",
-        "review-2",
-        "review-3"
-      ],
+      "disabled": true,
+      "blocks": {},
+      "block_order": [],
       "settings": {
-        "caption": "Loved by our customers",
-        "heading": "Softness you can feel",
+        "caption": "Customer reviews",
+        "heading": "What our customers say",
         "heading_size": "h1",
         "summary": "",
         "verified_label": "Verified buyer",
@@ -292,25 +267,25 @@
           "settings": {
             "heading": "How do I choose my size?",
             "icon": "none",
-            "row_content": "<p>Every product page has a size guide with body measurements. If you are between sizes, we recommend sizing up for a relaxed, comfortable fit.</p>",
+            "row_content": "<p>Open the size guide on the product page to compare your measurements. If you are unsure, contact us and we will gladly help.</p>",
             "page": ""
           }
         },
         "faq-2": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "What fabrics do you use?",
+            "heading": "What are your pieces made of?",
             "icon": "none",
-            "row_content": "<p>We work with soft, breathable fabrics such as cotton, modal and satin. You will find the exact composition and care instructions on each product page.</p>",
+            "row_content": "<p>The fabric composition and care instructions are listed on each product page.</p>",
             "page": ""
           }
         },
         "faq-3": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "How long does delivery take?",
+            "heading": "How much is delivery and how long does it take?",
             "icon": "none",
-            "row_content": "<p>Orders are prepared and dispatched within 1–2 business days. You will receive a tracking link as soon as your parcel leaves us.</p>",
+            "row_content": "<p>Available delivery options, costs and times are shown at checkout. See our <a href=\"/policies/shipping-policy\" title=\"Shipping policy\">shipping policy</a> for details.</p>",
             "page": ""
           }
         },
@@ -319,16 +294,16 @@
           "settings": {
             "heading": "Can I return or exchange my order?",
             "icon": "none",
-            "row_content": "<p>Yes. You can return or exchange unworn items within 30 days. See our refund policy for full details.</p>",
+            "row_content": "<p>Please see our <a href=\"/policies/refund-policy\" title=\"Refund policy\">refund policy</a> for returns and exchanges.</p>",
             "page": ""
           }
         },
         "faq-5": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Do you offer gift wrapping?",
+            "heading": "How can I contact you?",
             "icon": "none",
-            "row_content": "<p>Every order is carefully packed. Add a note at checkout and we will include a personal message with your gift.</p>",
+            "row_content": "<p>Use our <a href=\"/pages/contact\" title=\"Contact\">contact page</a> and we will get back to you.</p>",
             "page": ""
           }
         }
@@ -382,7 +357,7 @@
         "email_form"
       ],
       "settings": {
-        "color_scheme": "scheme-4",
+        "color_scheme": "scheme-1",
         "full_width": true,
         "padding_top": 72,
         "padding_bottom": 80

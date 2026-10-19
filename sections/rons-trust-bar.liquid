@@ -66,7 +66,9 @@
   "tag": "section",
   "class": "section",
   "disabled_on": {
-    "groups": ["header"]
+    "groups": [
+      "header"
+    ]
   },
   "max_blocks": 6,
   "settings": [
@@ -75,8 +77,14 @@
       "id": "alignment",
       "label": "Layout",
       "options": [
-        { "value": "left", "label": "Icon beside text" },
-        { "value": "center", "label": "Icon above text (centered)" }
+        {
+          "value": "left",
+          "label": "Icon beside text"
+        },
+        {
+          "value": "center",
+          "label": "Icon above text (centered)"
+        }
       ],
       "default": "left"
     },
@@ -200,7 +208,7 @@
               "label": "Snowflake"
             }
           ],
-          "default": "truck"
+          "default": "lock"
         },
         {
           "type": "image_picker",
@@ -212,13 +220,13 @@
           "type": "inline_richtext",
           "id": "heading",
           "label": "Heading",
-          "default": "Free delivery"
+          "default": "Secure checkout"
         },
         {
           "type": "inline_richtext",
           "id": "text",
           "label": "Text",
-          "default": "On all orders over €60"
+          "info": "Only state what your published policies guarantee."
         }
       ]
     }
@@ -227,10 +235,37 @@
     {
       "name": "Trust bar",
       "blocks": [
-        { "type": "item", "settings": { "icon": "truck", "heading": "Free delivery", "text": "On all orders over €60" } },
-        { "type": "item", "settings": { "icon": "return", "heading": "30-day returns", "text": "Easy, free exchanges" } },
-        { "type": "item", "settings": { "icon": "leaf", "heading": "Premium fabrics", "text": "Soft cotton, satin and modal" } },
-        { "type": "item", "settings": { "icon": "lock", "heading": "Secure checkout", "text": "Cards, Apple Pay and Google Pay" } }
+        {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "heading": "Delivery",
+            "text": "Options and costs shown at checkout"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "heading": "Returns",
+            "text": "See our refund policy"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "heading": "Secure checkout"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "chat_bubble",
+            "heading": "Customer care",
+            "text": "Questions? We are here to help"
+          }
+        }
       ]
     }
   ]

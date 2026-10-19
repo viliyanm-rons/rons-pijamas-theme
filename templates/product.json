@@ -41,15 +41,8 @@
           "type": "size_guide",
           "settings": {
             "label": "Size guide",
-            "heading": "Find your size",
-            "page": "",
-            "intro": "<p>Measurements are body measurements in centimetres. If you are between sizes, we recommend sizing up for a relaxed fit.</p>",
-            "show_default_table": true,
-            "column_size": "Size",
-            "column_bust": "Bust (cm)",
-            "column_waist": "Waist (cm)",
-            "column_hips": "Hips (cm)",
-            "notes": "<p>Need help choosing? Contact us and our team will be happy to advise.</p>"
+            "heading": "Size guide",
+            "page": ""
           }
         },
         "buy_buttons": {
@@ -61,14 +54,15 @@
         },
         "trust": {
           "type": "icon-with-text",
+          "disabled": true,
           "settings": {
             "layout": "vertical",
-            "icon_1": "truck",
-            "heading_1": "Free delivery over €60",
-            "icon_2": "return",
-            "heading_2": "30-day returns",
-            "icon_3": "lock",
-            "heading_3": "Secure checkout"
+            "icon_1": "lock",
+            "heading_1": "Secure checkout",
+            "icon_2": "truck",
+            "heading_2": "Delivery options at checkout",
+            "icon_3": "chat_bubble",
+            "heading_3": "Customer care"
           }
         },
         "description": {
@@ -80,7 +74,7 @@
           "settings": {
             "heading": "Fabric & care",
             "icon": "washing",
-            "content": "<p>Add the fabric composition and care instructions for this product here, or connect this tab to a product metafield.</p>",
+            "content": "",
             "page": ""
           }
         },
@@ -89,7 +83,7 @@
           "settings": {
             "heading": "Delivery & returns",
             "icon": "truck",
-            "content": "<p>Orders are dispatched within 1–2 business days. Free delivery on orders over €60. Unworn items can be returned or exchanged within 30 days.</p>",
+            "content": "",
             "page": ""
           }
         },

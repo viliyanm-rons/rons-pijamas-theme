@@ -413,35 +413,33 @@ body .rons-size-guide__intro {
   color: var(--rons-muted);
 }
 
-body .rons-size-guide__table-wrapper {
+/* Tables from a size guide page or metafield */
+body .rons-size-guide .rte table {
+  display: block;
+  width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-}
-
-body .rons-size-guide__table {
-  width: 100%;
-  min-width: 42rem;
   border-collapse: collapse;
   font-size: 1.35rem;
   text-align: center;
+  table-layout: auto;
 }
 
-body .rons-size-guide__table th,
-body .rons-size-guide__table td {
+body .rons-size-guide .rte th,
+body .rons-size-guide .rte td {
   padding: 1.1rem 0.8rem;
+  border: 0;
   border-bottom: 0.1rem solid var(--rons-hairline);
+  white-space: nowrap;
 }
 
-body .rons-size-guide__table thead th {
+body .rons-size-guide .rte thead th,
+body .rons-size-guide .rte tr:first-child th {
   font-weight: 500;
   font-size: 1.1rem;
   letter-spacing: var(--rons-tracking-label);
   text-transform: uppercase;
   border-bottom-color: rgb(var(--color-foreground));
-}
-
-body .rons-size-guide__table tbody th {
-  font-weight: 500;
 }
 
 body .rons-size-guide__image img {
