@@ -2,6 +2,9 @@ name: CI
 on:
   push:
   workflow_dispatch:
+permissions:
+  contents: read
+  checks: write
 jobs:
   theme-check:
     name: Theme Check

@@ -6,7 +6,7 @@
         "caption": {
           "type": "text",
           "settings": {
-            "text": "The new collection",
+            "text": "Ron's Pijamas",
             "text_style": "caption-with-letter-spacing"
           }
         },
@@ -20,18 +20,18 @@
         "text": {
           "type": "text",
           "settings": {
-            "text": "Pyjamas, nightdresses and loungewear in the softest fabrics, made to feel as good as they look.",
+            "text": "Sleepwear and loungewear for women.",
             "text_style": "body"
           }
         },
         "buttons": {
           "type": "buttons",
           "settings": {
-            "button_label_1": "Shop bestsellers",
+            "button_label_1": "Shop all",
             "button_link_1": "shopify://collections/all",
             "button_style_secondary_1": false,
-            "button_label_2": "Shop new in",
-            "button_link_2": "shopify://collections/all",
+            "button_label_2": "",
+            "button_link_2": "",
             "button_style_secondary_2": true
           }
         }
@@ -110,8 +110,8 @@
       "settings": {
         "title": "Bestsellers",
         "heading_size": "h1",
-        "description": "<p>Our most-loved pieces, chosen again and again.</p>",
-        "show_description": true,
+        "description": "",
+        "show_description": false,
         "description_style": "body",
         "collection": "",
         "products_to_show": 8,
@@ -125,7 +125,7 @@
         "image_shape": "default",
         "show_secondary_image": true,
         "show_vendor": false,
-        "show_rating": true,
+        "show_rating": false,
         "quick_add": "standard",
         "columns_mobile": "2",
         "swipe_on_mobile": true,
@@ -139,28 +139,24 @@
         "category-1": {
           "type": "category",
           "settings": {
-            "title": "Pyjama sets",
             "cta": "Shop now"
           }
         },
         "category-2": {
           "type": "category",
           "settings": {
-            "title": "Nightdresses",
             "cta": "Shop now"
           }
         },
         "category-3": {
           "type": "category",
           "settings": {
-            "title": "Loungewear",
             "cta": "Shop now"
           }
         },
         "category-4": {
           "type": "category",
           "settings": {
-            "title": "Robes",
             "cta": "Shop now"
           }
         }
@@ -172,8 +168,8 @@
         "category-4"
       ],
       "settings": {
-        "caption": "Shop by category",
-        "heading": "Find your night ritual",
+        "caption": "",
+        "heading": "Shop by category",
         "heading_size": "h1",
         "heading_alignment": "center",
         "image_ratio": "portrait",
@@ -201,21 +197,21 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Made for slow mornings and beautiful nights",
+            "heading": "Our story",
             "heading_size": "h1"
           }
         },
         "text": {
           "type": "text",
           "settings": {
-            "text": "<p>At Ron's Pijamas we believe the moments at home deserve the same care as the ones outside. Every piece is cut from fabrics chosen for how they feel on the skin, with refined details that make getting ready for bed a small ritual.</p>",
+            "text": "<p>Write a few sentences about Ron's Pijamas here.</p>",
             "text_style": "body"
           }
         },
         "button": {
           "type": "button",
           "settings": {
-            "button_label": "Discover the collection",
+            "button_label": "Shop all",
             "button_link": "shopify://collections/all",
             "button_style_secondary": true
           }
@@ -240,7 +236,8 @@
         "color_scheme": "scheme-3",
         "padding_top": 0,
         "padding_bottom": 0
-      }
+      },
+      "disabled": true
     },
     "reviews": {
       "type": "rons-testimonials",
@@ -267,7 +264,7 @@
           "settings": {
             "heading": "How do I choose my size?",
             "icon": "none",
-            "row_content": "<p>Open the size guide on the product page to compare your measurements. If you are unsure, contact us and we will gladly help.</p>",
+            "row_content": "<p>The available sizes are listed on each product page. If you are unsure which size to choose, please contact us before ordering.</p>",
             "page": ""
           }
         },
@@ -283,9 +280,9 @@
         "faq-3": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "How much is delivery and how long does it take?",
+            "heading": "How much does delivery cost?",
             "icon": "none",
-            "row_content": "<p>Available delivery options, costs and times are shown at checkout. See our <a href=\"/policies/shipping-policy\" title=\"Shipping policy\">shipping policy</a> for details.</p>",
+            "row_content": "<p>The available delivery options and their costs are shown at checkout before you pay.</p>",
             "page": ""
           }
         },
@@ -294,7 +291,7 @@
           "settings": {
             "heading": "Can I return or exchange my order?",
             "icon": "none",
-            "row_content": "<p>Please see our <a href=\"/policies/refund-policy\" title=\"Refund policy\">refund policy</a> for returns and exchanges.</p>",
+            "row_content": "<p>Our refund policy, linked at the bottom of every page, explains how returns and exchanges work.</p>",
             "page": ""
           }
         },
@@ -303,7 +300,7 @@
           "settings": {
             "heading": "How can I contact you?",
             "icon": "none",
-            "row_content": "<p>Use our <a href=\"/pages/contact\" title=\"Contact\">contact page</a> and we will get back to you.</p>",
+            "row_content": "<p>You can reach us through the contact details at the bottom of every page.</p>",
             "page": ""
           }
         }
@@ -316,7 +313,7 @@
         "faq-5"
       ],
       "settings": {
-        "caption": "FAQ",
+        "caption": "",
         "heading": "Questions, answered",
         "heading_size": "h1",
         "heading_alignment": "center",
@@ -336,14 +333,14 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Join the Ron's Pijamas list",
+            "heading": "Stay in touch",
             "heading_size": "h1"
           }
         },
         "paragraph": {
           "type": "paragraph",
           "settings": {
-            "text": "<p>Be the first to discover new collections, restocks and private offers.</p>"
+            "text": "<p>Subscribe to receive news from Ron's Pijamas.</p>"
           }
         },
         "email_form": {

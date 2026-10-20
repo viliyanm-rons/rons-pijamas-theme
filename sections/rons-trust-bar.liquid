@@ -18,47 +18,55 @@
   }
 {%- endstyle -%}
 
-<div
-  class="rons-trust-bar rons-trust-bar--{{ section.settings.alignment }} color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_border %} rons-trust-bar--bordered{% endif %}"
-  style="--rons-columns: {{ section.blocks.size | at_most: 4 | at_least: 1 }};{% if section.settings.show_border %} border-top: 0.1rem solid var(--rons-hairline); border-bottom: 0.1rem solid var(--rons-hairline);{% endif %}"
->
-  <div class="page-width section-{{ section.id }}-padding">
-    <ul class="rons-trust-bar__list" role="list">
-      {%- for block in section.blocks -%}
-        <li
-          class="rons-trust-bar__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {{ block.shopify_attributes }}
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-            style="--animation-order: {{ forloop.index }};"
-          {% endif %}
-        >
-          {%- if block.settings.image != blank -%}
-            <span class="rons-trust-bar__icon">
-              {{
-                block.settings.image
-                | image_url: width: 112
-                | image_tag: loading: 'lazy', widths: '56, 112', sizes: '28px'
-              }}
-            </span>
-          {%- elsif block.settings.icon != 'none' -%}
-            <span class="rons-trust-bar__icon" aria-hidden="true">
-              {%- render 'icon-accordion', icon: block.settings.icon -%}
-            </span>
-          {%- endif -%}
-          <div>
-            {%- if block.settings.heading != blank -%}
-              <p class="rons-trust-bar__heading">{{ block.settings.heading }}</p>
+{%- if section.blocks.size == 0 -%}
+  {%- if request.design_mode -%}
+    <div class="page-width section-{{ section.id }}-padding">
+      <p class="rons-editor-hint">Add trust points that match your published policies.</p>
+    </div>
+  {%- endif -%}
+{%- else -%}
+  <div
+    class="rons-trust-bar rons-trust-bar--{{ section.settings.alignment }} color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_border %} rons-trust-bar--bordered{% endif %}"
+    style="--rons-columns: {{ section.blocks.size | at_most: 4 | at_least: 1 }};{% if section.settings.show_border %} border-top: 0.1rem solid var(--rons-hairline); border-bottom: 0.1rem solid var(--rons-hairline);{% endif %}"
+  >
+    <div class="page-width section-{{ section.id }}-padding">
+      <ul class="rons-trust-bar__list" role="list">
+        {%- for block in section.blocks -%}
+          <li
+            class="rons-trust-bar__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {{ block.shopify_attributes }}
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            {%- if block.settings.image != blank -%}
+              <span class="rons-trust-bar__icon">
+                {{
+                  block.settings.image
+                  | image_url: width: 112
+                  | image_tag: loading: 'lazy', widths: '56, 112', sizes: '28px'
+                }}
+              </span>
+            {%- elsif block.settings.icon != 'none' -%}
+              <span class="rons-trust-bar__icon" aria-hidden="true">
+                {%- render 'icon-accordion', icon: block.settings.icon -%}
+              </span>
             {%- endif -%}
-            {%- if block.settings.text != blank -%}
-              <p class="rons-trust-bar__text">{{ block.settings.text }}</p>
-            {%- endif -%}
-          </div>
-        </li>
-      {%- endfor -%}
-    </ul>
+            <div>
+              {%- if block.settings.heading != blank -%}
+                <p class="rons-trust-bar__heading">{{ block.settings.heading }}</p>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="rons-trust-bar__text">{{ block.settings.text }}</p>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
   </div>
-</div>
+{%- endif -%}
 
 {% schema %}
 {

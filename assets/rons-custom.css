@@ -750,6 +750,15 @@ body .rons-category-tile__label {
   gap: 0.4rem;
 }
 
+/* Tile with a collection but no image: solid black, white title */
+body .rons-category-tile__media--empty {
+  background: rgb(var(--color-foreground));
+}
+
+body .rons-category-grid--below .rons-category-tile__media--empty + .rons-category-tile__label {
+  color: rgb(var(--color-foreground));
+}
+
 body .rons-category-grid--below .rons-category-tile__media::after {
   display: none;
 }
@@ -1103,4 +1112,37 @@ body .rons-cart-payment svg {
   body .rons-category-tile__media .placeholder-svg {
     transition: none;
   }
+}
+
+/* ---------------------------------------------------------------------------
+ * 17. Empty states
+ * Dawn shows grey placeholder illustrations when no image is chosen. Keep them
+ * in the Theme Editor (html.shopify-design-mode) but not for customers:
+ * image-with-text drops its empty media column. (The hero handles this in
+ * sections/image-banner.liquid.)
+ * ------------------------------------------------------------------------- */
+/* Hero without an image: no darkening overlay on the solid banner */
+body .banner--no-media::after {
+  display: none;
+}
+
+body .rons-editor-hint {
+  margin: 0 auto 2.4rem;
+  max-width: 60rem;
+  padding: 1.2rem 1.6rem;
+  border: 0.1rem dashed rgba(var(--color-foreground), 0.4);
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+html:not(.shopify-design-mode) body .image-with-text__media-item:has(.image-with-text__media--placeholder) {
+  display: none;
+}
+
+html:not(.shopify-design-mode)
+  body
+  .image-with-text__media-item:has(.image-with-text__media--placeholder)
+  + .image-with-text__text-item {
+  max-width: 100%;
+  flex-basis: 100%;
 }

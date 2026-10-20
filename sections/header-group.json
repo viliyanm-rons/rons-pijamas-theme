@@ -17,7 +17,7 @@
         "announcement-1": {
           "type": "announcement",
           "settings": {
-            "text": "Discover the new collection",
+            "text": "Discover the collection",
             "link": "shopify://collections/all"
           }
         }

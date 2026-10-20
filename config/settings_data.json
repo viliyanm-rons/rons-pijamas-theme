@@ -61,9 +61,9 @@
           }
         }
       },
-      "type_header_font": "bodoni_moda_n4",
+      "type_header_font": "assistant_n4",
       "heading_scale": 115,
-      "type_body_font": "jost_n4",
+      "type_body_font": "assistant_n4",
       "body_scale": 100,
       "page_width": 1400,
       "spacing_sections": 0,
@@ -157,7 +157,7 @@
       "sale_badge_color_scheme": "scheme-3",
       "sold_out_badge_color_scheme": "scheme-1",
       "brand_headline": "Ron's Pijamas",
-      "brand_description": "<p>Refined sleepwear and loungewear for women, designed for slow mornings and beautiful nights.</p>",
+      "brand_description": "<p>Sleepwear and loungewear for women.</p>",
       "brand_image_width": 100,
       "social_twitter_link": "",
       "social_facebook_link": "",

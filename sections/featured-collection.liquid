@@ -1,3 +1,9 @@
+{%- comment -%}
+  Ron's Pijamas: Dawn's sample product cards ("Example product title") only
+  appear in the Theme Editor. On the storefront the section renders nothing
+  until the chosen collection has products.
+{%- endcomment -%}
+{%- if section.settings.collection.products.size > 0 or request.design_mode -%}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
@@ -214,6 +220,7 @@
     {%- endif -%}
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {
