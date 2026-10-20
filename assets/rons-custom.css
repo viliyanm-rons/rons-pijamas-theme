@@ -639,6 +639,20 @@ body .rons-trust-bar__text {
   color: var(--rons-muted);
 }
 
+/* Phones: all trust points visible at once in a 2 x 2 grid */
+@media screen and (max-width: 749px) {
+  body .rons-trust-bar__list {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.4rem 1.6rem;
+    overflow: visible;
+  }
+
+  body .rons-trust-bar--left .rons-trust-bar__item {
+    align-items: flex-start;
+  }
+}
+
 @media screen and (min-width: 990px) {
   body .rons-trust-bar__list {
     grid-auto-flow: row;
@@ -1145,4 +1159,347 @@ html:not(.shopify-design-mode)
   + .image-with-text__text-item {
   max-width: 100%;
   flex-basis: 100%;
+}
+
+/* ---------------------------------------------------------------------------
+ * 18. Editorial hero (sections/rons-hero.liquid)
+ * Mobile first. `svh` keeps "full screen" from jumping under iOS Safari's
+ * collapsing toolbar; `vh` is the fallback for older browsers.
+ * ------------------------------------------------------------------------- */
+body .rons-hero {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  isolation: isolate;
+  background: #000;
+  color: #fff;
+  min-height: 60vh;
+  min-height: 60svh;
+}
+
+body .rons-hero--dark {
+  background: #fff;
+  color: #000;
+}
+
+body .rons-hero--mobile-full {
+  min-height: 88vh;
+  min-height: calc(100svh - 9rem);
+}
+
+body .rons-hero--mobile-large {
+  min-height: 75vh;
+  min-height: 75svh;
+}
+
+body .rons-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+body .rons-hero__media picture,
+body .rons-hero__media img,
+body .rons-hero__media .placeholder-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--rons-hero-focal-mobile, var(--rons-hero-focal, center));
+}
+
+body .rons-hero:not(.rons-hero--no-image) .rons-hero__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: var(--rons-hero-overlay, 0.2);
+}
+
+body .rons-hero--dark:not(.rons-hero--no-image) .rons-hero__media::after {
+  background: #fff;
+}
+
+body .rons-hero__content {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: flex-end;
+  padding-top: 6rem;
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+}
+
+body .rons-hero__content--mobile-center {
+  justify-content: center;
+  text-align: center;
+}
+
+body .rons-hero__box {
+  max-width: 56rem;
+}
+
+body .rons-hero__box > * {
+  margin: 0;
+  color: inherit;
+}
+
+body .rons-hero__box > * + * {
+  margin-top: 1.6rem;
+}
+
+body .rons-hero__heading {
+  line-height: 1.02;
+}
+
+body .rons-hero__text {
+  font-size: 1.6rem;
+  line-height: 1.6;
+  max-width: 44rem;
+}
+
+body .rons-hero__content--mobile-center .rons-hero__text {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body .rons-hero__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  padding-top: 0.8rem;
+}
+
+body .rons-hero__content--mobile-center .rons-hero__buttons {
+  justify-content: center;
+}
+
+/* Buttons follow the hero text colour, independent of the colour scheme */
+body .rons-hero .rons-hero__button {
+  --color-button: 255, 255, 255;
+  --color-button-text: 0, 0, 0;
+  --color-secondary-button-text: 255, 255, 255;
+  flex: 1 1 auto;
+  min-width: 14rem;
+}
+
+body .rons-hero--dark .rons-hero__button {
+  --color-button: 0, 0, 0;
+  --color-button-text: 255, 255, 255;
+  --color-secondary-button-text: 0, 0, 0;
+}
+
+body .rons-hero .rons-hero__button--primary {
+  background-color: rgb(var(--color-button));
+  color: rgb(var(--color-button-text));
+}
+
+body .rons-hero .rons-hero__button--secondary {
+  background-color: transparent;
+  color: rgb(var(--color-secondary-button-text));
+}
+
+body .rons-hero .rons-hero__button--secondary::after {
+  box-shadow: 0 0 0 0.1rem rgb(var(--color-secondary-button-text));
+}
+
+body .rons-hero .rons-editor-hint {
+  border-color: currentColor;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-hero__media img,
+  body .rons-hero__media .placeholder-svg {
+    object-position: var(--rons-hero-focal, center);
+  }
+
+  body .rons-hero--desktop-full {
+    min-height: 92vh;
+    min-height: calc(100svh - 12rem);
+  }
+
+  body .rons-hero--desktop-large {
+    min-height: 78vh;
+  }
+
+  body .rons-hero--desktop-medium {
+    min-height: 60vh;
+  }
+
+  body .rons-hero__content {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  body .rons-hero__content--bottom-center,
+  body .rons-hero__content--middle-center {
+    justify-content: center;
+    text-align: center;
+  }
+
+  body .rons-hero__content--middle-left,
+  body .rons-hero__content--middle-center {
+    align-items: center;
+  }
+
+  body .rons-hero__content--bottom-center .rons-hero__text,
+  body .rons-hero__content--middle-center .rons-hero__text {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  body .rons-hero__content--bottom-left .rons-hero__buttons,
+  body .rons-hero__content--middle-left .rons-hero__buttons {
+    justify-content: flex-start;
+  }
+
+  body .rons-hero__content--bottom-center .rons-hero__buttons,
+  body .rons-hero__content--middle-center .rons-hero__buttons {
+    justify-content: center;
+  }
+
+  body .rons-hero .rons-hero__button {
+    flex: 0 0 auto;
+  }
+
+  body .rons-hero__text {
+    font-size: 1.7rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * 19. Editorial image + text (sections/rons-editorial.liquid)
+ * ------------------------------------------------------------------------- */
+body .rons-editorial__inner {
+  display: grid;
+  gap: 3.2rem;
+  align-items: center;
+}
+
+body .rons-editorial__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--rons-ratio, 4 / 5);
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+body .rons-editorial__media img,
+body .rons-editorial__media .placeholder-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--rons-focal, center);
+}
+
+body .rons-editorial__content > * {
+  margin: 0;
+}
+
+body .rons-editorial__content > * + * {
+  margin-top: 1.6rem;
+}
+
+body .rons-editorial__text {
+  max-width: 48rem;
+  line-height: 1.8;
+}
+
+body .rons-editorial__button {
+  margin-top: 2.4rem !important;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-editorial--split .rons-editorial__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 6.4rem;
+  }
+
+  body .rons-editorial--split.rons-editorial--image-right .rons-editorial__media {
+    order: 2;
+  }
+
+  body .rons-editorial--split .rons-editorial__content {
+    padding: 0 4rem 0 0;
+  }
+
+  body .rons-editorial--split.rons-editorial--image-right .rons-editorial__content {
+    padding: 0 0 0 4rem;
+  }
+}
+
+/* Text on image */
+body .rons-editorial--overlay .rons-editorial__inner {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 70vh;
+  min-height: 70svh;
+  isolation: isolate;
+}
+
+body .rons-editorial--overlay .rons-editorial__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  aspect-ratio: auto;
+}
+
+body .rons-editorial--overlay .rons-editorial__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: var(--rons-overlay, 0.3);
+}
+
+body .rons-editorial--overlay .rons-editorial__content {
+  position: relative;
+  width: 100%;
+  padding: 6rem 1.5rem calc(4rem + env(safe-area-inset-bottom));
+  color: #fff;
+  text-align: center;
+}
+
+body .rons-editorial--overlay .rons-editorial__heading,
+body .rons-editorial--overlay .rte {
+  color: #fff;
+}
+
+body .rons-editorial--overlay .rons-editorial__text {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body .rons-editorial--overlay .rons-editorial__button {
+  --color-button: 255, 255, 255;
+  --color-button-text: 0, 0, 0;
+  --color-secondary-button-text: 255, 255, 255;
+}
+
+body .rons-editorial--overlay .rons-editorial__button.button--secondary {
+  background: transparent;
+  color: #fff;
+}
+
+body .rons-editorial--overlay .rons-editorial__button.button--secondary::after {
+  box-shadow: 0 0 0 0.1rem #fff;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-editorial--overlay .rons-editorial__inner {
+    min-height: 80vh;
+    align-items: center;
+  }
+
+  body .rons-editorial--overlay .rons-editorial__content {
+    padding: 8rem 5rem;
+  }
+}
+
+/* Theme Editor only: dim the hero placeholder so the text stays readable */
+body .rons-hero--no-image .rons-hero__placeholder {
+  opacity: 0.35;
 }

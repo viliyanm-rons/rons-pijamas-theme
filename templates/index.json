@@ -1,136 +1,24 @@
 {
   "sections": {
     "hero": {
-      "type": "image-banner",
-      "blocks": {
-        "caption": {
-          "type": "text",
-          "settings": {
-            "text": "Ron's Pijamas",
-            "text_style": "caption-with-letter-spacing"
-          }
-        },
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Sleep beautifully",
-            "heading_size": "hxl"
-          }
-        },
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "Sleepwear and loungewear for women.",
-            "text_style": "body"
-          }
-        },
-        "buttons": {
-          "type": "buttons",
-          "settings": {
-            "button_label_1": "Shop all",
-            "button_link_1": "shopify://collections/all",
-            "button_style_secondary_1": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": true
-          }
-        }
-      },
-      "block_order": [
-        "caption",
-        "heading",
-        "text",
-        "buttons"
-      ],
+      "type": "rons-hero",
       "settings": {
-        "image_overlay_opacity": 30,
-        "image_height": "large",
-        "image_behavior": "none",
-        "desktop_content_position": "bottom-left",
-        "desktop_content_alignment": "left",
-        "show_text_box": false,
-        "color_scheme": "scheme-3",
-        "stack_images_on_mobile": false,
-        "mobile_content_alignment": "left",
-        "show_text_below": false
-      }
-    },
-    "trust_bar": {
-      "type": "rons-trust-bar",
-      "blocks": {
-        "trust-1": {
-          "type": "item",
-          "settings": {
-            "icon": "truck",
-            "heading": "Delivery",
-            "text": "Options and costs shown at checkout"
-          }
-        },
-        "trust-2": {
-          "type": "item",
-          "settings": {
-            "icon": "return",
-            "heading": "Returns",
-            "text": "See our refund policy"
-          }
-        },
-        "trust-3": {
-          "type": "item",
-          "settings": {
-            "icon": "lock",
-            "heading": "Secure checkout"
-          }
-        },
-        "trust-4": {
-          "type": "item",
-          "settings": {
-            "icon": "chat_bubble",
-            "heading": "Customer care",
-            "text": "Questions? We are here to help"
-          }
-        }
-      },
-      "block_order": [
-        "trust-1",
-        "trust-2",
-        "trust-3",
-        "trust-4"
-      ],
-      "settings": {
-        "alignment": "left",
-        "show_border": true,
-        "color_scheme": "scheme-1",
-        "padding_top": 28,
-        "padding_bottom": 28
-      },
-      "disabled": true
-    },
-    "bestsellers": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "Bestsellers",
-        "heading_size": "h1",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "",
-        "products_to_show": 8,
-        "columns_desktop": 4,
-        "full_width": false,
-        "show_view_all": true,
-        "view_all_style": "link",
-        "enable_desktop_slider": false,
-        "color_scheme": "scheme-1",
-        "image_ratio": "portrait",
-        "image_shape": "default",
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_rating": false,
-        "quick_add": "standard",
-        "columns_mobile": "2",
-        "swipe_on_mobile": true,
-        "padding_top": 72,
-        "padding_bottom": 56
+        "image_desktop": "",
+        "image_mobile": "",
+        "overlay_opacity": 20,
+        "text_color": "light",
+        "desktop_height": "full",
+        "mobile_height": "full",
+        "desktop_position": "bottom-left",
+        "mobile_alignment": "left",
+        "eyebrow": "Ron's Pijamas",
+        "heading": "Sleep beautifully",
+        "heading_size": "hxl",
+        "text": "Sleepwear and loungewear for women.",
+        "button_label_1": "Shop now",
+        "button_link_1": "shopify://collections/all",
+        "button_label_2": "",
+        "button_link_2": ""
       }
     },
     "categories": {
@@ -179,65 +67,157 @@
         "color_scheme": "scheme-1",
         "columns_mobile": "2",
         "swipe_on_mobile": true,
-        "padding_top": 56,
+        "padding_top": 72,
+        "padding_bottom": 48
+      }
+    },
+    "bestsellers": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "Bestsellers",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "link",
+        "enable_desktop_slider": false,
+        "color_scheme": "scheme-1",
+        "image_ratio": "portrait",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "standard",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 48,
         "padding_bottom": 72
       }
     },
-    "brand_story": {
-      "type": "image-with-text",
+    "brand_intro": {
+      "type": "rons-editorial",
+      "settings": {
+        "image": "",
+        "layout": "split",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "color_scheme": "scheme-1",
+        "eyebrow": "Ron's Pijamas",
+        "heading": "Our story",
+        "heading_size": "h1",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "benefits": {
+      "type": "rons-trust-bar",
       "blocks": {
-        "caption": {
-          "type": "caption",
+        "benefit-1": {
+          "type": "item",
           "settings": {
-            "caption": "Our story",
-            "text_style": "caption-with-letter-spacing",
-            "text_size": "medium"
+            "icon": "lock",
+            "heading": "Secure checkout",
+            "text": "Payments are processed by Shopify Checkout"
           }
         },
-        "heading": {
-          "type": "heading",
+        "benefit-2": {
+          "type": "item",
           "settings": {
-            "heading": "Our story",
-            "heading_size": "h1"
+            "icon": "truck",
+            "heading": "Delivery",
+            "text": "Options and costs are shown at checkout"
           }
         },
-        "text": {
-          "type": "text",
+        "benefit-3": {
+          "type": "item",
           "settings": {
-            "text": "<p>Write a few sentences about Ron's Pijamas here.</p>",
-            "text_style": "body"
+            "icon": "return",
+            "heading": "Returns",
+            "text": "See our refund policy"
           }
         },
-        "button": {
-          "type": "button",
+        "benefit-4": {
+          "type": "item",
           "settings": {
-            "button_label": "Shop all",
-            "button_link": "shopify://collections/all",
-            "button_style_secondary": true
+            "icon": "chat_bubble",
+            "heading": "Customer care",
+            "text": "Questions? Get in touch"
           }
         }
       },
       "block_order": [
-        "caption",
-        "heading",
-        "text",
-        "button"
+        "benefit-1",
+        "benefit-2",
+        "benefit-3",
+        "benefit-4"
       ],
       "settings": {
-        "height": "large",
-        "desktop_image_width": "medium",
-        "layout": "image_first",
-        "image_behavior": "none",
-        "content_layout": "no-overlap",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "mobile_content_alignment": "left",
-        "section_color_scheme": "scheme-3",
+        "alignment": "center",
+        "show_border": true,
+        "color_scheme": "scheme-1",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "new_arrivals": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "New arrivals",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "collection": "",
+        "products_to_show": 12,
+        "columns_desktop": 4,
+        "full_width": false,
+        "show_view_all": true,
+        "view_all_style": "link",
+        "enable_desktop_slider": true,
+        "color_scheme": "scheme-1",
+        "image_ratio": "portrait",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "standard",
+        "columns_mobile": "2",
+        "swipe_on_mobile": true,
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    },
+    "gifts": {
+      "type": "rons-editorial",
+      "settings": {
+        "image": "",
+        "layout": "overlay",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
         "color_scheme": "scheme-3",
+        "eyebrow": "",
+        "heading": "Gifts",
+        "heading_size": "h0",
+        "text": "",
+        "button_label": "Shop gifts",
+        "button_link": "",
+        "button_style": "outline",
         "padding_top": 0,
         "padding_bottom": 0
-      },
-      "disabled": true
+      }
     },
     "reviews": {
       "type": "rons-testimonials",
@@ -314,7 +294,7 @@
       ],
       "settings": {
         "caption": "",
-        "heading": "Questions, answered",
+        "heading": "Frequently asked questions",
         "heading_size": "h1",
         "heading_alignment": "center",
         "layout": "none",
@@ -363,10 +343,12 @@
   },
   "order": [
     "hero",
-    "trust_bar",
-    "bestsellers",
     "categories",
-    "brand_story",
+    "bestsellers",
+    "brand_intro",
+    "benefits",
+    "new_arrivals",
+    "gifts",
     "reviews",
     "faq",
     "newsletter"

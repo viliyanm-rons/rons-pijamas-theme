@@ -1,0 +1,269 @@
+{% comment %}
+  Ron's Pijamas – editorial hero.
+
+  - Separate desktop and mobile images in one <picture>, so phones only
+    download the mobile image. Each falls back to the other when only one is
+    set, and both respect the focal point set in Shopify's image editor.
+  - Buttons only render when they have both a label and a link.
+  - Without any image, customers see a solid black (or white) hero with the
+    text; the Theme Editor shows a placeholder illustration instead.
+{% endcomment %}
+
+{%- liquid
+  assign image_desktop = section.settings.image_desktop
+  assign image_mobile = section.settings.image_mobile
+  assign main_image = image_desktop | default: image_mobile
+  assign has_image = false
+  if main_image != blank
+    assign has_image = true
+  endif
+
+  if section.index <= 2
+    assign loading = 'eager'
+    assign fetch_priority = 'high'
+  else
+    assign loading = 'lazy'
+    assign fetch_priority = 'auto'
+  endif
+
+  assign show_button_1 = false
+  if section.settings.button_label_1 != blank and section.settings.button_link_1 != blank
+    assign show_button_1 = true
+  endif
+  assign show_button_2 = false
+  if section.settings.button_label_2 != blank and section.settings.button_link_2 != blank
+    assign show_button_2 = true
+  endif
+-%}
+
+<div
+  class="rons-hero rons-hero--{{ section.settings.text_color }} rons-hero--desktop-{{ section.settings.desktop_height }} rons-hero--mobile-{{ section.settings.mobile_height }}{% unless has_image %} rons-hero--no-image{% endunless %}"
+  style="--rons-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};{% if has_image %} --rons-hero-focal: {{ main_image.presentation.focal_point }}; --rons-hero-focal-mobile: {{ image_mobile.presentation.focal_point | default: main_image.presentation.focal_point }};{% endif %}"
+>
+  <div class="rons-hero__media">
+    {%- if has_image -%}
+      <picture>
+        {%- if image_mobile != blank and image_desktop != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="
+              {{ image_mobile | image_url: width: 450 }} 450w,
+              {{ image_mobile | image_url: width: 750 }} 750w,
+              {{ image_mobile | image_url: width: 1100 }} 1100w,
+              {{ image_mobile | image_url: width: 1500 }} 1500w
+            "
+            sizes="100vw"
+            width="{{ image_mobile.width }}"
+            height="{{ image_mobile.height }}"
+          >
+        {%- endif -%}
+        {{
+          main_image
+          | image_url: width: 3000
+          | image_tag:
+            class: 'rons-hero__image',
+            widths: '450, 750, 1100, 1500, 1920, 2400, 3000',
+            sizes: '100vw',
+            loading: loading,
+            fetchpriority: fetch_priority,
+            alt: main_image.alt
+        }}
+      </picture>
+    {%- elsif request.design_mode -%}
+      {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg rons-hero__placeholder' }}
+    {%- endif -%}
+  </div>
+
+  <div class="rons-hero__content page-width rons-hero__content--{{ section.settings.desktop_position }} rons-hero__content--mobile-{{ section.settings.mobile_alignment }}">
+    <div class="rons-hero__box">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rons-hero__eyebrow rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="rons-hero__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <p class="rons-hero__text">{{ section.settings.text }}</p>
+      {%- endif -%}
+      {%- if show_button_1 or show_button_2 -%}
+        <div class="rons-hero__buttons">
+          {%- if show_button_1 -%}
+            <a href="{{ section.settings.button_link_1 }}" class="button rons-hero__button rons-hero__button--primary">
+              {{- section.settings.button_label_1 | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if show_button_2 -%}
+            <a href="{{ section.settings.button_link_2 }}" class="button rons-hero__button rons-hero__button--secondary">
+              {{- section.settings.button_label_2 | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- elsif request.design_mode -%}
+        <p class="rons-editor-hint">Buttons appear once they have both a label and a link.</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Editorial hero",
+  "tag": "section",
+  "class": "section rons-hero-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop image",
+      "info": "Landscape, at least 2400 × 1350 px. Set the focal point in the image editor."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Portrait (4:5 or 9:16), at least 1100 px wide. Uses the desktop image when empty."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Image shade",
+      "info": "Darkens (or lightens) the image to keep text readable.",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text colour",
+      "options": [
+        { "value": "light", "label": "White text" },
+        { "value": "dark", "label": "Black text" }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "desktop_height",
+      "label": "Desktop height",
+      "options": [
+        { "value": "full", "label": "Full screen" },
+        { "value": "large", "label": "Large" },
+        { "value": "medium", "label": "Medium" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "select",
+      "id": "mobile_height",
+      "label": "Mobile height",
+      "options": [
+        { "value": "full", "label": "Full screen" },
+        { "value": "large", "label": "Large" },
+        { "value": "medium", "label": "Medium" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "select",
+      "id": "desktop_position",
+      "label": "Desktop text position",
+      "options": [
+        { "value": "bottom-left", "label": "Bottom left" },
+        { "value": "bottom-center", "label": "Bottom center" },
+        { "value": "middle-left", "label": "Middle left" },
+        { "value": "middle-center", "label": "Middle center" }
+      ],
+      "default": "bottom-left"
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "Mobile text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small text above heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Sleep beautifully"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" },
+        { "value": "hxl", "label": "Extra large" }
+      ],
+      "default": "hxl"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Supporting text"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each button only appears when it has both a label and a link."
+    },
+    {
+      "type": "text",
+      "id": "button_label_1",
+      "label": "First button label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link_1",
+      "label": "First button link"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Second button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Second button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial hero"
+    }
+  ]
+}
+{% endschema %}
