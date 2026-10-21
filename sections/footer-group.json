@@ -14,14 +14,14 @@
         "shop": {
           "type": "link_list",
           "settings": {
-            "heading": "Shop",
+            "heading": "Пазаруване",
             "menu": "main-menu"
           }
         },
-        "help": {
+        "care": {
           "type": "link_list",
           "settings": {
-            "heading": "Customer care",
+            "heading": "Обслужване на клиенти",
             "menu": "footer"
           }
         }
@@ -29,12 +29,12 @@
       "block_order": [
         "brand",
         "shop",
-        "help"
+        "care"
       ],
       "settings": {
         "color_scheme": "scheme-3",
-        "newsletter_enable": false,
-        "newsletter_heading": "Stay in touch",
+        "newsletter_enable": true,
+        "newsletter_heading": "Новини от Ron's Pijamas",
         "enable_follow_on_shop": false,
         "show_social": true,
         "enable_country_selector": true,

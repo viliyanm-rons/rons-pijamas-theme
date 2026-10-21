@@ -40,8 +40,8 @@
         "size_guide": {
           "type": "size_guide",
           "settings": {
-            "label": "Size guide",
-            "heading": "Size guide",
+            "label": "Таблица с размери",
+            "heading": "Таблица с размери",
             "page": ""
           }
         },
@@ -58,11 +58,11 @@
           "settings": {
             "layout": "vertical",
             "icon_1": "lock",
-            "heading_1": "Secure checkout",
+            "heading_1": "Сигурно плащане",
             "icon_2": "truck",
-            "heading_2": "Delivery options at checkout",
+            "heading_2": "Доставка – опциите се виждат при поръчка",
             "icon_3": "chat_bubble",
-            "heading_3": "Customer care"
+            "heading_3": "Обслужване на клиенти"
           }
         },
         "description": {
@@ -72,7 +72,7 @@
         "fabric": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Fabric & care",
+            "heading": "Материя и грижа",
             "icon": "washing",
             "content": "",
             "page": ""
@@ -81,7 +81,7 @@
         "delivery": {
           "type": "collapsible_tab",
           "settings": {
-            "heading": "Delivery & returns",
+            "heading": "Доставка и връщане",
             "icon": "truck",
             "content": "",
             "page": ""
@@ -90,7 +90,7 @@
         "complementary": {
           "type": "complementary",
           "settings": {
-            "block_heading": "Complete the look",
+            "block_heading": "Допълни визията",
             "make_collapsible_row": false,
             "icon": "price_tag",
             "product_list_limit": 6,
@@ -103,7 +103,7 @@
         "share": {
           "type": "share",
           "settings": {
-            "share_label": "Share"
+            "share_label": "Сподели"
           }
         }
       },
@@ -149,7 +149,7 @@
     "related-products": {
       "type": "related-products",
       "settings": {
-        "heading": "You may also like",
+        "heading": "Може да харесаш още",
         "heading_size": "h1",
         "products_to_show": 4,
         "columns_desktop": 4,

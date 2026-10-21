@@ -1163,70 +1163,100 @@ html:not(.shopify-design-mode)
 
 /* ---------------------------------------------------------------------------
  * 18. Editorial hero (sections/rons-hero.liquid)
- * Mobile first. `svh` keeps "full screen" from jumping under iOS Safari's
- * collapsing toolbar; `vh` is the fallback for older browsers.
+ * Image and text share one grid cell (text on image) or stack (text below).
+ * Mobile first; `svh` keeps full-screen heights stable under iOS Safari's
+ * collapsing toolbar, with `vh` as the fallback.
  * ------------------------------------------------------------------------- */
 body .rons-hero {
+  --rons-hero-fg: 255, 255, 255;
+  --rons-hero-shade: 0, 0, 0;
   position: relative;
-  display: flex;
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   isolation: isolate;
-  background: #000;
-  color: #fff;
-  min-height: 60vh;
-  min-height: 60svh;
-}
-
-body .rons-hero--dark {
   background: #fff;
   color: #000;
 }
 
-body .rons-hero--mobile-full {
-  min-height: 88vh;
-  min-height: calc(100svh - 9rem);
+body .rons-hero--text-dark {
+  --rons-hero-fg: 0, 0, 0;
+  --rons-hero-shade: 255, 255, 255;
 }
 
-body .rons-hero--mobile-large {
-  min-height: 75vh;
-  min-height: 75svh;
+body .rons-hero__media,
+body .rons-hero__content {
+  grid-area: 1 / 1;
 }
 
 body .rons-hero__media {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
+  position: relative;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.06);
 }
 
 body .rons-hero__media picture,
 body .rons-hero__media img,
 body .rons-hero__media .placeholder-svg {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: var(--rons-hero-focal-mobile, var(--rons-hero-focal, center));
+  object-position: var(--rons-hero-focal-mobile, center);
 }
 
-body .rons-hero:not(.rons-hero--no-image) .rons-hero__media::after {
+/* Heights – mobile */
+body .rons-hero--mobile-adapt .rons-hero__media {
+  aspect-ratio: var(--rons-hero-ratio-mobile, 0.8);
+}
+
+body .rons-hero--mobile-medium .rons-hero__media {
+  min-height: 60vh;
+  min-height: 60svh;
+}
+
+body .rons-hero--mobile-large .rons-hero__media {
+  min-height: 80vh;
+  min-height: 80svh;
+}
+
+body .rons-hero--mobile-full .rons-hero__media {
+  min-height: 88vh;
+  min-height: calc(100svh - 9rem);
+}
+
+/* Readability overlay (only when chosen) */
+body .rons-hero--overlay-solid .rons-hero__media::after,
+body .rons-hero--overlay-gradient .rons-hero__media::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: #000;
-  opacity: var(--rons-hero-overlay, 0.2);
+  pointer-events: none;
 }
 
-body .rons-hero--dark:not(.rons-hero--no-image) .rons-hero__media::after {
-  background: #fff;
+body .rons-hero--overlay-solid .rons-hero__media::after {
+  background: rgba(var(--rons-hero-shade), var(--rons-hero-overlay, 0.35));
 }
 
+body .rons-hero--overlay-gradient .rons-hero__media::after {
+  background: linear-gradient(
+    to top,
+    rgba(var(--rons-hero-shade), var(--rons-hero-overlay, 0.35)) 0%,
+    rgba(var(--rons-hero-shade), 0) 65%
+  );
+}
+
+/* Text */
 body .rons-hero__content {
   position: relative;
+  z-index: 1;
   display: flex;
   width: 100%;
-  align-items: flex-end;
-  padding-top: 6rem;
-  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  align-self: end;
+  padding-top: 4rem;
+  padding-bottom: calc(3.6rem + env(safe-area-inset-bottom));
+  color: rgb(var(--rons-hero-fg));
 }
 
 body .rons-hero__content--mobile-center {
@@ -1244,17 +1274,19 @@ body .rons-hero__box > * {
 }
 
 body .rons-hero__box > * + * {
-  margin-top: 1.6rem;
+  margin-top: 1.4rem;
 }
 
 body .rons-hero__heading {
-  line-height: 1.02;
+  line-height: 1.05;
+  text-wrap: balance;
 }
 
 body .rons-hero__text {
   font-size: 1.6rem;
   line-height: 1.6;
-  max-width: 44rem;
+  max-width: 46rem;
+  text-wrap: pretty;
 }
 
 body .rons-hero__content--mobile-center .rons-hero__text {
@@ -1273,90 +1305,150 @@ body .rons-hero__content--mobile-center .rons-hero__buttons {
   justify-content: center;
 }
 
-/* Buttons follow the hero text colour, independent of the colour scheme */
+/* Buttons follow the text colour, independent of colour schemes */
 body .rons-hero .rons-hero__button {
-  --color-button: 255, 255, 255;
-  --color-button-text: 0, 0, 0;
-  --color-secondary-button-text: 255, 255, 255;
   flex: 1 1 auto;
-  min-width: 14rem;
-}
-
-body .rons-hero--dark .rons-hero__button {
-  --color-button: 0, 0, 0;
-  --color-button-text: 255, 255, 255;
-  --color-secondary-button-text: 0, 0, 0;
+  min-width: 16rem;
 }
 
 body .rons-hero .rons-hero__button--primary {
-  background-color: rgb(var(--color-button));
-  color: rgb(var(--color-button-text));
+  background-color: rgb(var(--rons-hero-fg));
+  color: rgb(var(--rons-hero-shade));
+}
+
+body .rons-hero .rons-hero__button--primary::after {
+  box-shadow: 0 0 0 0.1rem rgb(var(--rons-hero-fg));
 }
 
 body .rons-hero .rons-hero__button--secondary {
   background-color: transparent;
-  color: rgb(var(--color-secondary-button-text));
+  color: rgb(var(--rons-hero-fg));
 }
 
 body .rons-hero .rons-hero__button--secondary::after {
-  box-shadow: 0 0 0 0.1rem rgb(var(--color-secondary-button-text));
+  box-shadow: 0 0 0 0.1rem rgb(var(--rons-hero-fg));
 }
 
-body .rons-hero .rons-editor-hint {
-  border-color: currentColor;
+/* Text below the image (mobile) */
+@media screen and (max-width: 749px) {
+  body .rons-hero--below-mobile .rons-hero__content {
+    grid-area: 2 / 1;
+    padding-top: 2.8rem;
+    padding-bottom: 3.2rem;
+  }
+}
+
+/* No image (storefront): compact black-on-white text banner */
+body .rons-hero--no-image .rons-hero__content,
+body .rons-hero--below-mobile .rons-hero__content {
+  --rons-hero-fg: 0, 0, 0;
+  --rons-hero-shade: 255, 255, 255;
+}
+
+body .rons-hero--no-image .rons-hero__content {
+  padding-top: 5.6rem;
+  padding-bottom: 5.6rem;
+  border-bottom: 0.1rem solid var(--rons-hairline);
+}
+
+/* Theme Editor placeholder */
+body .rons-hero--placeholder .rons-hero__media {
+  min-height: 60vh;
+}
+
+body .rons-hero__hint {
+  position: absolute;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 3rem);
+  background: #fff;
+  color: #000;
+  z-index: 1;
 }
 
 @media screen and (min-width: 750px) {
+  body .rons-hero__media picture,
   body .rons-hero__media img,
   body .rons-hero__media .placeholder-svg {
     object-position: var(--rons-hero-focal, center);
   }
 
-  body .rons-hero--desktop-full {
+  /* Reset mobile heights, then apply desktop heights */
+  body .rons-hero .rons-hero__media {
+    aspect-ratio: auto;
+    min-height: 0;
+  }
+
+  body .rons-hero--desktop-adapt .rons-hero__media {
+    aspect-ratio: var(--rons-hero-ratio, 1.78);
+  }
+
+  body .rons-hero--desktop-medium .rons-hero__media {
+    min-height: 60vh;
+  }
+
+  body .rons-hero--desktop-large .rons-hero__media {
+    min-height: 82vh;
+  }
+
+  body .rons-hero--desktop-full .rons-hero__media {
     min-height: 92vh;
     min-height: calc(100svh - 12rem);
   }
 
-  body .rons-hero--desktop-large {
-    min-height: 78vh;
-  }
-
-  body .rons-hero--desktop-medium {
-    min-height: 60vh;
+  body .rons-hero--placeholder.rons-hero--desktop-adapt .rons-hero__media {
+    aspect-ratio: 16 / 9;
   }
 
   body .rons-hero__content {
-    padding-top: 8rem;
-    padding-bottom: 8rem;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
     justify-content: flex-start;
     text-align: left;
   }
 
-  body .rons-hero__content--bottom-center,
-  body .rons-hero__content--middle-center {
+  body .rons-hero__content--middle-left,
+  body .rons-hero__content--middle-center,
+  body .rons-hero__content--middle-right {
+    align-self: center;
+  }
+
+  body .rons-hero__content--middle-center,
+  body .rons-hero__content--bottom-center {
     justify-content: center;
     text-align: center;
   }
 
-  body .rons-hero__content--middle-left,
-  body .rons-hero__content--middle-center {
-    align-items: center;
+  body .rons-hero__content--middle-right,
+  body .rons-hero__content--bottom-right {
+    justify-content: flex-end;
+    text-align: right;
   }
 
-  body .rons-hero__content--bottom-center .rons-hero__text,
-  body .rons-hero__content--middle-center .rons-hero__text {
+  body .rons-hero__content--middle-center .rons-hero__text,
+  body .rons-hero__content--bottom-center .rons-hero__text {
     margin-left: auto;
     margin-right: auto;
   }
 
-  body .rons-hero__content--bottom-left .rons-hero__buttons,
-  body .rons-hero__content--middle-left .rons-hero__buttons {
+  body .rons-hero__content--middle-right .rons-hero__text,
+  body .rons-hero__content--bottom-right .rons-hero__text {
+    margin-left: auto;
+  }
+
+  body .rons-hero__content .rons-hero__buttons {
     justify-content: flex-start;
   }
 
-  body .rons-hero__content--bottom-center .rons-hero__buttons,
-  body .rons-hero__content--middle-center .rons-hero__buttons {
+  body .rons-hero__content--middle-center .rons-hero__buttons,
+  body .rons-hero__content--bottom-center .rons-hero__buttons {
     justify-content: center;
+  }
+
+  body .rons-hero__content--middle-right .rons-hero__buttons,
+  body .rons-hero__content--bottom-right .rons-hero__buttons {
+    justify-content: flex-end;
   }
 
   body .rons-hero .rons-hero__button {
@@ -1365,6 +1457,60 @@ body .rons-hero .rons-editor-hint {
 
   body .rons-hero__text {
     font-size: 1.7rem;
+  }
+
+  /* Gradient follows the text side on desktop */
+  body .rons-hero--overlay-gradient:has(.rons-hero__content--middle-left) .rons-hero__media::after {
+    background: linear-gradient(
+      to right,
+      rgba(var(--rons-hero-shade), var(--rons-hero-overlay, 0.35)) 0%,
+      rgba(var(--rons-hero-shade), 0) 60%
+    );
+  }
+
+  body .rons-hero--overlay-gradient:has(.rons-hero__content--middle-right) .rons-hero__media::after {
+    background: linear-gradient(
+      to left,
+      rgba(var(--rons-hero-shade), var(--rons-hero-overlay, 0.35)) 0%,
+      rgba(var(--rons-hero-shade), 0) 60%
+    );
+  }
+
+  body .rons-hero--overlay-gradient:has(.rons-hero__content--middle-center) .rons-hero__media::after {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(var(--rons-hero-shade), var(--rons-hero-overlay, 0.35)) 0%,
+      rgba(var(--rons-hero-shade), 0) 70%
+    );
+  }
+
+  body .rons-hero--below-desktop .rons-hero__content {
+    grid-area: 2 / 1;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    --rons-hero-fg: 0, 0, 0;
+    --rons-hero-shade: 255, 255, 255;
+  }
+
+  body .rons-hero--no-image .rons-hero__content {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+/* With text on the image on mobile, the media's text colour must be restored
+   on desktop when only "below on mobile" is set */
+@media screen and (min-width: 750px) {
+  body .rons-hero--below-mobile:not(.rons-hero--below-desktop):not(.rons-hero--no-image) .rons-hero__content {
+    --rons-hero-fg: 255, 255, 255;
+    --rons-hero-shade: 0, 0, 0;
+  }
+
+  body
+    .rons-hero--text-dark.rons-hero--below-mobile:not(.rons-hero--below-desktop):not(.rons-hero--no-image)
+    .rons-hero__content {
+    --rons-hero-fg: 0, 0, 0;
+    --rons-hero-shade: 255, 255, 255;
   }
 }
 
@@ -1499,7 +1645,33 @@ body .rons-editorial--overlay .rons-editorial__button.button--secondary::after {
   }
 }
 
-/* Theme Editor only: dim the hero placeholder so the text stays readable */
-body .rons-hero--no-image .rons-hero__placeholder {
-  opacity: 0.35;
+/* ---------------------------------------------------------------------------
+ * 20. Colour swatches on product cards (snippets/rons-card-swatches.liquid)
+ * ------------------------------------------------------------------------- */
+body .rons-card-swatches {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+}
+
+body .rons-card-swatches__list {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body .rons-card-swatch {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: rgba(var(--color-foreground), 0.08);
+  box-shadow: inset 0 0 0 0.1rem rgba(var(--color-foreground), 0.2);
+}
+
+body .rons-card-swatches__more {
+  font-size: 1.2rem;
+  color: var(--rons-muted);
 }

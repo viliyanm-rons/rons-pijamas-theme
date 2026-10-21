@@ -157,7 +157,7 @@
       "sale_badge_color_scheme": "scheme-3",
       "sold_out_badge_color_scheme": "scheme-1",
       "brand_headline": "Ron's Pijamas",
-      "brand_description": "<p>Sleepwear and loungewear for women.</p>",
+      "brand_description": "<p>Пижами и домашно облекло за жени.</p>",
       "brand_image_width": 100,
       "social_twitter_link": "",
       "social_facebook_link": "",
@@ -179,9 +179,9 @@
       "cart_color_scheme": "scheme-1",
       "rons_free_shipping_enable": false,
       "rons_free_shipping_threshold": 0,
-      "rons_free_shipping_message": "You are [amount] away from free delivery",
-      "rons_free_shipping_success": "Congratulations, your delivery is free",
-      "rons_cart_trust_1": "Secure checkout",
+      "rons_free_shipping_message": "Още [amount] до безплатна доставка",
+      "rons_free_shipping_success": "Доставката ти е безплатна",
+      "rons_cart_trust_1": "Сигурно плащане",
       "rons_cart_trust_2": "",
       "rons_cart_payment_icons": true,
       "rons_custom_fonts": true,
@@ -198,7 +198,8 @@
             "color_scheme": "scheme-1"
           }
         }
-      }
+      },
+      "rons_card_swatches": true
     }
   }
 }

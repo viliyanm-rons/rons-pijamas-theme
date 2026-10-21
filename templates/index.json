@@ -5,76 +5,29 @@
       "settings": {
         "image_desktop": "",
         "image_mobile": "",
-        "overlay_opacity": 20,
+        "desktop_height": "large",
+        "mobile_height": "large",
+        "overlay_style": "gradient",
+        "overlay_opacity": 35,
         "text_color": "light",
-        "desktop_height": "full",
-        "mobile_height": "full",
         "desktop_position": "bottom-left",
         "mobile_alignment": "left",
-        "eyebrow": "Ron's Pijamas",
-        "heading": "Sleep beautifully",
-        "heading_size": "hxl",
-        "text": "Sleepwear and loungewear for women.",
-        "button_label_1": "Shop now",
+        "text_below_desktop": false,
+        "text_below_mobile": false,
+        "eyebrow": "",
+        "heading": "Красотата започва с комфорта.",
+        "heading_size": "h0",
+        "text": "Открий пижами и домашно облекло, създадени за красивите моменти у дома.",
+        "button_label_1": "Разгледай колекцията",
         "button_link_1": "shopify://collections/all",
         "button_label_2": "",
         "button_link_2": ""
       }
     },
-    "categories": {
-      "type": "rons-category-grid",
-      "blocks": {
-        "category-1": {
-          "type": "category",
-          "settings": {
-            "cta": "Shop now"
-          }
-        },
-        "category-2": {
-          "type": "category",
-          "settings": {
-            "cta": "Shop now"
-          }
-        },
-        "category-3": {
-          "type": "category",
-          "settings": {
-            "cta": "Shop now"
-          }
-        },
-        "category-4": {
-          "type": "category",
-          "settings": {
-            "cta": "Shop now"
-          }
-        }
-      },
-      "block_order": [
-        "category-1",
-        "category-2",
-        "category-3",
-        "category-4"
-      ],
-      "settings": {
-        "caption": "",
-        "heading": "Shop by category",
-        "heading_size": "h1",
-        "heading_alignment": "center",
-        "image_ratio": "portrait",
-        "label_position": "overlay",
-        "overlay_opacity": 35,
-        "columns_desktop": 4,
-        "color_scheme": "scheme-1",
-        "columns_mobile": "2",
-        "swipe_on_mobile": true,
-        "padding_top": 72,
-        "padding_bottom": 48
-      }
-    },
     "bestsellers": {
       "type": "featured-collection",
       "settings": {
-        "title": "Bestsellers",
+        "title": "Най-харесвани",
         "heading_size": "h1",
         "description": "",
         "show_description": false,
@@ -95,11 +48,65 @@
         "quick_add": "standard",
         "columns_mobile": "2",
         "swipe_on_mobile": false,
-        "padding_top": 48,
-        "padding_bottom": 72
+        "padding_top": 64,
+        "padding_bottom": 48
       }
     },
-    "brand_intro": {
+    "categories": {
+      "type": "rons-category-grid",
+      "blocks": {
+        "category-1": {
+          "type": "category",
+          "settings": {
+            "title": "Сатенени пижами",
+            "cta": "Разгледай"
+          }
+        },
+        "category-2": {
+          "type": "category",
+          "settings": {
+            "title": "Памучни пижами",
+            "cta": "Разгледай"
+          }
+        },
+        "category-3": {
+          "type": "category",
+          "settings": {
+            "title": "Нощници",
+            "cta": "Разгледай"
+          }
+        },
+        "category-4": {
+          "type": "category",
+          "settings": {
+            "title": "Домашно облекло",
+            "cta": "Разгледай"
+          }
+        }
+      },
+      "block_order": [
+        "category-1",
+        "category-2",
+        "category-3",
+        "category-4"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "Пазарувай по категория",
+        "heading_size": "h1",
+        "heading_alignment": "center",
+        "image_ratio": "portrait",
+        "label_position": "overlay",
+        "overlay_opacity": 35,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
+    },
+    "brand_story": {
       "type": "rons-editorial",
       "settings": {
         "image": "",
@@ -109,15 +116,15 @@
         "full_width": true,
         "overlay_opacity": 30,
         "color_scheme": "scheme-1",
-        "eyebrow": "Ron's Pijamas",
-        "heading": "Our story",
+        "eyebrow": "Нашата история",
+        "heading": "Създадено за твоите моменти у дома",
         "heading_size": "h1",
-        "text": "",
-        "button_label": "",
-        "button_link": "",
+        "text": "<p>Ron's Pijamas е за жените, които искат да се чувстват красиви и в най-спокойните си моменти. Вярваме, че бавната неделна сутрин, вечерният ритуал и спокойният сън заслужават дрехи, които са едновременно удобни и елегантни.</p>",
+        "button_label": "Открий колекцията",
+        "button_link": "shopify://collections/all",
         "button_style": "outline",
-        "padding_top": 72,
-        "padding_bottom": 72
+        "padding_top": 64,
+        "padding_bottom": 64
       }
     },
     "benefits": {
@@ -127,32 +134,32 @@
           "type": "item",
           "settings": {
             "icon": "lock",
-            "heading": "Secure checkout",
-            "text": "Payments are processed by Shopify Checkout"
+            "heading": "Сигурно плащане",
+            "text": "Плащането се обработва защитено чрез Shopify"
           }
         },
         "benefit-2": {
           "type": "item",
           "settings": {
             "icon": "truck",
-            "heading": "Delivery",
-            "text": "Options and costs are shown at checkout"
+            "heading": "Доставка",
+            "text": "Опциите и цените се виждат преди плащане"
           }
         },
         "benefit-3": {
           "type": "item",
           "settings": {
             "icon": "return",
-            "heading": "Returns",
-            "text": "See our refund policy"
+            "heading": "Връщане и замяна",
+            "text": "Условията са описани в нашата политика"
           }
         },
         "benefit-4": {
           "type": "item",
           "settings": {
             "icon": "chat_bubble",
-            "heading": "Customer care",
-            "text": "Questions? Get in touch"
+            "heading": "Обслужване",
+            "text": "Пиши ни при всякакви въпроси"
           }
         }
       },
@@ -173,7 +180,7 @@
     "new_arrivals": {
       "type": "featured-collection",
       "settings": {
-        "title": "New arrivals",
+        "title": "Нови предложения",
         "heading_size": "h1",
         "description": "",
         "show_description": false,
@@ -194,8 +201,8 @@
         "quick_add": "standard",
         "columns_mobile": "2",
         "swipe_on_mobile": true,
-        "padding_top": 72,
-        "padding_bottom": 72
+        "padding_top": 64,
+        "padding_bottom": 64
       }
     },
     "gifts": {
@@ -208,11 +215,11 @@
         "full_width": true,
         "overlay_opacity": 30,
         "color_scheme": "scheme-3",
-        "eyebrow": "",
-        "heading": "Gifts",
+        "eyebrow": "Идеи за подарък",
+        "heading": "Подари комфорт и красота",
         "heading_size": "h0",
-        "text": "",
-        "button_label": "Shop gifts",
+        "text": "<p>Пижами и домашно облекло – подарък, който се усеща всеки ден.</p>",
+        "button_label": "Виж подаръците",
         "button_link": "",
         "button_style": "outline",
         "padding_top": 0,
@@ -225,14 +232,14 @@
       "blocks": {},
       "block_order": [],
       "settings": {
-        "caption": "Customer reviews",
-        "heading": "What our customers say",
+        "caption": "Отзиви",
+        "heading": "Какво казват нашите клиентки",
         "heading_size": "h1",
         "summary": "",
-        "verified_label": "Verified buyer",
+        "verified_label": "Потвърдена покупка",
         "columns_desktop": 3,
         "color_scheme": "scheme-1",
-        "padding_top": 80,
+        "padding_top": 72,
         "padding_bottom": 72
       }
     },
@@ -242,45 +249,45 @@
         "faq-1": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "How do I choose my size?",
+            "heading": "Как да избера правилния размер?",
             "icon": "none",
-            "row_content": "<p>The available sizes are listed on each product page. If you are unsure which size to choose, please contact us before ordering.</p>",
+            "row_content": "<p>На страницата на всеки продукт са посочени наличните размери. Ако се колебаеш, пиши ни преди поръчката и ще ти помогнем.</p>",
             "page": ""
           }
         },
         "faq-2": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "What are your pieces made of?",
+            "heading": "От какви материи са изработени продуктите?",
             "icon": "none",
-            "row_content": "<p>The fabric composition and care instructions are listed on each product page.</p>",
+            "row_content": "<p>Съставът на материята и указанията за грижа са посочени на страницата на всеки продукт.</p>",
             "page": ""
           }
         },
         "faq-3": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "How much does delivery cost?",
+            "heading": "Каква е цената на доставката?",
             "icon": "none",
-            "row_content": "<p>The available delivery options and their costs are shown at checkout before you pay.</p>",
+            "row_content": "<p>Наличните опции за доставка и техните цени се показват при поръчка, преди да платиш.</p>",
             "page": ""
           }
         },
         "faq-4": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "Can I return or exchange my order?",
+            "heading": "Мога ли да върна или заменя продукт?",
             "icon": "none",
-            "row_content": "<p>Our refund policy, linked at the bottom of every page, explains how returns and exchanges work.</p>",
+            "row_content": "<p>Условията за връщане и замяна са описани в политиката ни за връщане – връзката към нея е в долната част на всяка страница.</p>",
             "page": ""
           }
         },
         "faq-5": {
           "type": "collapsible_row",
           "settings": {
-            "heading": "How can I contact you?",
+            "heading": "Как мога да се свържа с вас?",
             "icon": "none",
-            "row_content": "<p>You can reach us through the contact details at the bottom of every page.</p>",
+            "row_content": "<p>Пиши ни чрез данните за контакт в долната част на всяка страница.</p>",
             "page": ""
           }
         }
@@ -294,7 +301,7 @@
       ],
       "settings": {
         "caption": "",
-        "heading": "Frequently asked questions",
+        "heading": "Често задавани въпроси",
         "heading_size": "h1",
         "heading_alignment": "center",
         "layout": "none",
@@ -303,8 +310,8 @@
         "open_first_collapsible_row": false,
         "image_ratio": "adapt",
         "desktop_layout": "image_second",
-        "padding_top": 72,
-        "padding_bottom": 72
+        "padding_top": 64,
+        "padding_bottom": 64
       }
     },
     "newsletter": {
@@ -313,14 +320,14 @@
         "heading": {
           "type": "heading",
           "settings": {
-            "heading": "Stay in touch",
+            "heading": "Нека останем свързани",
             "heading_size": "h1"
           }
         },
         "paragraph": {
           "type": "paragraph",
           "settings": {
-            "text": "<p>Subscribe to receive news from Ron's Pijamas.</p>"
+            "text": "<p>Абонирай се за новини за новите колекции и вдъхновение от Ron's Pijamas.</p>"
           }
         },
         "email_form": {
@@ -336,16 +343,16 @@
       "settings": {
         "color_scheme": "scheme-1",
         "full_width": true,
-        "padding_top": 72,
-        "padding_bottom": 80
+        "padding_top": 64,
+        "padding_bottom": 72
       }
     }
   },
   "order": [
     "hero",
-    "categories",
     "bestsellers",
-    "brand_intro",
+    "categories",
+    "brand_story",
     "benefits",
     "new_arrivals",
     "gifts",

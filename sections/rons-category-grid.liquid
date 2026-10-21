@@ -64,8 +64,8 @@
 
       {%- if live_tiles == 0 -%}
         <p class="rons-editor-hint">
-          Choose a collection (or add a link) for each category. Tiles without one, and this section while it has
-          none, are hidden from customers.
+          Избери колекция (или връзка) за всяка категория. Картите без колекция, както и целият раздел, докато
+          няма нито една, са скрити за клиентите.
         </p>
       {%- endif -%}
 
@@ -84,7 +84,7 @@
             assign tile_image = block.settings.image | default: tile_collection.featured_image
             assign tile_title = block.settings.title | default: tile_collection.title
             if tile_title == blank and request.design_mode
-              assign tile_title = 'Choose a collection'
+              assign tile_title = 'Избери колекция'
             endif
             if tile_link != blank
               assign tile_tag = 'a'
@@ -156,7 +156,7 @@
       "type": "inline_richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "Shop by category"
+      "default": "Пазарувай по категория"
     },
     {
       "type": "select",
@@ -333,7 +333,7 @@
           "type": "text",
           "id": "cta",
           "label": "Link label",
-          "default": "Shop now"
+          "default": "Разгледай"
         },
         {
           "type": "url",
@@ -349,16 +349,28 @@
       "name": "Shop by category",
       "blocks": [
         {
-          "type": "category"
+          "type": "category",
+          "settings": {
+            "title": "Сатенени пижами"
+          }
         },
         {
-          "type": "category"
+          "type": "category",
+          "settings": {
+            "title": "Памучни пижами"
+          }
         },
         {
-          "type": "category"
+          "type": "category",
+          "settings": {
+            "title": "Нощници"
+          }
         },
         {
-          "type": "category"
+          "type": "category",
+          "settings": {
+            "title": "Домашно облекло"
+          }
         }
       ]
     }

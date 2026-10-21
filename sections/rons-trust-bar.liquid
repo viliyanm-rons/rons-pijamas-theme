@@ -21,7 +21,7 @@
 {%- if section.blocks.size == 0 -%}
   {%- if request.design_mode -%}
     <div class="page-width section-{{ section.id }}-padding">
-      <p class="rons-editor-hint">Add trust points that match your published policies.</p>
+      <p class="rons-editor-hint">Добави предимства, които отговарят на публикуваните ти политики.</p>
     </div>
   {%- endif -%}
 {%- else -%}
@@ -228,7 +228,7 @@
           "type": "inline_richtext",
           "id": "heading",
           "label": "Heading",
-          "default": "Secure checkout"
+          "default": "Сигурно плащане"
         },
         {
           "type": "inline_richtext",
@@ -246,32 +246,33 @@
         {
           "type": "item",
           "settings": {
+            "icon": "lock",
+            "heading": "Сигурно плащане",
+            "text": "Плащането се обработва защитено чрез Shopify"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
             "icon": "truck",
-            "heading": "Delivery",
-            "text": "Options and costs shown at checkout"
+            "heading": "Доставка",
+            "text": "Опциите и цените се виждат преди плащане"
           }
         },
         {
           "type": "item",
           "settings": {
             "icon": "return",
-            "heading": "Returns",
-            "text": "See our refund policy"
-          }
-        },
-        {
-          "type": "item",
-          "settings": {
-            "icon": "lock",
-            "heading": "Secure checkout"
+            "heading": "Връщане и замяна",
+            "text": "Условията са описани в нашата политика"
           }
         },
         {
           "type": "item",
           "settings": {
             "icon": "chat_bubble",
-            "heading": "Customer care",
-            "text": "Questions? We are here to help"
+            "heading": "Обслужване",
+            "text": "Пиши ни при всякакви въпроси"
           }
         }
       ]

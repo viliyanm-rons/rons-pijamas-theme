@@ -635,6 +635,18 @@
     ]
   },
   {
+    "name": "Product cards (Ron's Pijamas)",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "rons_card_swatches",
+        "label": "Show colour swatches",
+        "info": "Shows the colours of the first option that has swatches set up in Shopify (Products › Variants › Option values).",
+        "default": true
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.collection_cards.name",
     "settings": [
       {
@@ -1497,13 +1509,13 @@
         "id": "rons_free_shipping_message",
         "label": "Progress message",
         "info": "Use [amount] for the amount left to spend.",
-        "default": "You are [amount] away from free delivery"
+        "default": "Още [amount] до безплатна доставка"
       },
       {
         "type": "text",
         "id": "rons_free_shipping_success",
         "label": "Success message",
-        "default": "Congratulations, your delivery is free"
+        "default": "Доставката ти е безплатна"
       },
       {
         "type": "header",
@@ -1513,7 +1525,7 @@
         "type": "text",
         "id": "rons_cart_trust_1",
         "label": "Reassurance line 1",
-        "default": "Secure checkout"
+        "default": "Сигурно плащане"
       },
       {
         "type": "text",

@@ -41,8 +41,11 @@
 {%- if has_content == false -%}
   {%- if request.design_mode -%}
     <div class="page-width section-{{ section.id }}-padding center">
-      <p class="rons-eyebrow">Customer reviews</p>
-      <p>Add real reviews (Add block › Review) or a reviews app block. This section stays hidden on the storefront until then.</p>
+      <p class="rons-eyebrow">Отзиви от клиенти</p>
+      <p class="rons-editor-hint">
+        Добави истински отзиви (Добавяне на блок › Review) или блок от приложение за отзиви. Дотогава разделът е скрит
+        за клиентите.
+      </p>
     </div>
   {%- endif -%}
 {%- else -%}
@@ -136,13 +139,13 @@
       "type": "text",
       "id": "caption",
       "label": "Caption",
-      "default": "Customer reviews"
+      "default": "Отзиви"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "What our customers say"
+      "default": "Какво казват нашите клиентки"
     },
     {
       "type": "select",
@@ -174,7 +177,7 @@
       "type": "text",
       "id": "verified_label",
       "label": "Verified buyer label",
-      "default": "Verified buyer"
+      "default": "Потвърдена покупка"
     },
     {
       "type": "range",
