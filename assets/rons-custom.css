@@ -819,30 +819,8 @@ body .rons-category-tile__cta {
 }
 
 /* ---------------------------------------------------------------------------
- * 12. Testimonials / reviews (sections/rons-testimonials.liquid)
+ * 12. Star ratings (used by sections/rons-customer-reviews.liquid)
  * ------------------------------------------------------------------------- */
-body .rons-testimonials__header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-body .rons-testimonials__header > * {
-  margin: 0;
-}
-
-body .rons-testimonials__header > * + * {
-  margin-top: 1.2rem;
-}
-
-body .rons-testimonials__summary {
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 1.3rem;
-  letter-spacing: 0.04em;
-  color: var(--rons-muted);
-}
-
 body .rons-stars {
   display: inline-flex;
   gap: 0.2rem;
@@ -857,90 +835,6 @@ body .rons-stars svg {
 
 body .rons-stars .rons-star--empty {
   opacity: 0.2;
-}
-
-body .rons-testimonials__list {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 85%;
-  gap: 1.6rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-body .rons-testimonials__list::-webkit-scrollbar {
-  display: none;
-}
-
-@media screen and (min-width: 750px) {
-  body .rons-testimonials__list {
-    grid-auto-columns: calc((100% - 3.2rem) / 2.2);
-    gap: 1.6rem;
-  }
-}
-
-@media screen and (min-width: 990px) {
-  body .rons-testimonials__list {
-    grid-auto-flow: row;
-    grid-template-columns: repeat(var(--rons-columns, 3), minmax(0, 1fr));
-    overflow: visible;
-  }
-}
-
-body .rons-review {
-  margin: 0;
-  scroll-snap-align: start;
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-  height: 100%;
-  padding: 3.2rem 2.8rem;
-  border: 0.1rem solid var(--rons-hairline);
-  background: rgb(var(--color-background));
-}
-
-body .rons-review__quote {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  color: rgb(var(--color-foreground));
-  font-family: var(--font-heading-family);
-  font-style: var(--font-heading-style);
-  font-size: calc(var(--font-heading-scale) * 1.9rem);
-  line-height: 1.45;
-  letter-spacing: 0.01em;
-  flex: 1 1 auto;
-}
-
-body .rons-review__author {
-  margin: 0;
-  font-size: 1.15rem;
-  letter-spacing: var(--rons-tracking-label);
-  text-transform: uppercase;
-}
-
-body .rons-review__product {
-  margin: 0;
-  font-size: 1.25rem;
-  color: var(--rons-muted);
-}
-
-body .rons-review__verified {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 1.1rem;
-  color: var(--rons-muted);
-}
-
-body .rons-review__verified svg {
-  width: 1.2rem;
-  height: 1.2rem;
 }
 
 /* ---------------------------------------------------------------------------
@@ -2192,4 +2086,227 @@ body .rons-upsell .rons-upsell__button {
 body .rons-upsell__error {
   margin: 1rem 0 0;
   font-size: 1.3rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * 24. Hero trust badge (sections/rons-hero.liquid)
+ * A slim outlined pill in the hero's text colour.
+ * ------------------------------------------------------------------------- */
+body .rons-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.6rem 1.4rem;
+  border: 0.1rem solid rgba(var(--rons-hero-fg), 0.45);
+  border-radius: 10rem;
+  font-family: var(--font-body-family);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  color: rgb(var(--rons-hero-fg));
+  text-decoration: none;
+  white-space: normal;
+}
+
+body .rons-hero__box > .rons-hero__badge + * {
+  margin-top: 1.8rem;
+}
+
+body .rons-hero__badge--link {
+  transition: border-color var(--duration-short) ease;
+}
+
+body .rons-hero__badge--link:hover {
+  border-color: rgb(var(--rons-hero-fg));
+}
+
+body .rons-hero__content--mobile-center .rons-hero__badge {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-hero__badge {
+    font-size: 1.2rem;
+  }
+
+  body .rons-hero__content--middle-center .rons-hero__badge,
+  body .rons-hero__content--bottom-center .rons-hero__badge {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  body .rons-hero__content--middle-right .rons-hero__badge,
+  body .rons-hero__content--bottom-right .rons-hero__badge {
+    margin-left: auto;
+    margin-right: 0;
+  }
+
+  body .rons-hero--layout-editorial .rons-hero__content .rons-hero__badge {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * 25. Customer reviews with photos (sections/rons-customer-reviews.liquid)
+ * Mobile: swipeable cards (85% width, next card peeks). Desktop: grid.
+ * ------------------------------------------------------------------------- */
+body .rons-reviews__header {
+  margin-bottom: 3.6rem;
+}
+
+body .rons-reviews__header--center {
+  text-align: center;
+}
+
+body .rons-reviews__heading {
+  margin: 0;
+}
+
+body .rons-reviews__subheading {
+  margin: 1.2rem 0 0;
+  color: var(--rons-muted);
+  font-size: 1.5rem;
+  line-height: 1.6;
+}
+
+body .rons-reviews__header--center .rons-reviews__subheading {
+  max-width: 52rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body .rons-reviews__list {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 82%;
+  gap: 1.6rem;
+  margin: 0;
+  padding: 0 0 0.4rem;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+body .rons-reviews__list::-webkit-scrollbar {
+  display: none;
+}
+
+body .rons-reviews__item {
+  scroll-snap-align: start;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-reviews__list {
+    grid-auto-columns: calc((100% - 1.6rem) / 2.15);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  body .rons-reviews__list {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(var(--rons-columns, 3), minmax(0, 1fr));
+    gap: 3.2rem 2.4rem;
+    overflow: visible;
+  }
+}
+
+body .rons-review-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+}
+
+body .rons-review-card__photo {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--rons-photo-ratio, 4 / 5);
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+body .rons-review-card__photo img,
+body .rons-review-card__photo .placeholder-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body .rons-reviews--grayscale .rons-review-card__photo img {
+  filter: grayscale(1);
+}
+
+body .rons-review-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  flex: 1 1 auto;
+  padding: 2rem 0 0;
+}
+
+body .rons-review-card__stars {
+  color: rgb(var(--color-foreground));
+}
+
+body .rons-review-card__text {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--font-heading-family);
+  font-size: calc(var(--font-heading-scale) * 1.9rem);
+  font-style: normal;
+  line-height: 1.45;
+  color: rgb(var(--color-foreground));
+}
+
+body .rons-review-card__author {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 1rem;
+  margin-top: auto;
+  padding-top: 1.2rem;
+  border-top: 0.1rem solid var(--rons-hairline);
+}
+
+body .rons-review-card__name {
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: var(--rons-tracking-label);
+  text-transform: uppercase;
+}
+
+body .rons-review-card__location {
+  font-size: 1.25rem;
+  color: var(--rons-muted);
+}
+
+/* Theme Editor only: incomplete cards are visibly placeholders */
+body .rons-reviews__item--placeholder .rons-review-card {
+  opacity: 0.55;
+}
+
+body .rons-reviews__app {
+  margin-top: 4rem;
+}
+
+/* Review without a photo: framed quote card that fills the row height */
+body .rons-review-card--no-photo {
+  border: 0.1rem solid var(--rons-hairline);
+  padding: 3.2rem 2.8rem 2.4rem;
+}
+
+body .rons-review-card--no-photo .rons-review-card__body {
+  padding-top: 0;
+}
+
+body .rons-review-card--no-photo .rons-review-card__text {
+  font-size: calc(var(--font-heading-scale) * 2.2rem);
 }

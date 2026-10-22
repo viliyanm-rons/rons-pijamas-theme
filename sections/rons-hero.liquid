@@ -43,8 +43,13 @@
     assign show_button_2 = true
   endif
 
+  assign show_badge = false
+  if section.settings.show_badge and section.settings.badge_text != blank
+    assign show_badge = true
+  endif
+
   assign has_text = false
-  if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.text != blank or show_button_1 or show_button_2
+  if show_badge or section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.text != blank or show_button_1 or show_button_2
     assign has_text = true
   endif
 
@@ -129,6 +134,15 @@
     {%- if has_text -%}
       <div class="rons-hero__content page-width rons-hero__content--{{ section.settings.desktop_position }} rons-hero__content--mobile-{{ section.settings.mobile_alignment }}">
         <div class="rons-hero__box">
+          {%- if show_badge -%}
+            {%- if section.settings.badge_link != blank -%}
+              <a href="{{ section.settings.badge_link }}" class="rons-hero__badge rons-hero__badge--link">
+                {{- section.settings.badge_text | escape -}}
+              </a>
+            {%- else -%}
+              <p class="rons-hero__badge">{{ section.settings.badge_text | escape }}</p>
+            {%- endif -%}
+          {%- endif -%}
           {%- if section.settings.eyebrow != blank -%}
             <p class="rons-hero__eyebrow rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
           {%- endif -%}
@@ -388,6 +402,29 @@
       "label": "Show text below the image on mobile",
       "info": "Keeps the full photo visible on phones.",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Trust badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show trust badge",
+      "info": "Only turn on when the rating and customer numbers are accurate and can be backed up.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "★ 5.0 оценка | 1000+ доволни клиенти"
+    },
+    {
+      "type": "url",
+      "id": "badge_link",
+      "label": "Badge link (optional)",
+      "info": "e.g. a page or app listing your reviews."
     },
     {
       "type": "header",

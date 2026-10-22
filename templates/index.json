@@ -32,7 +32,10 @@
         "button_label_1": "Разгледай колекцията",
         "button_link_1": "shopify://collections/all",
         "button_label_2": "",
-        "button_link_2": ""
+        "button_link_2": "",
+        "show_badge": false,
+        "badge_text": "★ 5.0 оценка | 1000+ доволни клиенти",
+        "badge_link": ""
       }
     },
     "bestsellers": {
@@ -248,21 +251,6 @@
         "padding_bottom": 0
       }
     },
-    "reviews": {
-      "type": "rons-testimonials",
-      "disabled": true,
-      "settings": {
-        "caption": "Отзиви",
-        "heading": "Какво казват нашите клиентки",
-        "heading_size": "h1",
-        "summary": "",
-        "verified_label": "Потвърдена покупка",
-        "columns_desktop": 3,
-        "color_scheme": "scheme-1",
-        "padding_top": 72,
-        "padding_bottom": 72
-      }
-    },
     "faq": {
       "type": "collapsible-content",
       "blocks": {
@@ -367,17 +355,66 @@
         "padding_top": 64,
         "padding_bottom": 72
       }
+    },
+    "customer_reviews": {
+      "type": "rons-customer-reviews",
+      "blocks": {
+        "review-1": {
+          "type": "review",
+          "settings": {
+            "name": "",
+            "location": "",
+            "text": "",
+            "rating": "0"
+          }
+        },
+        "review-2": {
+          "type": "review",
+          "settings": {
+            "name": "",
+            "location": "",
+            "text": "",
+            "rating": "0"
+          }
+        },
+        "review-3": {
+          "type": "review",
+          "settings": {
+            "name": "",
+            "location": "",
+            "text": "",
+            "rating": "0"
+          }
+        }
+      },
+      "block_order": [
+        "review-1",
+        "review-2",
+        "review-3"
+      ],
+      "settings": {
+        "heading": "Мнения от нашите клиентки",
+        "heading_size": "h1",
+        "subheading": "Истински отзиви от жени, които вече избраха Ron’s Pijamas.",
+        "heading_alignment": "center",
+        "columns_desktop": 3,
+        "photo_ratio": "portrait",
+        "grayscale_photos": false,
+        "color_scheme": "scheme-1",
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
     }
   },
   "order": [
     "hero",
     "bestsellers",
+    "customer_reviews",
     "categories",
     "brand_story",
     "benefits",
     "new_arrivals",
     "gifts",
-    "reviews",
     "faq",
     "newsletter"
   ]
