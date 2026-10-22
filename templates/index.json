@@ -1,10 +1,21 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "rons-hero",
       "settings": {
-        "image_desktop": "",
-        "image_mobile": "",
+        "image_desktop": "shopify://shop_images/DSC6521.jpg",
+        "image_mobile": "shopify://shop_images/DSC6398.jpg",
+        "layout": "editorial",
+        "image_side": "right",
         "desktop_height": "large",
         "mobile_height": "large",
         "overlay_style": "gradient",
@@ -21,27 +32,24 @@
         "button_label_1": "Разгледай колекцията",
         "button_link_1": "shopify://collections/all",
         "button_label_2": "",
-        "button_link_2": "",
-        "layout": "editorial",
-        "image_side": "right",
-        "detail_image": ""
+        "button_link_2": ""
       }
     },
     "bestsellers": {
       "type": "featured-collection",
       "settings": {
+        "collection": "",
+        "products_to_show": 8,
         "title": "Най-харесвани",
         "heading_size": "h1",
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "collection": "",
-        "products_to_show": 8,
         "columns_desktop": 4,
+        "enable_desktop_slider": false,
         "full_width": false,
         "show_view_all": true,
         "view_all_style": "link",
-        "enable_desktop_slider": false,
         "color_scheme": "scheme-1",
         "image_ratio": "portrait",
         "image_shape": "default",
@@ -61,29 +69,38 @@
         "category-1": {
           "type": "category",
           "settings": {
+            "collection": "frontpage",
+            "image": "shopify://shop_images/0-0-64099-0-000600.jpg",
             "title": "Сатенени пижами",
-            "cta": "Разгледай"
+            "cta": "Разгледай",
+            "link": ""
           }
         },
         "category-2": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Памучни пижами",
-            "cta": "Разгледай"
+            "cta": "Разгледай",
+            "link": ""
           }
         },
         "category-3": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Нощници",
-            "cta": "Разгледай"
+            "cta": "Разгледай",
+            "link": ""
           }
         },
         "category-4": {
           "type": "category",
           "settings": {
+            "collection": "",
             "title": "Домашно облекло",
-            "cta": "Разгледай"
+            "cta": "Разгледай",
+            "link": ""
           }
         }
       },
@@ -98,6 +115,8 @@
         "heading": "Пазарувай по категория",
         "heading_size": "h1",
         "heading_alignment": "center",
+        "layout": "campaign",
+        "show_numbers": true,
         "image_ratio": "portrait",
         "label_position": "overlay",
         "overlay_opacity": 35,
@@ -106,20 +125,18 @@
         "columns_mobile": "2",
         "swipe_on_mobile": false,
         "padding_top": 48,
-        "padding_bottom": 64,
-        "layout": "campaign",
-        "show_numbers": true
+        "padding_bottom": 64
       }
     },
     "brand_story": {
       "type": "rons-editorial",
       "settings": {
-        "image": "",
+        "image": "shopify://shop_images/Imagen_categorias.jpg",
         "layout": "split",
         "image_position": "left",
         "image_ratio": "portrait",
         "full_width": true,
-        "overlay_opacity": 30,
+        "overlay_opacity": 40,
         "color_scheme": "scheme-1",
         "eyebrow": "Нашата история",
         "heading": "Създадено за твоите моменти у дома",
@@ -185,18 +202,18 @@
     "new_arrivals": {
       "type": "featured-collection",
       "settings": {
+        "collection": "",
+        "products_to_show": 12,
         "title": "Нови предложения",
         "heading_size": "h1",
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "collection": "",
-        "products_to_show": 12,
         "columns_desktop": 4,
+        "enable_desktop_slider": true,
         "full_width": false,
         "show_view_all": true,
         "view_all_style": "link",
-        "enable_desktop_slider": true,
         "color_scheme": "scheme-1",
         "image_ratio": "portrait",
         "image_shape": "default",
@@ -213,7 +230,7 @@
     "gifts": {
       "type": "rons-editorial",
       "settings": {
-        "image": "",
+        "image": "shopify://shop_images/generated-image.png",
         "layout": "overlay",
         "image_position": "left",
         "image_ratio": "portrait",
@@ -234,8 +251,6 @@
     "reviews": {
       "type": "rons-testimonials",
       "disabled": true,
-      "blocks": {},
-      "block_order": [],
       "settings": {
         "caption": "Отзиви",
         "heading": "Какво казват нашите клиентки",
@@ -337,6 +352,7 @@
         },
         "email_form": {
           "type": "email_form",
+          "name": "Имейл",
           "settings": {}
         }
       },
