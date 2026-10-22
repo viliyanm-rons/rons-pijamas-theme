@@ -174,7 +174,7 @@
       "currency_code_enabled": true,
       "cart_type": "drawer",
       "show_vendor": false,
-      "show_cart_note": false,
+      "show_cart_note": true,
       "cart_drawer_collection": "",
       "cart_color_scheme": "scheme-1",
       "rons_free_shipping_enable": false,
@@ -199,7 +199,12 @@
           }
         }
       },
-      "rons_card_swatches": true
+      "rons_card_swatches": true,
+      "rons_cart_upsell_collection": "",
+      "rons_cart_upsell_count": 2,
+      "rons_cart_upsell_heading": "Комбинирай с",
+      "rons_cart_upsell_add_label": "Добави",
+      "rons_cart_upsell_choose_label": "Избери"
     }
   }
 }

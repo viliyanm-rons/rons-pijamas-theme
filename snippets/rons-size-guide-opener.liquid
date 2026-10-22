@@ -1,0 +1,33 @@
+{% comment %}
+  Ron's Pijamas – "Таблица с размери" link for the main-product Size guide block.
+  Only rendered when real measurements exist: the product metafield
+  custom.size_guide, or a page or size chart image on the block. Opens the
+  modal from snippets/rons-size-guide-modal.liquid.
+
+  Accepts:
+  - block: {Object} the size_guide block
+  - product: {Object} the current product
+
+  Usage:
+  {% render 'rons-size-guide-opener', block: block, product: product %}
+{% endcomment %}
+
+{%- if product.metafields.custom.size_guide != blank or block.settings.page != blank or block.settings.image != blank -%}
+  <modal-opener
+    class="rons-size-guide__opener quick-add-hidden"
+    data-modal="#SizeGuideModal-{{ block.id }}"
+    {{ block.shopify_attributes }}
+  >
+    <button
+      id="SizeGuide-{{ block.id }}"
+      class="rons-size-guide__button"
+      type="button"
+      aria-haspopup="dialog"
+    >
+      <span class="svg-wrapper" aria-hidden="true">
+        {{- 'icon-ruler.svg' | inline_asset_content -}}
+      </span>
+      {{ block.settings.label | escape }}
+    </button>
+  </modal-opener>
+{%- endif -%}

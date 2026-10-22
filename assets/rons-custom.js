@@ -108,3 +108,156 @@ if (!customElements.get('rons-sticky-atc')) {
 
   customElements.define('rons-sticky-atc', RonsStickyAtc);
 }
+
+/*
+ * Low-stock indicator (snippets/rons-stock-status.liquid)
+ *
+ * Dawn re-renders the product section for the newly selected variant and
+ * publishes it with the variant-change event. The stock message is copied
+ * from that server-rendered HTML, so it always reflects real inventory.
+ * While a new option is loading (or the combination doesn't exist) the
+ * message is cleared so a stale count is never shown.
+ */
+if (typeof subscribe === 'function') {
+  subscribe(PUB_SUB_EVENTS.optionValueSelectionChange, (event) => {
+    const productInfo = event.data?.target?.closest('product-info');
+    const stock = productInfo && document.getElementById(`RonsStock-${productInfo.dataset.section}`);
+    if (!stock) return;
+    stock.innerHTML = '';
+    stock.className = 'rons-stock rons-stock--none';
+  });
+
+  subscribe(PUB_SUB_EVENTS.variantChange, (event) => {
+    const { sectionId, html } = event.data;
+    const destination = document.getElementById(`RonsStock-${sectionId}`);
+    const source = html?.getElementById(`RonsStock-${sectionId}`);
+    if (!destination || !source) return;
+    destination.innerHTML = source.innerHTML;
+    destination.className = source.className;
+  });
+}
+
+/*
+ * Gallery filtered by colour (main-product setting "Show only the selected
+ * colour's images").
+ *
+ * An image belongs to a colour when its alt text equals that option value
+ * (case-insensitive). Images whose alt text matches no option value are
+ * shared and always shown. If no image matches the selected values, the full
+ * gallery stays visible, so a product without alt texts is never emptied.
+ */
+function ronsFilterGallery(productInfo) {
+  if (!productInfo || !productInfo.hasAttribute('data-rons-filter-gallery')) return;
+  const sectionId = productInfo.dataset.section;
+  const normalise = (value) => (value || '').trim().toLowerCase();
+
+  const optionInputs = productInfo.querySelectorAll('variant-selects input[type="radio"], variant-selects option');
+  const allValues = new Set(Array.from(optionInputs, (input) => normalise(input.value)).filter(Boolean));
+  const selectedValues = new Set(
+    Array.from(
+      productInfo.querySelectorAll('variant-selects input[type="radio"]:checked, variant-selects option[selected]'),
+      (input) => normalise(input.value),
+    ),
+  );
+
+  const items = Array.from(
+    productInfo.querySelectorAll(
+      `#GalleryViewer-${sectionId} [data-media-id], #GalleryThumbnails-${sectionId} [data-target]`,
+    ),
+  );
+  const colourOf = (item) => normalise(item.querySelector('img')?.getAttribute('alt'));
+  const anyMatch = items.some((item) => selectedValues.has(colourOf(item)));
+
+  items.forEach((item) => {
+    const colour = colourOf(item);
+    const belongsToOtherValue = anyMatch && allValues.has(colour) && !selectedValues.has(colour);
+    item.classList.toggle('rons-media-hidden', belongsToOtherValue);
+  });
+
+  // Keep the active slide visible and let Dawn's sliders recount their pages.
+  const gallery = productInfo.querySelector('media-gallery');
+  const active = productInfo.querySelector(`#GalleryViewer-${sectionId} [data-media-id].is-active`);
+  if (gallery && active && active.classList.contains('rons-media-hidden')) {
+    const firstVisible = productInfo.querySelector(
+      `#GalleryViewer-${sectionId} [data-media-id]:not(.rons-media-hidden)`,
+    );
+    if (firstVisible) gallery.setActiveMedia?.(firstVisible.dataset.mediaId, false);
+  }
+  productInfo
+    .querySelectorAll(`#GalleryViewer-${sectionId}, #GalleryThumbnails-${sectionId}`)
+    .forEach((slider) => slider.resetPages?.());
+}
+
+document.querySelectorAll('product-info[data-rons-filter-gallery]').forEach(ronsFilterGallery);
+if (typeof subscribe === 'function') {
+  subscribe(PUB_SUB_EVENTS.variantChange, (event) => {
+    ronsFilterGallery(document.querySelector(`product-info[data-section="${event.data.sectionId}"]`));
+  });
+}
+
+/*
+ * Gift message (main-product block): the field is only submitted with the
+ * add-to-cart form while it is opened.
+ */
+document.addEventListener(
+  'toggle',
+  (event) => {
+    if (!event.target.classList?.contains('rons-gift')) return;
+    const field = event.target.querySelector('.rons-gift__input');
+    if (!field) return;
+    field.disabled = !event.target.open;
+    if (event.target.open) field.focus();
+  },
+  true,
+);
+
+/*
+ * Cart drawer complementary products (snippets/rons-cart-upsell.liquid):
+ * add a single-variant product and refresh the drawer with Dawn's renderer.
+ */
+document.addEventListener('submit', (event) => {
+  const form = event.target.closest?.('.rons-upsell__form');
+  if (!form) return;
+  const cartDrawer = document.querySelector('cart-drawer');
+  if (!cartDrawer || typeof cartDrawer.renderContents !== 'function') return;
+  event.preventDefault();
+
+  const button = form.querySelector('button');
+  const error = form.closest('.rons-upsell')?.querySelector('.rons-upsell__error');
+  button.setAttribute('aria-disabled', 'true');
+  button.classList.add('loading');
+
+  const formData = new FormData(form);
+  formData.append(
+    'sections',
+    cartDrawer.getSectionsToRender().map((section) => section.id),
+  );
+  formData.append('sections_url', window.location.pathname);
+  const config = fetchConfig('javascript');
+  config.headers['X-Requested-With'] = 'XMLHttpRequest';
+  delete config.headers['Content-Type'];
+  config.body = formData;
+
+  fetch(`${routes.cart_add_url}`, config)
+    .then((response) => response.json())
+    .then((response) => {
+      if (response.status) {
+        if (error) {
+          error.textContent = response.description || response.message;
+          error.hidden = false;
+        }
+        return;
+      }
+      cartDrawer.renderContents(response);
+      publish(PUB_SUB_EVENTS.cartUpdate, {
+        source: 'rons-cart-upsell',
+        productVariantId: formData.get('id'),
+        cartData: response,
+      });
+    })
+    .catch((e) => console.error(e))
+    .finally(() => {
+      button.removeAttribute('aria-disabled');
+      button.classList.remove('loading');
+    });
+});

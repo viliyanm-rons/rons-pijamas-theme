@@ -3,13 +3,6 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "vendor": {
-          "type": "text",
-          "settings": {
-            "text": "{{ product.vendor }}",
-            "text_style": "uppercase"
-          }
-        },
         "title": {
           "type": "title",
           "settings": {}
@@ -21,14 +14,6 @@
         "price": {
           "type": "price",
           "settings": {}
-        },
-        "inventory": {
-          "type": "inventory",
-          "settings": {
-            "text_style": "body",
-            "inventory_threshold": 5,
-            "show_inventory_quantity": true
-          }
         },
         "variant_picker": {
           "type": "variant_picker",
@@ -54,13 +39,12 @@
         },
         "trust": {
           "type": "icon-with-text",
-          "disabled": true,
           "settings": {
-            "layout": "vertical",
+            "layout": "horizontal",
             "icon_1": "lock",
             "heading_1": "Сигурно плащане",
             "icon_2": "truck",
-            "heading_2": "Доставка – опциите се виждат при поръчка",
+            "heading_2": "Доставката се избира при поръчка",
             "icon_3": "chat_bubble",
             "heading_3": "Обслужване на клиенти"
           }
@@ -78,19 +62,10 @@
             "page": ""
           }
         },
-        "delivery": {
-          "type": "collapsible_tab",
-          "settings": {
-            "heading": "Доставка и връщане",
-            "icon": "truck",
-            "content": "",
-            "page": ""
-          }
-        },
         "complementary": {
           "type": "complementary",
           "settings": {
-            "block_heading": "Допълни визията",
+            "block_heading": "Комбинирай с",
             "make_collapsible_row": false,
             "icon": "price_tag",
             "product_list_limit": 6,
@@ -105,21 +80,50 @@
           "settings": {
             "share_label": "Сподели"
           }
+        },
+        "stock": {
+          "type": "rons_stock",
+          "settings": {
+            "threshold": 5,
+            "text_one": "Остава само 1 брой",
+            "text_other": "Остават само [count] броя",
+            "show_sold_out": true,
+            "text_sold_out": "Този вариант е изчерпан"
+          }
+        },
+        "policies": {
+          "type": "rons_policies",
+          "settings": {
+            "heading": "Доставка и връщане",
+            "icon": "truck",
+            "summary": ""
+          }
+        },
+        "gift": {
+          "type": "rons_gift_message",
+          "settings": {
+            "label": "Добави подаръчно съобщение",
+            "field_label": "Твоето съобщение",
+            "placeholder": "Напиши няколко думи…",
+            "note": "",
+            "property_name": "Подаръчно съобщение",
+            "max_length": 200
+          }
         }
       },
       "block_order": [
-        "vendor",
         "title",
         "rating",
         "price",
-        "inventory",
+        "stock",
         "variant_picker",
         "size_guide",
         "buy_buttons",
+        "gift",
         "trust",
         "description",
         "fabric",
-        "delivery",
+        "policies",
         "complementary",
         "share"
       ],
@@ -127,16 +131,17 @@
         "enable_sticky_info": true,
         "color_scheme": "scheme-1",
         "media_position": "left",
-        "gallery_layout": "columns",
+        "gallery_layout": "thumbnail",
         "media_size": "large",
         "constrain_to_viewport": false,
         "media_fit": "cover",
         "image_zoom": "lightbox",
-        "mobile_thumbnails": "hide",
-        "hide_variants": true,
+        "mobile_thumbnails": "show",
+        "hide_variants": false,
         "enable_video_looping": false,
         "padding_top": 16,
-        "padding_bottom": 48
+        "padding_bottom": 48,
+        "rons_filter_gallery": true
       }
     },
     "disclosures": {
@@ -167,7 +172,7 @@
     "sticky_atc": {
       "type": "rons-sticky-atc",
       "settings": {
-        "show_on_desktop": true,
+        "show_on_desktop": false,
         "show_image": true,
         "color_scheme": "scheme-1"
       }

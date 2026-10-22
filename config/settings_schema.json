@@ -1538,6 +1538,43 @@
         "id": "rons_cart_payment_icons",
         "label": "Show payment icons",
         "default": true
+      },
+      {
+        "type": "header",
+        "content": "Complementary products"
+      },
+      {
+        "type": "collection",
+        "id": "rons_cart_upsell_collection",
+        "label": "Collection to suggest from",
+        "info": "Products already in the cart and sold-out products are skipped. Leave empty to hide."
+      },
+      {
+        "type": "range",
+        "id": "rons_cart_upsell_count",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "label": "Number of products",
+        "default": 2
+      },
+      {
+        "type": "text",
+        "id": "rons_cart_upsell_heading",
+        "label": "Heading",
+        "default": "Комбинирай с"
+      },
+      {
+        "type": "text",
+        "id": "rons_cart_upsell_add_label",
+        "label": "Add button label",
+        "default": "Добави"
+      },
+      {
+        "type": "text",
+        "id": "rons_cart_upsell_choose_label",
+        "label": "Choose options label",
+        "default": "Избери"
       }
     ]
   },

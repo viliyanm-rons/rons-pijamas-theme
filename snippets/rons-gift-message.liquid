@@ -1,0 +1,38 @@
+{% comment %}
+  Ron's Pijamas – optional gift message on the product page.
+  The textarea belongs to the product form through its `form` attribute and
+  is disabled (not submitted) until the customer opens the toggle; see
+  assets/rons-custom.js. The message is saved as a line item property.
+
+  Accepts:
+  - block: {Object} the rons_gift_message block
+  - product_form_id: {String} id of the product form
+
+  Usage:
+  {% render 'rons-gift-message', block: block, product_form_id: product_form_id %}
+{% endcomment %}
+
+<details class="rons-gift quick-add-hidden" {{ block.shopify_attributes }}>
+  <summary class="rons-gift__summary">
+    <span class="rons-gift__box" aria-hidden="true"></span>
+    {{ block.settings.label | escape }}
+  </summary>
+  <div class="rons-gift__body">
+    <label class="rons-gift__label" for="GiftMessage-{{ block.id }}">
+      {{- block.settings.field_label | escape -}}
+    </label>
+    <textarea
+      id="GiftMessage-{{ block.id }}"
+      class="field__input rons-gift__input"
+      name="properties[{{ block.settings.property_name | escape }}]"
+      form="{{ product_form_id }}"
+      maxlength="{{ block.settings.max_length }}"
+      rows="3"
+      placeholder="{{ block.settings.placeholder | escape }}"
+      disabled
+    ></textarea>
+    <p class="rons-gift__note">
+      {{- block.settings.note | escape -}}
+    </p>
+  </div>
+</details>
