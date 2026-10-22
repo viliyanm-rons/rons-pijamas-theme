@@ -69,6 +69,16 @@
     "customer_reviews": {
       "type": "rons-customer-reviews",
       "blocks": {
+        "review_hgT6pB": {
+          "type": "review",
+          "settings": {
+            "photo": "shopify://shop_images/40294F7E-7AFE-486D-A8D9-4BE925912703.jpg",
+            "name": "Ради",
+            "location": "",
+            "text": "Страхотни пижами винаги съм ги харесвала <3",
+            "rating": "0"
+          }
+        },
         "review-1": {
           "type": "review",
           "settings": {
@@ -98,6 +108,7 @@
         }
       },
       "block_order": [
+        "review_hgT6pB",
         "review-1",
         "review-2",
         "review-3"
