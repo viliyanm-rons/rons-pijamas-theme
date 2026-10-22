@@ -25,6 +25,9 @@
         "mobile_alignment": "left",
         "text_below_desktop": false,
         "text_below_mobile": false,
+        "show_badge": false,
+        "badge_text": "★ 5.0 оценка | 1000+ доволни клиенти",
+        "badge_link": "",
         "eyebrow": "",
         "heading": "Красотата започва с комфорта.",
         "heading_size": "h0",
@@ -32,10 +35,7 @@
         "button_label_1": "Разгледай колекцията",
         "button_link_1": "shopify://collections/all",
         "button_label_2": "",
-        "button_link_2": "",
-        "show_badge": false,
-        "badge_text": "★ 5.0 оценка | 1000+ доволни клиенти",
-        "badge_link": ""
+        "button_link_2": ""
       }
     },
     "bestsellers": {
@@ -64,6 +64,55 @@
         "swipe_on_mobile": false,
         "padding_top": 64,
         "padding_bottom": 48
+      }
+    },
+    "customer_reviews": {
+      "type": "rons-customer-reviews",
+      "blocks": {
+        "review-1": {
+          "type": "review",
+          "settings": {
+            "name": "",
+            "location": "",
+            "text": "",
+            "rating": "0"
+          }
+        },
+        "review-2": {
+          "type": "review",
+          "settings": {
+            "name": "",
+            "location": "",
+            "text": "",
+            "rating": "0"
+          }
+        },
+        "review-3": {
+          "type": "review",
+          "settings": {
+            "name": "",
+            "location": "",
+            "text": "",
+            "rating": "0"
+          }
+        }
+      },
+      "block_order": [
+        "review-1",
+        "review-2",
+        "review-3"
+      ],
+      "settings": {
+        "heading": "Мнения от нашите клиентки",
+        "heading_size": "h1",
+        "subheading": "Истински отзиви от жени, които вече избраха Ron’s Pijamas.",
+        "heading_alignment": "center",
+        "columns_desktop": 3,
+        "photo_ratio": "portrait",
+        "grayscale_photos": false,
+        "color_scheme": "scheme-1",
+        "padding_top": 72,
+        "padding_bottom": 72
       }
     },
     "categories": {
@@ -205,7 +254,7 @@
     "new_arrivals": {
       "type": "featured-collection",
       "settings": {
-        "collection": "",
+        "collection": "актуални",
         "products_to_show": 12,
         "title": "Нови предложения",
         "heading_size": "h1",
@@ -353,55 +402,6 @@
         "color_scheme": "scheme-1",
         "full_width": true,
         "padding_top": 64,
-        "padding_bottom": 72
-      }
-    },
-    "customer_reviews": {
-      "type": "rons-customer-reviews",
-      "blocks": {
-        "review-1": {
-          "type": "review",
-          "settings": {
-            "name": "",
-            "location": "",
-            "text": "",
-            "rating": "0"
-          }
-        },
-        "review-2": {
-          "type": "review",
-          "settings": {
-            "name": "",
-            "location": "",
-            "text": "",
-            "rating": "0"
-          }
-        },
-        "review-3": {
-          "type": "review",
-          "settings": {
-            "name": "",
-            "location": "",
-            "text": "",
-            "rating": "0"
-          }
-        }
-      },
-      "block_order": [
-        "review-1",
-        "review-2",
-        "review-3"
-      ],
-      "settings": {
-        "heading": "Мнения от нашите клиентки",
-        "heading_size": "h1",
-        "subheading": "Истински отзиви от жени, които вече избраха Ron’s Pijamas.",
-        "heading_alignment": "center",
-        "columns_desktop": 3,
-        "photo_ratio": "portrait",
-        "grayscale_photos": false,
-        "color_scheme": "scheme-1",
-        "padding_top": 72,
         "padding_bottom": 72
       }
     }
