@@ -4,6 +4,22 @@
   until the chosen collection has products.
 {%- endcomment -%}
 {%- if section.settings.collection.products.size > 0 or request.design_mode -%}
+{%- assign rons_visible_products = section.settings.collection.products.size | default: 0 -%}
+{%- if request.design_mode and rons_visible_products == 0 -%}
+  <div class="page-width">
+    <p class="rons-editor-hint">
+      {%- if section.settings.collection == blank -%}
+        Избери колекция в настройките на този раздел. Дотогава клиентите не виждат раздела, а тук се показват примерни
+        карти.
+      {%- else -%}
+        Колекция „{{ section.settings.collection.title | escape }}“ няма продукти, видими в онлайн магазина. Провери, че
+        продуктите са активни и публикувани в канала „Online Store“ (Продукти › продукт › Публикуване), че колекцията е
+        публикувана в „Online Store“ и че продуктите са включени в пазара за България. Дотогава клиентите не виждат
+        раздела.
+      {%- endif -%}
+    </p>
+  </div>
+{%- endif -%}
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
