@@ -44,8 +44,21 @@
   endfor
 -%}
 
+{%- liquid
+  if request.design_mode
+    assign shown_tiles = section.blocks.size
+  else
+    assign shown_tiles = live_tiles
+  endif
+  assign campaign = false
+  if section.settings.layout == 'campaign' and shown_tiles == 4
+    assign campaign = true
+  endif
+  assign tile_number = 0
+-%}
+
 {%- if live_tiles > 0 or request.design_mode -%}
-  <div class="rons-category-grid rons-category-grid--{{ section.settings.label_position }} color-{{ section.settings.color_scheme }} gradient">
+  <div class="rons-category-grid rons-category-grid--{{ section.settings.label_position }}{% if campaign %} rons-category-grid--campaign{% endif %} color-{{ section.settings.color_scheme }} gradient">
     <div class="page-width section-{{ section.id }}-padding">
       {%- if section.settings.heading != blank or section.settings.caption != blank -%}
         <div class="rons-category-grid__header rons-category-grid__header--{{ section.settings.heading_alignment }}">
@@ -92,6 +105,7 @@
               assign tile_tag = 'div'
             endif
             assign placeholder_index = forloop.index0 | modulo: 4 | plus: 1
+            assign tile_number = tile_number | plus: 1
           -%}
           <li
             {% if settings.animations_reveal_on_scroll %}
@@ -120,6 +134,11 @@
               </div>
               {%- if tile_title != blank -%}
                 <span class="rons-category-tile__label">
+                  {%- if section.settings.show_numbers -%}
+                    <span class="rons-category-tile__index" aria-hidden="true">
+                      {%- if tile_number < 10 %}0{% endif %}{{ tile_number -}}
+                    </span>
+                  {%- endif -%}
                   <span class="rons-category-tile__title h3">{{ tile_title | escape }}</span>
                   {%- if block.settings.cta != blank and tile_link != blank -%}
                     <span class="rons-category-tile__cta">{{ block.settings.cta | escape }}</span>
@@ -196,8 +215,31 @@
     },
     {
       "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "campaign",
+          "label": "Campaign (one large, three smaller)"
+        },
+        {
+          "value": "grid",
+          "label": "Even grid"
+        }
+      ],
+      "default": "campaign",
+      "info": "Campaign layout is used when exactly four categories are shown."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Show numbers (01–04)",
+      "default": true
+    },
+    {
+      "type": "select",
       "id": "image_ratio",
-      "label": "Image ratio",
+      "label": "Image ratio (even grid)",
       "options": [
         {
           "value": "portrait",

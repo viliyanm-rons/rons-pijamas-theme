@@ -1514,6 +1514,114 @@ body .rons-hero__hint {
   }
 }
 
+/* Hero – editorial split (desktop): text column beside a dominant photo */
+body .rons-hero__detail {
+  display: none;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-hero--layout-editorial:not(.rons-hero--no-image) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: stretch;
+  }
+
+  body .rons-hero--layout-editorial.rons-hero--image-left:not(.rons-hero--no-image) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  body .rons-hero--layout-editorial:not(.rons-hero--no-image) .rons-hero__media {
+    grid-area: 1 / 2;
+  }
+
+  body .rons-hero--layout-editorial.rons-hero--image-left:not(.rons-hero--no-image) .rons-hero__media {
+    grid-area: 1 / 1;
+  }
+
+  body .rons-hero--layout-editorial.rons-hero--desktop-medium .rons-hero__media {
+    min-height: clamp(44rem, 60vh, 68rem);
+  }
+
+  body .rons-hero--layout-editorial.rons-hero--desktop-large .rons-hero__media {
+    min-height: clamp(52rem, 76vh, 86rem);
+  }
+
+  body .rons-hero--layout-editorial.rons-hero--desktop-full .rons-hero__media {
+    min-height: min(calc(100svh - 12rem), 96rem);
+  }
+
+  body .rons-hero--layout-editorial .rons-hero__media::after {
+    display: none;
+  }
+
+  body .rons-hero--layout-editorial:not(.rons-hero--no-image) .rons-hero__content {
+    grid-area: 1 / 1;
+    align-self: center;
+    max-width: none;
+    margin: 0;
+    padding: 6rem clamp(3.2rem, 5vw, 8rem);
+    justify-content: flex-start;
+    text-align: left;
+    --rons-hero-fg: 0, 0, 0;
+    --rons-hero-shade: 255, 255, 255;
+  }
+
+  body .rons-hero--layout-editorial.rons-hero--image-left:not(.rons-hero--no-image) .rons-hero__content {
+    grid-area: 1 / 2;
+  }
+
+  body .rons-hero--layout-editorial .rons-hero__content .rons-hero__text {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  body .rons-hero--layout-editorial .rons-hero__content .rons-hero__buttons {
+    justify-content: flex-start;
+  }
+
+  body .rons-hero--layout-editorial:has(.rons-hero__detail) .rons-hero__content {
+    padding-right: clamp(8rem, 10vw, 16rem);
+  }
+
+  body .rons-hero--layout-editorial.rons-hero--image-left:has(.rons-hero__detail) .rons-hero__content {
+    padding-right: clamp(3.2rem, 5vw, 8rem);
+    padding-left: clamp(8rem, 10vw, 16rem);
+  }
+
+  body .rons-hero--layout-editorial .rons-hero__heading {
+    font-size: clamp(4.4rem, 4.6vw, 7.2rem);
+  }
+
+  /* Detail image overlapping the photo's inner edge */
+  body .rons-hero--layout-editorial .rons-hero__detail {
+    display: block;
+    grid-area: 1 / 2;
+    align-self: end;
+    justify-self: start;
+    position: relative;
+    z-index: 2;
+    width: clamp(15rem, 16vw, 26rem);
+    aspect-ratio: 4 / 5;
+    margin: 0 0 6rem;
+    transform: translateX(-45%);
+    border: 0.8rem solid #fff;
+    background: #fff;
+    box-shadow: 0 1.2rem 4rem rgba(0, 0, 0, 0.12);
+  }
+
+  body .rons-hero--layout-editorial.rons-hero--image-left .rons-hero__detail {
+    grid-area: 1 / 1;
+    justify-self: end;
+    transform: translateX(45%);
+  }
+
+  body .rons-hero--layout-editorial .rons-hero__detail img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
 /* ---------------------------------------------------------------------------
  * 19. Editorial image + text (sections/rons-editorial.liquid)
  * ------------------------------------------------------------------------- */
@@ -1674,4 +1782,198 @@ body .rons-card-swatch {
 body .rons-card-swatches__more {
   font-size: 1.2rem;
   color: var(--rons-muted);
+}
+
+/* ---------------------------------------------------------------------------
+ * 21. Shop by category – campaign layout (exactly four categories)
+ * Mobile: one tall feature, one wide, two side by side.
+ * Desktop: one tall feature on the left, one wide and two smaller on the right.
+ * ------------------------------------------------------------------------- */
+body .rons-category-tile__index {
+  font-size: 1.1rem;
+  letter-spacing: var(--rons-tracking-wide);
+  opacity: 0.85;
+}
+
+body .rons-category-grid--campaign .rons-category-grid__list,
+body .rons-category-grid--campaign .rons-category-grid__list--swipe {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-columns: auto;
+  gap: 0.8rem;
+  overflow: visible;
+}
+
+body .rons-category-grid--campaign .rons-category-grid__list > li:nth-child(1) {
+  grid-column: 1 / -1;
+  --rons-ratio: 4 / 5;
+}
+
+body .rons-category-grid--campaign .rons-category-grid__list > li:nth-child(2) {
+  grid-column: 1 / -1;
+  --rons-ratio: 4 / 3;
+}
+
+body .rons-category-grid--campaign .rons-category-grid__list > li:nth-child(n + 3) {
+  --rons-ratio: 3 / 4;
+}
+
+body .rons-category-grid--campaign .rons-category-tile__title {
+  font-size: calc(var(--font-heading-scale) * 2.4rem);
+}
+
+body .rons-category-grid--campaign li:nth-child(n + 3) .rons-category-tile__title {
+  font-size: calc(var(--font-heading-scale) * 1.9rem);
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-category-grid--campaign .rons-category-grid__list,
+  body .rons-category-grid--campaign .rons-category-grid__list--swipe {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(2, clamp(24rem, 26vw, 42rem));
+    gap: 1.2rem;
+  }
+
+  body .rons-category-grid--campaign .rons-category-grid__list > li {
+    display: flex;
+  }
+
+  body .rons-category-grid--campaign .rons-category-grid__list > li > .rons-category-tile {
+    flex: 1 1 auto;
+  }
+
+  body .rons-category-grid--campaign .rons-category-tile__media {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+
+  body .rons-category-grid--campaign .rons-category-grid__list > li:nth-child(1) {
+    grid-column: 1 / span 6;
+    grid-row: 1 / span 2;
+  }
+
+  body .rons-category-grid--campaign .rons-category-grid__list > li:nth-child(2) {
+    grid-column: 7 / span 6;
+    grid-row: 1;
+  }
+
+  body .rons-category-grid--campaign .rons-category-grid__list > li:nth-child(3) {
+    grid-column: 7 / span 3;
+    grid-row: 2;
+  }
+
+  body .rons-category-grid--campaign .rons-category-grid__list > li:nth-child(4) {
+    grid-column: 10 / span 3;
+    grid-row: 2;
+  }
+
+  body .rons-category-grid--campaign li:nth-child(1) .rons-category-tile__title {
+    font-size: calc(var(--font-heading-scale) * 4rem);
+  }
+
+  body .rons-category-grid--campaign li:nth-child(2) .rons-category-tile__title {
+    font-size: calc(var(--font-heading-scale) * 3rem);
+  }
+
+  body .rons-category-grid--campaign li:nth-child(n + 3) .rons-category-tile__title {
+    font-size: calc(var(--font-heading-scale) * 2.2rem);
+  }
+
+  /* Titles below images don't fit the fixed-height campaign rows */
+  body .rons-category-grid--campaign.rons-category-grid--below .rons-category-tile__label {
+    position: absolute;
+    color: #fff;
+  }
+
+  body .rons-category-grid--campaign.rons-category-grid--below .rons-category-tile__media::after {
+    display: block;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * 22. Header, mobile menu and footer refinements
+ * ------------------------------------------------------------------------- */
+/* Wordmark when no logo image is uploaded */
+body .header__heading-link .h2 {
+  font-family: var(--font-heading-family);
+  font-size: calc(var(--font-heading-scale) * 2.2rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+@media screen and (min-width: 990px) {
+  body .header__heading-link .h2 {
+    font-size: calc(var(--font-heading-scale) * 2.8rem);
+  }
+
+  body .header__inline-menu .list-menu--inline {
+    gap: 0 1.2rem;
+  }
+}
+
+body .header__icon {
+  width: 4.4rem;
+  height: 4.4rem;
+}
+
+/* Mobile menu drawer */
+body .menu-drawer__menu > li {
+  border-bottom: 0.1rem solid var(--rons-hairline);
+}
+
+body .menu-drawer__menu-item {
+  padding-top: 1.6rem;
+  padding-bottom: 1.6rem;
+  font-size: 1.4rem;
+  letter-spacing: var(--rons-tracking-label);
+  text-transform: uppercase;
+}
+
+body .menu-drawer__submenu .menu-drawer__menu-item {
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 1.5rem;
+}
+
+body .menu-drawer__utility-links {
+  background: #fff;
+  border-top: 0.1rem solid var(--rons-hairline);
+}
+
+body .menu-drawer__account {
+  font-size: 1.3rem;
+  letter-spacing: 0.06em;
+}
+
+/* Footer */
+body .footer__content-top {
+  padding-bottom: 4rem;
+}
+
+body .footer-block__brand-info .footer-block__heading {
+  font-family: var(--font-heading-family);
+  font-size: calc(var(--font-heading-scale) * 2.4rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+body .footer .list-social__link {
+  padding: 1rem;
+}
+
+body .footer__content-bottom {
+  padding-top: 2.4rem;
+}
+
+@media screen and (max-width: 749px) {
+  body .footer-block {
+    margin-bottom: 3.2rem;
+  }
+
+  body .footer__content-bottom-wrapper,
+  body .footer__copyright {
+    text-align: center;
+  }
 }
