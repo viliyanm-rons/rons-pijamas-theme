@@ -1,0 +1,245 @@
+{% comment %}
+  Ron's Pijamas – editorial image with text.
+  Used for the brand introduction and the gift feature on the homepage.
+
+  Layouts:
+  - split: image and text side by side (stacked on mobile, image first)
+  - overlay: full-width image with the text on top
+
+  This is an image-led section: customers only see it once an image is
+  chosen. In the Theme Editor it shows a placeholder and a hint until then.
+  The button only renders when it has both a label and a link.
+{% endcomment %}
+
+{%- liquid
+  assign image = section.settings.image
+  assign show_button = false
+  if section.settings.button_label != blank and section.settings.button_link != blank
+    assign show_button = true
+  endif
+  case section.settings.image_ratio
+    when 'square'
+      assign ratio = '1 / 1'
+    when 'landscape'
+      assign ratio = '4 / 3'
+    else
+      assign ratio = '4 / 5'
+  endcase
+-%}
+
+{%- if image != blank or request.design_mode -%}
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  <div class="rons-editorial rons-editorial--{{ section.settings.layout }} rons-editorial--image-{{ section.settings.image_position }} color-{{ section.settings.color_scheme }} gradient">
+    <div class="section-{{ section.id }}-padding{% unless section.settings.layout == 'overlay' and section.settings.full_width %} page-width{% endunless %}">
+      <div
+        class="rons-editorial__inner"
+        style="--rons-ratio: {{ ratio }}; --rons-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};{% if image != blank %} --rons-focal: {{ image.presentation.focal_point }};{% endif %}"
+      >
+        <div class="rons-editorial__media">
+          {%- if image != blank -%}
+            {%- if section.settings.layout == 'overlay' -%}
+              {%- assign sizes = '100vw' -%}
+            {%- else -%}
+              {%- assign sizes = '(min-width: 750px) 50vw, 100vw' -%}
+            {%- endif -%}
+            {{
+              image
+              | image_url: width: 2400
+              | image_tag: loading: 'lazy', widths: '450, 750, 1100, 1500, 1920, 2400', sizes: sizes, alt: image.alt
+            }}
+          {%- else -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+
+        <div class="rons-editorial__content">
+          {%- if image == blank -%}
+            <p class="rons-editor-hint">Избери снимка. Дотогава този раздел е скрит за клиентите.</p>
+          {%- endif -%}
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="rons-editorial__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <div class="rons-editorial__text rte">{{ section.settings.text }}</div>
+          {%- endif -%}
+          {%- if show_button -%}
+            <a
+              href="{{ section.settings.button_link }}"
+              class="button{% if section.settings.button_style == 'outline' %} button--secondary{% endif %} rons-editorial__button"
+            >
+              {{- section.settings.button_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Editorial image + text",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Customers only see this section once an image is chosen."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "split", "label": "Image beside text" },
+        { "value": "overlay", "label": "Text on image" }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position (image beside text)",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image shape (image beside text)",
+      "options": [
+        { "value": "portrait", "label": "Portrait 4:5" },
+        { "value": "square", "label": "Square" },
+        { "value": "landscape", "label": "Landscape 4:3" }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width (text on image)",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Image shade (text on image)",
+      "default": 30
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small text above heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "The button only appears when it has both a label and a link."
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "solid", "label": "Solid" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial image + text"
+    }
+  ]
+}
+{% endschema %}

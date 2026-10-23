@@ -35,82 +35,123 @@
   {%- if section.settings.swipe_on_mobile %} 72vw{% else %} calc(100vw / {{ section.settings.columns_mobile }}){% endif -%}
 {%- endcapture -%}
 
-<div class="rons-category-grid rons-category-grid--{{ section.settings.label_position }} color-{{ section.settings.color_scheme }} gradient">
-  <div class="page-width section-{{ section.id }}-padding">
-    {%- if section.settings.heading != blank or section.settings.caption != blank -%}
-      <div class="rons-category-grid__header rons-category-grid__header--{{ section.settings.heading_alignment }}">
-        <div>
-          {%- if section.settings.caption != blank -%}
-            <p class="rons-eyebrow">{{ section.settings.caption | escape }}</p>
-          {%- endif -%}
-          {%- if section.settings.heading != blank -%}
-            <h2 class="rons-category-grid__heading inline-richtext {{ section.settings.heading_size }}">
-              {{ section.settings.heading }}
-            </h2>
-          {%- endif -%}
-        </div>
-      </div>
-    {%- endif -%}
+{%- liquid
+  assign live_tiles = 0
+  for block in section.blocks
+    if block.settings.link != blank or block.settings.collection != blank
+      assign live_tiles = live_tiles | plus: 1
+    endif
+  endfor
+-%}
 
-    <ul
-      class="rons-category-grid__list{% if section.settings.swipe_on_mobile %} rons-category-grid__list--swipe{% endif %}"
-      role="list"
-      style="--rons-columns: {{ columns }}; --rons-columns-mobile: {{ section.settings.columns_mobile }}; --rons-ratio: {{ ratio }}; --rons-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"
-    >
-      {%- for block in section.blocks -%}
-        {%- liquid
-          assign tile_collection = block.settings.collection
-          assign tile_image = block.settings.image | default: tile_collection.featured_image
-          assign tile_title = block.settings.title | default: tile_collection.title
-          assign tile_link = block.settings.link | default: tile_collection.url
-          if tile_link != blank
-            assign tile_tag = 'a'
-          else
-            assign tile_tag = 'div'
-          endif
-          assign placeholder_index = forloop.index0 | modulo: 4 | plus: 1
-        -%}
-        <li
-          {% if settings.animations_reveal_on_scroll %}
-            class="scroll-trigger animate--slide-in"
-            data-cascade
-            style="--animation-order: {{ forloop.index }};"
-          {% endif %}
-          {{ block.shopify_attributes }}
-        >
-          <{{ tile_tag }}
-            class="rons-category-tile"
-            {% if tile_link != blank %}
-              href="{{ tile_link }}"
-            {% endif %}
-          >
-            <div class="rons-category-tile__media">
-              {%- if tile_image != blank -%}
-                {{
-                  tile_image
-                  | image_url: width: 1200
-                  | image_tag: loading: 'lazy', widths: '360, 540, 720, 900, 1200', sizes: sizes, alt: tile_title
-                }}
-              {%- else -%}
-                {{ 'collection-apparel-' | append: placeholder_index | placeholder_svg_tag: 'placeholder-svg' }}
-              {%- endif -%}
-            </div>
-            {%- if tile_title != blank or block.settings.cta != blank -%}
-              <span class="rons-category-tile__label">
-                {%- if tile_title != blank -%}
-                  <span class="rons-category-tile__title h3">{{ tile_title | escape }}</span>
-                {%- endif -%}
-                {%- if block.settings.cta != blank and tile_link != blank -%}
-                  <span class="rons-category-tile__cta">{{ block.settings.cta | escape }}</span>
-                {%- endif -%}
-              </span>
+{%- liquid
+  if request.design_mode
+    assign shown_tiles = section.blocks.size
+  else
+    assign shown_tiles = live_tiles
+  endif
+  assign campaign = false
+  if section.settings.layout == 'campaign' and shown_tiles == 4
+    assign campaign = true
+  endif
+  assign tile_number = 0
+-%}
+
+{%- if live_tiles > 0 or request.design_mode -%}
+  <div class="rons-category-grid rons-category-grid--{{ section.settings.label_position }}{% if campaign %} rons-category-grid--campaign{% endif %} color-{{ section.settings.color_scheme }} gradient">
+    <div class="page-width section-{{ section.id }}-padding">
+      {%- if section.settings.heading != blank or section.settings.caption != blank -%}
+        <div class="rons-category-grid__header rons-category-grid__header--{{ section.settings.heading_alignment }}">
+          <div>
+            {%- if section.settings.caption != blank -%}
+              <p class="rons-eyebrow">{{ section.settings.caption | escape }}</p>
             {%- endif -%}
-          </{{ tile_tag }}>
-        </li>
-      {%- endfor -%}
-    </ul>
+            {%- if section.settings.heading != blank -%}
+              <h2 class="rons-category-grid__heading inline-richtext {{ section.settings.heading_size }}">
+                {{ section.settings.heading }}
+              </h2>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if live_tiles == 0 -%}
+        <p class="rons-editor-hint">
+          Избери колекция (или връзка) за всяка категория. Картите без колекция, както и целият раздел, докато
+          няма нито една, са скрити за клиентите.
+        </p>
+      {%- endif -%}
+
+      <ul
+        class="rons-category-grid__list{% if section.settings.swipe_on_mobile %} rons-category-grid__list--swipe{% endif %}"
+        role="list"
+        style="--rons-columns: {{ columns }}; --rons-columns-mobile: {{ section.settings.columns_mobile }}; --rons-ratio: {{ ratio }}; --rons-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"
+      >
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign tile_collection = block.settings.collection
+            assign tile_link = block.settings.link | default: tile_collection.url
+            if tile_link == blank and request.design_mode == false
+              continue
+            endif
+            assign tile_image = block.settings.image | default: tile_collection.featured_image
+            assign tile_title = block.settings.title | default: tile_collection.title
+            if tile_title == blank and request.design_mode
+              assign tile_title = 'Избери колекция'
+            endif
+            if tile_link != blank
+              assign tile_tag = 'a'
+            else
+              assign tile_tag = 'div'
+            endif
+            assign placeholder_index = forloop.index0 | modulo: 4 | plus: 1
+            assign tile_number = tile_number | plus: 1
+          -%}
+          <li
+            {% if settings.animations_reveal_on_scroll %}
+              class="scroll-trigger animate--slide-in"
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+            {{ block.shopify_attributes }}
+          >
+            <{{ tile_tag }}
+              class="rons-category-tile"
+              {% if tile_link != blank %}
+                href="{{ tile_link }}"
+              {% endif %}
+            >
+              <div class="rons-category-tile__media{% if tile_image == blank %} rons-category-tile__media--empty{% endif %}">
+                {%- if tile_image != blank -%}
+                  {{
+                    tile_image
+                    | image_url: width: 1200
+                    | image_tag: loading: 'lazy', widths: '360, 540, 720, 900, 1200', sizes: sizes, alt: tile_title
+                  }}
+                {%- elsif request.design_mode -%}
+                  {{ 'collection-apparel-' | append: placeholder_index | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+              {%- if tile_title != blank -%}
+                <span class="rons-category-tile__label">
+                  {%- if section.settings.show_numbers -%}
+                    <span class="rons-category-tile__index" aria-hidden="true">
+                      {%- if tile_number < 10 %}0{% endif %}{{ tile_number -}}
+                    </span>
+                  {%- endif -%}
+                  <span class="rons-category-tile__title h3">{{ tile_title | escape }}</span>
+                  {%- if block.settings.cta != blank and tile_link != blank -%}
+                    <span class="rons-category-tile__cta">{{ block.settings.cta | escape }}</span>
+                  {%- endif -%}
+                </span>
+              {%- endif -%}
+            </{{ tile_tag }}>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
   </div>
-</div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -118,30 +159,41 @@
   "tag": "section",
   "class": "section",
   "disabled_on": {
-    "groups": ["header", "footer"]
+    "groups": [
+      "header",
+      "footer"
+    ]
   },
   "max_blocks": 8,
   "settings": [
     {
       "type": "text",
       "id": "caption",
-      "label": "Caption",
-      "default": "Shop by category"
+      "label": "Caption"
     },
     {
       "type": "inline_richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "Find your night ritual"
+      "default": "Пазарувай по категория"
     },
     {
       "type": "select",
       "id": "heading_size",
       "label": "Heading size",
       "options": [
-        { "value": "h2", "label": "Small" },
-        { "value": "h1", "label": "Medium" },
-        { "value": "h0", "label": "Large" }
+        {
+          "value": "h2",
+          "label": "Small"
+        },
+        {
+          "value": "h1",
+          "label": "Medium"
+        },
+        {
+          "value": "h0",
+          "label": "Large"
+        }
       ],
       "default": "h1"
     },
@@ -150,19 +202,57 @@
       "id": "heading_alignment",
       "label": "Heading alignment",
       "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Center" }
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
       ],
       "default": "center"
     },
     {
       "type": "select",
-      "id": "image_ratio",
-      "label": "Image ratio",
+      "id": "layout",
+      "label": "Layout",
       "options": [
-        { "value": "portrait", "label": "Portrait (3:4)" },
-        { "value": "tall", "label": "Tall (2:3)" },
-        { "value": "square", "label": "Square" }
+        {
+          "value": "campaign",
+          "label": "Campaign (one large, three smaller)"
+        },
+        {
+          "value": "grid",
+          "label": "Even grid"
+        }
+      ],
+      "default": "campaign",
+      "info": "Campaign layout is used when exactly four categories are shown."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Show numbers (01–04)",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio (even grid)",
+      "options": [
+        {
+          "value": "portrait",
+          "label": "Portrait (3:4)"
+        },
+        {
+          "value": "tall",
+          "label": "Tall (2:3)"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        }
       ],
       "default": "portrait"
     },
@@ -171,8 +261,14 @@
       "id": "label_position",
       "label": "Title position",
       "options": [
-        { "value": "overlay", "label": "On image" },
-        { "value": "below", "label": "Below image" }
+        {
+          "value": "overlay",
+          "label": "On image"
+        },
+        {
+          "value": "below",
+          "label": "Below image"
+        }
       ],
       "default": "overlay"
     },
@@ -210,8 +306,14 @@
       "id": "columns_mobile",
       "label": "Columns on mobile",
       "options": [
-        { "value": "1", "label": "1 column" },
-        { "value": "2", "label": "2 columns" }
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
       ],
       "default": "2"
     },
@@ -273,7 +375,7 @@
           "type": "text",
           "id": "cta",
           "label": "Link label",
-          "default": "Shop now"
+          "default": "Разгледай"
         },
         {
           "type": "url",
@@ -288,10 +390,30 @@
     {
       "name": "Shop by category",
       "blocks": [
-        { "type": "category", "settings": { "title": "Pyjama sets" } },
-        { "type": "category", "settings": { "title": "Nightdresses" } },
-        { "type": "category", "settings": { "title": "Loungewear" } },
-        { "type": "category", "settings": { "title": "Robes" } }
+        {
+          "type": "category",
+          "settings": {
+            "title": "Сатенени пижами"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Памучни пижами"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Нощници"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Домашно облекло"
+          }
+        }
       ]
     }
   ]

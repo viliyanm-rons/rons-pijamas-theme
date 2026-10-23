@@ -1,0 +1,315 @@
+{% comment %}
+  Ron's Pijamas – customer reviews with photos.
+
+  Each "Review" block is one card: customer photo, name, optional location,
+  review text and optional star rating. A card is shown to customers only
+  when it has both a name and review text, so empty or half-filled blocks
+  never reach the storefront. Without any complete review (and no reviews
+  app block) the section renders nothing for customers; the Theme Editor
+  shows placeholder cards and a hint instead.
+
+  Nothing here is pre-filled: names, texts, photos and ratings come only
+  from the merchant (or a reviews app).
+{% endcomment %}
+
+{%- liquid
+  assign review_count = 0
+  for block in section.blocks
+    if block.type == 'review' and block.settings.name != blank and block.settings.text != blank
+      assign review_count = review_count | plus: 1
+    endif
+  endfor
+  assign app_blocks = section.blocks | where: 'type', '@app'
+-%}
+
+{%- if review_count > 0 or app_blocks.size > 0 or request.design_mode -%}
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  {%- capture star_icon -%}
+    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path fill="currentColor" d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/></svg>
+  {%- endcapture -%}
+
+  <div class="rons-reviews color-{{ section.settings.color_scheme }} gradient{% if section.settings.grayscale_photos %} rons-reviews--grayscale{% endif %}">
+    <div class="page-width section-{{ section.id }}-padding">
+      <div class="rons-reviews__header rons-reviews__header--{{ section.settings.heading_alignment }}">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="rons-reviews__heading inline-richtext {{ section.settings.heading_size }}">
+            {{ section.settings.heading }}
+          </h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="rons-reviews__subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if review_count == 0 and request.design_mode -%}
+        <p class="rons-editor-hint">
+          Добави 3–6 истински отзива (снимка, име, текст). Карта се показва на клиентите само когато има име и текст.
+          Дотогава разделът е скрит за клиентите.
+        </p>
+      {%- endif -%}
+
+      <ul
+        class="rons-reviews__list"
+        role="list"
+        style="--rons-columns: {{ section.settings.columns_desktop }}; --rons-photo-ratio: {% if section.settings.photo_ratio == 'square' %}1 / 1{% else %}4 / 5{% endif %};"
+      >
+        {%- for block in section.blocks -%}
+          {%- if block.type != 'review' -%}{%- continue -%}{%- endif -%}
+          {%- liquid
+            assign is_complete = false
+            if block.settings.name != blank and block.settings.text != blank
+              assign is_complete = true
+            endif
+            if is_complete == false and request.design_mode == false
+              continue
+            endif
+            assign rating = block.settings.rating | plus: 0
+          -%}
+          <li
+            class="rons-reviews__item{% if is_complete == false %} rons-reviews__item--placeholder{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {{ block.shopify_attributes }}
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            <figure class="rons-review-card{% if block.settings.photo == blank and request.design_mode == false %} rons-review-card--no-photo{% endif %}">
+              {%- if block.settings.photo != blank -%}
+                <div class="rons-review-card__photo">
+                  {{
+                    block.settings.photo
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '300, 450, 600, 900',
+                      sizes: '(min-width: 990px) 30vw, (min-width: 750px) 45vw, 80vw',
+                      alt: block.settings.photo.alt
+                  }}
+                </div>
+              {%- elsif request.design_mode -%}
+                <div class="rons-review-card__photo">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {%- endif -%}
+
+              <div class="rons-review-card__body">
+                {%- if rating > 0 -%}
+                  <span
+                    class="rons-stars rons-review-card__stars"
+                    role="img"
+                    aria-label="{{ rating }} / 5"
+                  >
+                    {%- for i in (1..5) -%}
+                      <span class="{% if i > rating %}rons-star--empty{% endif %}">{{ star_icon }}</span>
+                    {%- endfor -%}
+                  </span>
+                {%- endif -%}
+
+                <blockquote class="rons-review-card__text">
+                  {%- if is_complete -%}
+                    {{ block.settings.text | escape | newline_to_br }}
+                  {%- else -%}
+                    Текст на отзива – видим за клиентите само след като добавиш име и текст.
+                  {%- endif -%}
+                </blockquote>
+
+                <figcaption class="rons-review-card__author">
+                  <span class="rons-review-card__name">
+                    {%- if block.settings.name != blank -%}
+                      {{ block.settings.name | escape }}
+                    {%- else -%}
+                      Име на клиентката
+                    {%- endif -%}
+                  </span>
+                  {%- if block.settings.location != blank -%}
+                    <span class="rons-review-card__location">{{ block.settings.location | escape }}</span>
+                  {%- endif -%}
+                </figcaption>
+              </div>
+            </figure>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- for block in app_blocks -%}
+        <div class="rons-reviews__app" {{ block.shopify_attributes }}>
+          {% render block %}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Customer reviews (photos)",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "max_blocks": 7,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Add 3–6 genuine reviews. A card is only shown to customers when it has a name and review text; without any, the section stays hidden on the storefront."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Мнения от нашите клиентки"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        { "value": "h2", "label": "Small" },
+        { "value": "h1", "label": "Medium" },
+        { "value": "h0", "label": "Large" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Истински отзиви от жени, които вече избраха Ron’s Pijamas."
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Cards per row on desktop",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "photo_ratio",
+      "label": "Photo shape",
+      "options": [
+        { "value": "portrait", "label": "Portrait 4:5" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "grayscale_photos",
+      "label": "Show photos in black and white",
+      "default": false
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Customer photo",
+          "info": "Only use photos the customer has agreed to share."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer name",
+          "info": "e.g. first name and initial."
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location (optional)"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Review text",
+          "info": "Copy the genuine review word for word."
+        },
+        {
+          "type": "select",
+          "id": "rating",
+          "label": "Rating (optional)",
+          "options": [
+            { "value": "0", "label": "Don't show a rating" },
+            { "value": "5", "label": "5 stars" },
+            { "value": "4", "label": "4 stars" },
+            { "value": "3", "label": "3 stars" },
+            { "value": "2", "label": "2 stars" },
+            { "value": "1", "label": "1 star" }
+          ],
+          "default": "0"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer reviews (photos)",
+      "blocks": [{ "type": "review" }, { "type": "review" }, { "type": "review" }]
+    }
+  ]
+}
+{% endschema %}

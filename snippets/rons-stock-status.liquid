@@ -1,0 +1,58 @@
+{% comment %}
+  Ron's Pijamas – honest low-stock indicator for the selected variant.
+
+  Shows a message only when ALL of these are true:
+  - Shopify tracks inventory for the variant (inventory_management: shopify)
+  - the variant does not allow overselling (inventory_policy: deny)
+  - the real inventory quantity is between 1 and the block's threshold
+  When the variant is sold out it can show a neutral sold-out note instead.
+  Nothing is shown for untracked or oversellable variants.
+
+  The wrapper id lets assets/rons-custom.js swap in the server-rendered message
+  for the newly selected variant (Dawn's variant-change event carries it).
+
+  Accepts:
+  - block: {Object} the rons_stock block
+  - variant: {Object} the selected (or first available) variant
+  - section_id: {String} the product section id
+
+  Usage:
+  {% render 'rons-stock-status', block: block, variant: product.selected_or_first_available_variant, section_id: section.id %}
+{% endcomment %}
+
+{%- liquid
+  assign state = 'none'
+  if variant != null
+    if variant.available == false
+      if block.settings.show_sold_out
+        assign state = 'sold_out'
+      endif
+    elsif variant.inventory_management == 'shopify' and variant.inventory_policy != 'continue'
+      if variant.inventory_quantity >= 1 and variant.inventory_quantity <= block.settings.threshold
+        assign state = 'low'
+      endif
+    endif
+  endif
+-%}
+
+<div
+  id="RonsStock-{{ section_id }}"
+  class="rons-stock rons-stock--{{ state }}"
+  role="status"
+  aria-live="polite"
+  {{ block.shopify_attributes }}
+>
+  {%- case state -%}
+    {%- when 'low' -%}
+      <span class="rons-stock__dot" aria-hidden="true"></span>
+      <span class="rons-stock__text">
+        {%- if variant.inventory_quantity == 1 -%}
+          {{ block.settings.text_one | escape }}
+        {%- else -%}
+          {{ block.settings.text_other | replace: '[count]', variant.inventory_quantity | escape }}
+        {%- endif -%}
+      </span>
+    {%- when 'sold_out' -%}
+      <span class="rons-stock__text">{{ block.settings.text_sold_out | escape }}</span>
+  {%- endcase -%}
+</div>

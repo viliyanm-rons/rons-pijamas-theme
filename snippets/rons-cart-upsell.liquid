@@ -1,0 +1,73 @@
+{% comment %}
+  Ron's Pijamas – complementary products in the cart drawer.
+  Products come from the collection chosen in Theme settings › Cart drawer
+  extras; products already in the cart are skipped. Single-variant products
+  get a one-tap add button (handled in assets/rons-custom.js, which refreshes
+  the drawer with Dawn's own renderer); products with options link to the
+  product page so the customer picks a size and colour.
+
+  Usage:
+  {% render 'rons-cart-upsell' %}
+{% endcomment %}
+
+{%- assign upsell_collection = settings.rons_cart_upsell_collection -%}
+{%- if cart.item_count > 0 and upsell_collection != blank and upsell_collection.products_count > 0 -%}
+  {%- liquid
+    assign cart_product_ids = cart.items | map: 'product_id'
+    assign shown = 0
+  -%}
+  {%- capture upsell_items -%}
+    {%- for upsell_product in upsell_collection.products limit: 12 -%}
+      {%- if shown >= settings.rons_cart_upsell_count -%}{%- break -%}{%- endif -%}
+      {%- if cart_product_ids contains upsell_product.id or upsell_product.available == false -%}{%- continue -%}{%- endif -%}
+      {%- assign shown = shown | plus: 1 -%}
+      <li class="rons-upsell__item">
+        <a href="{{ upsell_product.url }}" class="rons-upsell__media" tabindex="-1" aria-hidden="true">
+          {%- if upsell_product.featured_media -%}
+            {{
+              upsell_product.featured_media
+              | image_url: width: 240
+              | image_tag: loading: 'lazy', widths: '120, 240', sizes: '80px', alt: ''
+            }}
+          {%- endif -%}
+        </a>
+        <div class="rons-upsell__info">
+          <a href="{{ upsell_product.url }}" class="rons-upsell__title">{{ upsell_product.title | escape }}</a>
+          <div class="rons-upsell__price">
+            {%- if upsell_product.compare_at_price > upsell_product.price -%}
+              <s class="rons-upsell__compare">{{ upsell_product.compare_at_price | money }}</s>
+            {%- endif -%}
+            {%- if upsell_product.price_varies -%}
+              {%- assign price_min = upsell_product.price_min | money -%}
+              {{ 'products.product.price.from_price_html' | t: price: price_min }}
+            {%- else -%}
+              {{ upsell_product.price | money }}
+            {%- endif -%}
+          </div>
+        </div>
+        {%- if upsell_product.has_only_default_variant -%}
+          <form method="post" action="{{ routes.cart_add_url }}" class="rons-upsell__form">
+            <input type="hidden" name="id" value="{{ upsell_product.selected_or_first_available_variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="rons-upsell__button button button--secondary">
+              {{- settings.rons_cart_upsell_add_label | escape -}}
+            </button>
+          </form>
+        {%- else -%}
+          <a href="{{ upsell_product.url }}" class="rons-upsell__button button button--secondary">
+            {{- settings.rons_cart_upsell_choose_label | escape -}}
+          </a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if shown > 0 -%}
+    <div class="rons-upsell">
+      <p class="rons-upsell__heading">{{ settings.rons_cart_upsell_heading | escape }}</p>
+      <ul class="rons-upsell__list list-unstyled" role="list">
+        {{ upsell_items }}
+      </ul>
+      <p class="rons-upsell__error" role="alert" hidden></p>
+    </div>
+  {%- endif -%}
+{%- endif -%}

@@ -5,6 +5,9 @@
   data-product-id="{{ product.id }}"
   data-update-url="true"
   data-url="{{ product.url }}"
+  {% if section.settings.rons_filter_gallery %}
+    data-rons-filter-gallery
+  {% endif %}
   {% if section.settings.image_zoom == 'hover' %}
     data-zoom-on-hover
   {% endif %}
@@ -211,6 +214,10 @@
                 {%- when 'custom_liquid' -%}
                   {{ block.settings.custom_liquid }}
                 {%- when 'collapsible_tab' -%}
+                  {%- comment -%}Ron's Pijamas: hide empty tabs so no placeholder text reaches customers.{%- endcomment -%}
+                  {%- if block.settings.content == blank and block.settings.page == blank -%}
+                    {%- continue -%}
+                  {%- endif -%}
                   <div class="product__accordion accordion quick-add-hidden" {{ block.shopify_attributes }}>
                     <details id="Details-{{ block.id }}-{{ section.id }}">
                       <summary>
@@ -470,24 +477,18 @@
                       {{ block.settings.text | default: block.settings.page.title | escape }}
                     </button>
                   </modal-opener>
+                {%- when 'rons_stock' -%}
+                  {%- render 'rons-stock-status',
+                    block: block,
+                    variant: product.selected_or_first_available_variant,
+                    section_id: section.id
+                  -%}
+                {%- when 'rons_policies' -%}
+                  {%- render 'rons-product-policies', block: block, section_id: section.id -%}
+                {%- when 'rons_gift_message' -%}
+                  {%- render 'rons-gift-message', block: block, product_form_id: product_form_id -%}
                 {%- when 'size_guide' -%}
-                  <modal-opener
-                    class="rons-size-guide__opener quick-add-hidden"
-                    data-modal="#SizeGuideModal-{{ block.id }}"
-                    {{ block.shopify_attributes }}
-                  >
-                    <button
-                      id="SizeGuide-{{ block.id }}"
-                      class="rons-size-guide__button"
-                      type="button"
-                      aria-haspopup="dialog"
-                    >
-                      <span class="svg-wrapper" aria-hidden="true">
-                        {{- 'icon-ruler.svg' | inline_asset_content -}}
-                      </span>
-                      {{ block.settings.label | escape }}
-                    </button>
-                  </modal-opener>
+                  {%- render 'rons-size-guide-opener', block: block, product: product -%}
                 {%- when 'share' -%}
                   {% liquid
                     assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin
@@ -1263,77 +1264,349 @@
       ]
     },
     {
+      "type": "rons_stock",
+      "name": "Low stock indicator",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Shows a small red note only when Shopify tracks the selected variant's inventory, overselling is off and the real quantity is between 1 and the threshold. Updates when another size or colour is selected."
+        },
+        {
+          "type": "range",
+          "id": "threshold",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "label": "Show when stock is at or below",
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "text_one",
+          "label": "Text for 1 item",
+          "default": "Остава само 1 брой"
+        },
+        {
+          "type": "text",
+          "id": "text_other",
+          "label": "Text for 2 or more items",
+          "info": "[count] is replaced with the real quantity.",
+          "default": "Остават само [count] броя"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_sold_out",
+          "label": "Show a note when the variant is sold out",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "text_sold_out",
+          "label": "Sold-out text",
+          "default": "Този вариант е изчерпан"
+        }
+      ]
+    },
+    {
+      "type": "rons_policies",
+      "name": "Delivery and returns",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Links to your Shopify shipping and refund policies (Settings › Policies). Hidden when neither policy exists and no summary is set."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Доставка и връщане"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "none",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__1.label"
+            },
+            {
+              "value": "apple",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__2.label"
+            },
+            {
+              "value": "banana",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__3.label"
+            },
+            {
+              "value": "bottle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__4.label"
+            },
+            {
+              "value": "box",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__5.label"
+            },
+            {
+              "value": "carrot",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__6.label"
+            },
+            {
+              "value": "chat_bubble",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__7.label"
+            },
+            {
+              "value": "check_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__8.label"
+            },
+            {
+              "value": "clipboard",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__9.label"
+            },
+            {
+              "value": "dairy",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__10.label"
+            },
+            {
+              "value": "dairy_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__11.label"
+            },
+            {
+              "value": "dryer",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__12.label"
+            },
+            {
+              "value": "eye",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__13.label"
+            },
+            {
+              "value": "fire",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__14.label"
+            },
+            {
+              "value": "gluten_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__15.label"
+            },
+            {
+              "value": "heart",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__16.label"
+            },
+            {
+              "value": "iron",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__17.label"
+            },
+            {
+              "value": "leaf",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__18.label"
+            },
+            {
+              "value": "leather",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__19.label"
+            },
+            {
+              "value": "lightning_bolt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__20.label"
+            },
+            {
+              "value": "lipstick",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__21.label"
+            },
+            {
+              "value": "lock",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__22.label"
+            },
+            {
+              "value": "map_pin",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__23.label"
+            },
+            {
+              "value": "nut_free",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__24.label"
+            },
+            {
+              "value": "pants",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__25.label"
+            },
+            {
+              "value": "paw_print",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__26.label"
+            },
+            {
+              "value": "pepper",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__27.label"
+            },
+            {
+              "value": "perfume",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__28.label"
+            },
+            {
+              "value": "plane",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__29.label"
+            },
+            {
+              "value": "plant",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__30.label"
+            },
+            {
+              "value": "price_tag",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__31.label"
+            },
+            {
+              "value": "question_mark",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__32.label"
+            },
+            {
+              "value": "recycle",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__33.label"
+            },
+            {
+              "value": "return",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__34.label"
+            },
+            {
+              "value": "ruler",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__35.label"
+            },
+            {
+              "value": "serving_dish",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__36.label"
+            },
+            {
+              "value": "shirt",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__37.label"
+            },
+            {
+              "value": "shoe",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__38.label"
+            },
+            {
+              "value": "silhouette",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__39.label"
+            },
+            {
+              "value": "snowflake",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__40.label"
+            },
+            {
+              "value": "star",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__41.label"
+            },
+            {
+              "value": "stopwatch",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__42.label"
+            },
+            {
+              "value": "truck",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__43.label"
+            },
+            {
+              "value": "washing",
+              "label": "t:sections.main-product.blocks.collapsible_tab.settings.icon.options__44.label"
+            }
+          ],
+          "default": "truck"
+        },
+        {
+          "type": "richtext",
+          "id": "summary",
+          "label": "Short summary",
+          "info": "Only state what your published policies say."
+        }
+      ]
+    },
+    {
+      "type": "rons_gift_message",
+      "name": "Gift message",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Adds an optional message to the cart line. It appears in the cart, checkout and order details."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Toggle label",
+          "default": "Добави подаръчно съобщение"
+        },
+        {
+          "type": "text",
+          "id": "field_label",
+          "label": "Field label",
+          "default": "Твоето съобщение"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "default": "Напиши няколко думи…"
+        },
+        {
+          "type": "text",
+          "id": "note",
+          "label": "Note under the field"
+        },
+        {
+          "type": "text",
+          "id": "property_name",
+          "label": "Order field name",
+          "default": "Подаръчно съобщение"
+        },
+        {
+          "type": "range",
+          "id": "max_length",
+          "min": 50,
+          "max": 300,
+          "step": 10,
+          "label": "Maximum characters",
+          "default": 200
+        }
+      ]
+    },
+    {
       "type": "size_guide",
       "name": "Size guide",
       "limit": 1,
       "settings": [
         {
           "type": "paragraph",
-          "content": "Opens a size guide. Uses the product metafield custom.size_guide (page or rich text) when set, then the page below, then the content below."
+          "content": "Hidden until real measurements are added. Shows the product metafield custom.size_guide (page or rich text) when set, otherwise the page or size chart image below."
         },
         {
           "type": "text",
           "id": "label",
           "label": "Link label",
-          "default": "Size guide"
+          "default": "Таблица с размери"
         },
         {
           "type": "text",
           "id": "heading",
           "label": "Heading",
-          "default": "Find your size"
+          "default": "Таблица с размери"
         },
         {
           "type": "page",
           "id": "page",
-          "label": "Size guide page"
+          "label": "Size guide page",
+          "info": "A page with your size table, e.g. built with a table in the page editor."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Size chart image"
         },
         {
           "type": "richtext",
           "id": "intro",
           "label": "Introduction",
-          "default": "<p>Measurements are body measurements in centimetres. If you are between sizes, we recommend sizing up for a relaxed fit.</p>"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_default_table",
-          "label": "Show standard size table",
-          "default": true
-        },
-        {
-          "type": "text",
-          "id": "column_size",
-          "label": "Size column label",
-          "default": "Size"
-        },
-        {
-          "type": "text",
-          "id": "column_bust",
-          "label": "Bust column label",
-          "default": "Bust (cm)"
-        },
-        {
-          "type": "text",
-          "id": "column_waist",
-          "label": "Waist column label",
-          "default": "Waist (cm)"
-        },
-        {
-          "type": "text",
-          "id": "column_hips",
-          "label": "Hips column label",
-          "default": "Hips (cm)"
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Size chart or measuring image"
+          "info": "Shown above the size chart image."
         },
         {
           "type": "richtext",
           "id": "notes",
           "label": "Notes",
-          "default": "<p>Need help choosing? Contact us and our team will be happy to advise.</p>"
+          "info": "Shown below the size chart image."
         }
       ]
     },
@@ -2388,6 +2661,13 @@
       "id": "hide_variants",
       "default": false,
       "label": "t:sections.main-product.settings.hide_variants.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "rons_filter_gallery",
+      "label": "Show only the selected colour's images",
+      "info": "Set each image's alt text to the colour name exactly as in the variant (e.g. Черен). Images with other alt text are always shown. Turn off \"Hide other variants’ media\" when using this.",
+      "default": false
     },
     {
       "type": "checkbox",

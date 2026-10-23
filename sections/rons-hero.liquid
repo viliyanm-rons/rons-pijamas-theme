@@ -1,0 +1,506 @@
+{% comment %}
+  Ron's Pijamas – editorial hero.
+
+  - Separate desktop and mobile images in one <picture>, so phones only
+    download the mobile image. Each falls back to the other when only one is
+    set; each uses its own focal point from Shopify's image editor.
+  - Text sits on the image (optional readability gradient or shade) or below
+    it, configurable separately for mobile.
+  - Heights: fit to image, medium, large or full screen, per device.
+  - Layout "Editorial split" (desktop): text column beside a dominant photo,
+    with an optional smaller detail image overlapping the photo's edge.
+    Phones always use the vertical mobile image with the text on it (or
+    below it) so the button is visible without scrolling.
+  - Buttons only render when they have both a label and a link.
+  - Without an image, customers see a compact text banner (no large empty
+    block); the Theme Editor shows a placeholder at the configured height.
+{% endcomment %}
+
+{%- liquid
+  assign image_desktop = section.settings.image_desktop
+  assign image_mobile = section.settings.image_mobile
+  assign main_image = image_desktop | default: image_mobile
+  assign mobile_image = image_mobile | default: image_desktop
+  assign has_image = false
+  if main_image != blank
+    assign has_image = true
+  endif
+
+  if section.index <= 2
+    assign loading = 'eager'
+    assign fetch_priority = 'high'
+  else
+    assign loading = 'lazy'
+    assign fetch_priority = 'auto'
+  endif
+
+  assign show_button_1 = false
+  if section.settings.button_label_1 != blank and section.settings.button_link_1 != blank
+    assign show_button_1 = true
+  endif
+  assign show_button_2 = false
+  if section.settings.button_label_2 != blank and section.settings.button_link_2 != blank
+    assign show_button_2 = true
+  endif
+
+  assign show_badge = false
+  if section.settings.show_badge and section.settings.badge_text != blank
+    assign show_badge = true
+  endif
+
+  assign has_text = false
+  if show_badge or section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.text != blank or show_button_1 or show_button_2
+    assign has_text = true
+  endif
+
+  capture hero_classes
+    echo 'rons-hero'
+    echo ' rons-hero--layout-' | append: section.settings.layout
+    echo ' rons-hero--image-' | append: section.settings.image_side
+    echo ' rons-hero--text-' | append: section.settings.text_color
+    echo ' rons-hero--desktop-' | append: section.settings.desktop_height
+    echo ' rons-hero--mobile-' | append: section.settings.mobile_height
+    echo ' rons-hero--overlay-' | append: section.settings.overlay_style
+    if section.settings.text_below_desktop
+      echo ' rons-hero--below-desktop'
+    endif
+    if section.settings.text_below_mobile
+      echo ' rons-hero--below-mobile'
+    endif
+    if has_image == false
+      if request.design_mode
+        echo ' rons-hero--placeholder'
+      else
+        echo ' rons-hero--no-image'
+      endif
+    endif
+  endcapture
+-%}
+
+{%- if has_image or has_text or request.design_mode -%}
+  <div
+    class="{{ hero_classes | strip }}"
+    style="--rons-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};{% if has_image %} --rons-hero-ratio: {{ main_image.aspect_ratio }}; --rons-hero-ratio-mobile: {{ mobile_image.aspect_ratio }}; --rons-hero-focal: {{ main_image.presentation.focal_point }}; --rons-hero-focal-mobile: {{ mobile_image.presentation.focal_point }};{% endif %}"
+  >
+    {%- if has_image or request.design_mode -%}
+      <div class="rons-hero__media">
+        {%- if has_image -%}
+          <picture>
+            {%- if image_mobile != blank and image_desktop != blank -%}
+              <source
+                media="(max-width: 749px)"
+                srcset="
+                  {{ image_mobile | image_url: width: 450 }} 450w,
+                  {{ image_mobile | image_url: width: 750 }} 750w,
+                  {{ image_mobile | image_url: width: 1100 }} 1100w,
+                  {{ image_mobile | image_url: width: 1500 }} 1500w
+                "
+                sizes="100vw"
+                width="{{ image_mobile.width }}"
+                height="{{ image_mobile.height }}"
+              >
+            {%- endif -%}
+            {{
+              main_image
+              | image_url: width: 3000
+              | image_tag:
+                class: 'rons-hero__image',
+                widths: '450, 750, 1100, 1500, 1920, 2400, 3000',
+                sizes: '100vw',
+                loading: loading,
+                fetchpriority: fetch_priority,
+                alt: main_image.alt
+            }}
+          </picture>
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg rons-hero__placeholder' }}
+          <p class="rons-editor-hint rons-hero__hint">
+            Добави снимка за десктоп и мобилна снимка. Без снимка клиентите виждат само текста в компактен банер.
+          </p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.layout == 'editorial' and section.settings.detail_image != blank -%}
+      <div class="rons-hero__detail" aria-hidden="true">
+        {{
+          section.settings.detail_image
+          | image_url: width: 900
+          | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 990px) 18vw, 1px', alt: ''
+        }}
+      </div>
+    {%- endif -%}
+
+    {%- if has_text -%}
+      <div class="rons-hero__content page-width rons-hero__content--{{ section.settings.desktop_position }} rons-hero__content--mobile-{{ section.settings.mobile_alignment }}">
+        <div class="rons-hero__box">
+          {%- if show_badge -%}
+            {%- if section.settings.badge_link != blank -%}
+              <a href="{{ section.settings.badge_link }}" class="rons-hero__badge rons-hero__badge--link">
+                {{- section.settings.badge_text | escape -}}
+              </a>
+            {%- else -%}
+              <p class="rons-hero__badge">{{ section.settings.badge_text | escape }}</p>
+            {%- endif -%}
+          {%- endif -%}
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="rons-hero__eyebrow rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 class="rons-hero__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <p class="rons-hero__text">{{ section.settings.text }}</p>
+          {%- endif -%}
+          {%- if show_button_1 or show_button_2 -%}
+            <div class="rons-hero__buttons">
+              {%- if show_button_1 -%}
+                <a href="{{ section.settings.button_link_1 }}" class="button rons-hero__button rons-hero__button--primary">
+                  {{- section.settings.button_label_1 | escape -}}
+                </a>
+              {%- endif -%}
+              {%- if show_button_2 -%}
+                <a
+                  href="{{ section.settings.button_link_2 }}"
+                  class="button rons-hero__button rons-hero__button--secondary"
+                >
+                  {{- section.settings.button_label_2 | escape -}}
+                </a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Editorial hero",
+  "tag": "section",
+  "class": "section rons-hero-section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_desktop",
+      "label": "Desktop image",
+      "info": "Landscape, at least 2400 × 1350 px. Set the focal point in the image editor."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Portrait (4:5 or 3:4), at least 1100 px wide. Uses the desktop image when empty."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "editorial",
+          "label": "Editorial split (text beside photo)"
+        },
+        {
+          "value": "full",
+          "label": "Full-width photo with text on it"
+        }
+      ],
+      "default": "editorial"
+    },
+    {
+      "type": "select",
+      "id": "image_side",
+      "label": "Photo side (editorial split)",
+      "options": [
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "image_picker",
+      "id": "detail_image",
+      "label": "Detail image (editorial split, optional)",
+      "info": "A smaller close-up (fabric, lace, packaging) that overlaps the main photo on desktop."
+    },
+    {
+      "type": "select",
+      "id": "desktop_height",
+      "label": "Desktop height",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Fit to image"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "full",
+          "label": "Full screen"
+        }
+      ],
+      "default": "large",
+      "info": "Editorial split is capped at 860 px so the photo never feels oversized."
+    },
+    {
+      "type": "select",
+      "id": "mobile_height",
+      "label": "Mobile height",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Fit to image"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "full",
+          "label": "Full screen"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "header",
+      "content": "Text on image"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "Readability overlay",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient behind text"
+        },
+        {
+          "value": "solid",
+          "label": "Even shade"
+        }
+      ],
+      "default": "gradient",
+      "info": "Use only when the text is hard to read on the photo."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay strength",
+      "default": 35
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text colour on image",
+      "options": [
+        {
+          "value": "light",
+          "label": "White"
+        },
+        {
+          "value": "dark",
+          "label": "Black"
+        }
+      ],
+      "default": "light"
+    },
+    {
+      "type": "select",
+      "id": "desktop_position",
+      "label": "Desktop text position",
+      "options": [
+        {
+          "value": "middle-left",
+          "label": "Middle left"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "middle-center",
+          "label": "Middle center"
+        },
+        {
+          "value": "bottom-center",
+          "label": "Bottom center"
+        },
+        {
+          "value": "middle-right",
+          "label": "Middle right"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom right"
+        }
+      ],
+      "default": "bottom-left",
+      "info": "Used by the full-width layout."
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "Mobile text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_below_desktop",
+      "label": "Show text below the image on desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "text_below_mobile",
+      "label": "Show text below the image on mobile",
+      "info": "Keeps the full photo visible on phones.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Trust badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show trust badge",
+      "info": "Only turn on when the rating and customer numbers are accurate and can be backed up.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "★ 5.0 оценка | 1000+ доволни клиенти"
+    },
+    {
+      "type": "url",
+      "id": "badge_link",
+      "label": "Badge link (optional)",
+      "info": "e.g. a page or app listing your reviews."
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small text above heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Красотата започва с комфорта."
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading size",
+      "options": [
+        {
+          "value": "h1",
+          "label": "Medium"
+        },
+        {
+          "value": "h0",
+          "label": "Large"
+        },
+        {
+          "value": "hxl",
+          "label": "Extra large"
+        }
+      ],
+      "default": "h0"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Subheading",
+      "default": "Открий пижами и домашно облекло, създадени за красивите моменти у дома."
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each button only appears when it has both a label and a link."
+    },
+    {
+      "type": "text",
+      "id": "button_label_1",
+      "label": "First button label",
+      "default": "Разгледай колекцията"
+    },
+    {
+      "type": "url",
+      "id": "button_link_1",
+      "label": "First button link"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Second button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Second button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial hero"
+    }
+  ]
+}
+{% endschema %}

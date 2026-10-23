@@ -18,47 +18,55 @@
   }
 {%- endstyle -%}
 
-<div
-  class="rons-trust-bar rons-trust-bar--{{ section.settings.alignment }} color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_border %} rons-trust-bar--bordered{% endif %}"
-  style="--rons-columns: {{ section.blocks.size | at_most: 4 | at_least: 1 }};{% if section.settings.show_border %} border-top: 0.1rem solid var(--rons-hairline); border-bottom: 0.1rem solid var(--rons-hairline);{% endif %}"
->
-  <div class="page-width section-{{ section.id }}-padding">
-    <ul class="rons-trust-bar__list" role="list">
-      {%- for block in section.blocks -%}
-        <li
-          class="rons-trust-bar__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {{ block.shopify_attributes }}
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-            style="--animation-order: {{ forloop.index }};"
-          {% endif %}
-        >
-          {%- if block.settings.image != blank -%}
-            <span class="rons-trust-bar__icon">
-              {{
-                block.settings.image
-                | image_url: width: 112
-                | image_tag: loading: 'lazy', widths: '56, 112', sizes: '28px'
-              }}
-            </span>
-          {%- elsif block.settings.icon != 'none' -%}
-            <span class="rons-trust-bar__icon" aria-hidden="true">
-              {%- render 'icon-accordion', icon: block.settings.icon -%}
-            </span>
-          {%- endif -%}
-          <div>
-            {%- if block.settings.heading != blank -%}
-              <p class="rons-trust-bar__heading">{{ block.settings.heading }}</p>
+{%- if section.blocks.size == 0 -%}
+  {%- if request.design_mode -%}
+    <div class="page-width section-{{ section.id }}-padding">
+      <p class="rons-editor-hint">Добави предимства, които отговарят на публикуваните ти политики.</p>
+    </div>
+  {%- endif -%}
+{%- else -%}
+  <div
+    class="rons-trust-bar rons-trust-bar--{{ section.settings.alignment }} color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_border %} rons-trust-bar--bordered{% endif %}"
+    style="--rons-columns: {{ section.blocks.size | at_most: 4 | at_least: 1 }};{% if section.settings.show_border %} border-top: 0.1rem solid var(--rons-hairline); border-bottom: 0.1rem solid var(--rons-hairline);{% endif %}"
+  >
+    <div class="page-width section-{{ section.id }}-padding">
+      <ul class="rons-trust-bar__list" role="list">
+        {%- for block in section.blocks -%}
+          <li
+            class="rons-trust-bar__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {{ block.shopify_attributes }}
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            {%- if block.settings.image != blank -%}
+              <span class="rons-trust-bar__icon">
+                {{
+                  block.settings.image
+                  | image_url: width: 112
+                  | image_tag: loading: 'lazy', widths: '56, 112', sizes: '28px'
+                }}
+              </span>
+            {%- elsif block.settings.icon != 'none' -%}
+              <span class="rons-trust-bar__icon" aria-hidden="true">
+                {%- render 'icon-accordion', icon: block.settings.icon -%}
+              </span>
             {%- endif -%}
-            {%- if block.settings.text != blank -%}
-              <p class="rons-trust-bar__text">{{ block.settings.text }}</p>
-            {%- endif -%}
-          </div>
-        </li>
-      {%- endfor -%}
-    </ul>
+            <div>
+              {%- if block.settings.heading != blank -%}
+                <p class="rons-trust-bar__heading">{{ block.settings.heading }}</p>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="rons-trust-bar__text">{{ block.settings.text }}</p>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
   </div>
-</div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -66,7 +74,9 @@
   "tag": "section",
   "class": "section",
   "disabled_on": {
-    "groups": ["header"]
+    "groups": [
+      "header"
+    ]
   },
   "max_blocks": 6,
   "settings": [
@@ -75,8 +85,14 @@
       "id": "alignment",
       "label": "Layout",
       "options": [
-        { "value": "left", "label": "Icon beside text" },
-        { "value": "center", "label": "Icon above text (centered)" }
+        {
+          "value": "left",
+          "label": "Icon beside text"
+        },
+        {
+          "value": "center",
+          "label": "Icon above text (centered)"
+        }
       ],
       "default": "left"
     },
@@ -200,7 +216,7 @@
               "label": "Snowflake"
             }
           ],
-          "default": "truck"
+          "default": "lock"
         },
         {
           "type": "image_picker",
@@ -212,13 +228,13 @@
           "type": "inline_richtext",
           "id": "heading",
           "label": "Heading",
-          "default": "Free delivery"
+          "default": "Сигурно плащане"
         },
         {
           "type": "inline_richtext",
           "id": "text",
           "label": "Text",
-          "default": "On all orders over €60"
+          "info": "Only state what your published policies guarantee."
         }
       ]
     }
@@ -227,10 +243,38 @@
     {
       "name": "Trust bar",
       "blocks": [
-        { "type": "item", "settings": { "icon": "truck", "heading": "Free delivery", "text": "On all orders over €60" } },
-        { "type": "item", "settings": { "icon": "return", "heading": "30-day returns", "text": "Easy, free exchanges" } },
-        { "type": "item", "settings": { "icon": "leaf", "heading": "Premium fabrics", "text": "Soft cotton, satin and modal" } },
-        { "type": "item", "settings": { "icon": "lock", "heading": "Secure checkout", "text": "Cards, Apple Pay and Google Pay" } }
+        {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "heading": "Сигурно плащане",
+            "text": "Плащането се обработва защитено чрез Shopify"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "heading": "Доставка",
+            "text": "Опциите и цените се виждат преди плащане"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "heading": "Връщане и замяна",
+            "text": "Условията са описани в нашата политика"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "icon": "chat_bubble",
+            "heading": "Обслужване",
+            "text": "Пиши ни при всякакви въпроси"
+          }
+        }
       ]
     }
   ]
