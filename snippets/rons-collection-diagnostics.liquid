@@ -1,0 +1,44 @@
+{% comment %}
+  Ron's Pijamas – Theme Editor diagnostics for product sections.
+  Renders only in the Theme Editor (request.design_mode), never for shoppers.
+  Explains why a section that uses a collection picker shows no products:
+  - no collection resolved: none selected, or the selected one was deleted or
+    is not published to the Online Store channel (Shopify then gives the
+    theme no collection at all);
+  - collection found but no products visible to the Online Store.
+
+  Accepts:
+  - collection: {Object} the section's collection setting
+
+  Usage:
+  {% render 'rons-collection-diagnostics', collection: section.settings.collection %}
+{% endcomment %}
+
+{%- if request.design_mode -%}
+  {%- assign visible_products = collection.products.size | default: 0 -%}
+  {%- if collection == blank or visible_products == 0 -%}
+    <div class="page-width">
+      <div class="rons-editor-hint rons-diagnostics" role="note">
+        {%- if collection == blank -%}
+          <p class="rons-diagnostics__title">Няма заредена колекция</p>
+          <p>Или не е избрана колекция в настройките на раздела, или избраната е изтрита или не е публикувана в канала „Online Store“ (Продукти › Колекции › колекцията › Публикуване). В такъв случай Shopify не я подава на темата.</p>
+        {%- else -%}
+          <p class="rons-diagnostics__title">
+            Колекция „{{ collection.title | escape }}“ е намерена, но няма продукти, видими в онлайн магазина
+          </p>
+          <ul class="rons-diagnostics__list">
+            <li>Всеки продукт: статус „Активен“ <strong>и</strong> отметнат канал „Online Store“ в полето „Публикуване“. При импорт от CSV колоната „Published“ трябва да е TRUE.</li>
+            <li>Продуктите да са добавени в тази колекция (или да отговарят на условията ѝ, ако е автоматична).</li>
+            <li>При Markets: продуктите да са включени в пазара за България.</li>
+          </ul>
+          <p>
+            <a href="https://{{ shop.permanent_domain }}/admin/collections/{{ collection.id }}" target="_blank" rel="noopener">
+              Отвори колекцията в Shopify Admin
+            </a>
+          </p>
+        {%- endif -%}
+        <p class="rons-diagnostics__note">Клиентите не виждат това съобщение, нито празния раздел.</p>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

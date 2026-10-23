@@ -2310,3 +2310,27 @@ body .rons-review-card--no-photo .rons-review-card__body {
 body .rons-review-card--no-photo .rons-review-card__text {
   font-size: calc(var(--font-heading-scale) * 2.2rem);
 }
+
+/* Theme Editor diagnostics (snippets/rons-collection-diagnostics.liquid) */
+body .rons-diagnostics {
+  max-width: 72rem;
+  text-align: left;
+}
+
+body .rons-diagnostics p {
+  margin: 0 0 0.8rem;
+}
+
+body .rons-diagnostics__title {
+  font-weight: 600;
+}
+
+body .rons-diagnostics__list {
+  margin: 0 0 1rem;
+  padding-left: 1.8rem;
+}
+
+body .rons-diagnostics__note {
+  color: var(--rons-muted);
+  font-size: 1.2rem;
+}
