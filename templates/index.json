@@ -41,7 +41,7 @@
     "bestsellers": {
       "type": "featured-collection",
       "settings": {
-        "collection": "",
+        "collection": "frontpage",
         "products_to_show": 8,
         "title": "Най-харесвани",
         "heading_size": "h1",
