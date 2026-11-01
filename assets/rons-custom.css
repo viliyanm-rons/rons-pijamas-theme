@@ -1897,11 +1897,51 @@ body .rons-stock--low {
 }
 
 body .rons-stock__dot {
+  position: relative;
   flex: 0 0 auto;
   width: 0.7rem;
   height: 0.7rem;
   border-radius: 50%;
   background: rgb(var(--rons-alert));
+}
+
+body .rons-stock--low .rons-stock__text {
+  font-weight: 500;
+}
+
+/* Soft halo that expands and fades every 2 s; the text never moves */
+body .rons-stock--pulse .rons-stock__dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgb(var(--rons-alert));
+  animation: rons-stock-pulse 2s ease-out infinite;
+}
+
+@keyframes rons-stock-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+
+  70%,
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .rons-stock--pulse .rons-stock__dot::after {
+    animation: none;
+    display: none;
+  }
+}
+
+/* While the next variant loads: keep the space, show nothing (never a stale count) */
+body .rons-stock--loading {
+  visibility: hidden;
 }
 
 body .rons-stock--sold_out {

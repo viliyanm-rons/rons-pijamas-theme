@@ -1273,6 +1273,19 @@
           "content": "Shows a small red note only when Shopify tracks the selected variant's inventory, overselling is off and the real quantity is between 1 and the threshold. Updates when another size or colour is selected."
         },
         {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show low-stock warning",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "pulse",
+          "label": "Pulse the red dot",
+          "info": "A soft pulse every 2 seconds. Automatically off for customers who prefer reduced motion.",
+          "default": true
+        },
+        {
           "type": "range",
           "id": "threshold",
           "min": 1,
@@ -1285,26 +1298,26 @@
           "type": "text",
           "id": "text_one",
           "label": "Text for 1 item",
-          "default": "Остава само 1 брой"
+          "default": "Остава само 1 брой!"
         },
         {
           "type": "text",
           "id": "text_other",
           "label": "Text for 2 or more items",
           "info": "[count] is replaced with the real quantity.",
-          "default": "Остават само [count] броя"
+          "default": "Остават само [count] броя!"
         },
         {
           "type": "checkbox",
           "id": "show_sold_out",
-          "label": "Show a note when the variant is sold out",
+          "label": "Also show \"Изчерпан\" under the price when sold out",
           "default": true
         },
         {
           "type": "text",
           "id": "text_sold_out",
           "label": "Sold-out text",
-          "default": "Този вариант е изчерпан"
+          "default": "Изчерпан"
         }
       ]
     },

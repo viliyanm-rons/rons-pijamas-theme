@@ -113,18 +113,23 @@ if (!customElements.get('rons-sticky-atc')) {
  * Low-stock indicator (snippets/rons-stock-status.liquid)
  *
  * Dawn re-renders the product section for the newly selected variant and
- * publishes it with the variant-change event. The stock message is copied
- * from that server-rendered HTML, so it always reflects real inventory.
- * While a new option is loading (or the combination doesn't exist) the
- * message is cleared so a stale count is never shown.
+ * publishes it with the variant-change event. The stock message is taken
+ * from that server-rendered HTML, so it always reflects the real inventory
+ * of the selected variant.
+ *
+ * While a new size or colour is loading (or the combination doesn't exist,
+ * in which case Dawn publishes no event) the message is hidden and marked
+ * busy, so a previous variant's count is never shown. The text is only
+ * replaced when it actually changes, so screen readers announce real changes
+ * once and never the decorative pulse.
  */
 if (typeof subscribe === 'function') {
   subscribe(PUB_SUB_EVENTS.optionValueSelectionChange, (event) => {
     const productInfo = event.data?.target?.closest('product-info');
     const stock = productInfo && document.getElementById(`RonsStock-${productInfo.dataset.section}`);
     if (!stock) return;
-    stock.innerHTML = '';
-    stock.className = 'rons-stock rons-stock--none';
+    stock.classList.add('rons-stock--loading');
+    stock.setAttribute('aria-busy', 'true');
   });
 
   subscribe(PUB_SUB_EVENTS.variantChange, (event) => {
@@ -132,8 +137,9 @@ if (typeof subscribe === 'function') {
     const destination = document.getElementById(`RonsStock-${sectionId}`);
     const source = html?.getElementById(`RonsStock-${sectionId}`);
     if (!destination || !source) return;
-    destination.innerHTML = source.innerHTML;
+    if (destination.innerHTML !== source.innerHTML) destination.innerHTML = source.innerHTML;
     destination.className = source.className;
+    destination.removeAttribute('aria-busy');
   });
 }
 
