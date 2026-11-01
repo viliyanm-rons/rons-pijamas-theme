@@ -14,7 +14,11 @@
     to the link.
 
   Lists in the metaobject are matched by position: the first bust/waist/hips
-  value belongs to the first size, and so on. A missing value shows "—".
+  value belongs to the first size, and so on. Only sizes with bust, waist and
+  hips all filled in are shown; incomplete sizes are left out (and listed in
+  a Theme Editor-only hint), so partial rows never look like valid advice.
+  Values are trimmed and a trailing unit (e.g. "85-88см") is removed because
+  the unit is shown once on its own.
 
   Accepts:
   - block: {Object} the size_guide block
@@ -29,16 +33,47 @@
 {%- if guide_handle != blank -%}
   {%- liquid
     assign guide = shop.metaobjects.size_guide[guide_handle]
-    assign sizes = guide.sizes.value
-    assign bust = guide.bust.value
-    assign waist = guide.waist.value
-    assign hips = guide.hips.value
-    assign garment = guide.garment.value
-    assign unit = guide.unit.value | default: 'см'
+    assign unit = guide.unit.value | default: 'см' | strip
+    assign raw_bust = guide.bust.value
+    assign raw_waist = guide.waist.value
+    assign raw_hips = guide.hips.value
+    assign raw_garment = guide.garment.value
     assign has_garment = false
-    if guide.garment_label.value != blank and garment.size > 0
+    if guide.garment_label.value != blank and raw_garment.size > 0
       assign has_garment = true
     endif
+
+    # Keep only complete sizes, as cleaned parallel lists.
+    assign sep = '§§'
+    assign list_sizes = ''
+    assign list_bust = ''
+    assign list_waist = ''
+    assign list_hips = ''
+    assign list_garment = ''
+    assign skipped_sizes = ''
+    for raw_size in guide.sizes.value
+      assign i = forloop.index0
+      assign clean_size = raw_size | strip
+      assign clean_bust = raw_bust[i] | remove: unit | strip
+      assign clean_waist = raw_waist[i] | remove: unit | strip
+      assign clean_hips = raw_hips[i] | remove: unit | strip
+      assign clean_garment = raw_garment[i] | remove: unit | strip | default: '—'
+      if clean_size != blank and clean_bust != blank and clean_waist != blank and clean_hips != blank
+        assign list_sizes = list_sizes | append: sep | append: clean_size
+        assign list_bust = list_bust | append: sep | append: clean_bust
+        assign list_waist = list_waist | append: sep | append: clean_waist
+        assign list_hips = list_hips | append: sep | append: clean_hips
+        assign list_garment = list_garment | append: sep | append: clean_garment
+      elsif clean_size != blank
+        assign skipped_sizes = skipped_sizes | append: ', ' | append: clean_size
+      endif
+    endfor
+    assign sizes = list_sizes | remove_first: sep | split: sep
+    assign bust = list_bust | remove_first: sep | split: sep
+    assign waist = list_waist | remove_first: sep | split: sep
+    assign hips = list_hips | remove_first: sep | split: sep
+    assign garment = list_garment | remove_first: sep | split: sep
+    assign skipped_sizes = skipped_sizes | remove_first: ', '
   -%}
   {%- capture size_option_name -%}
     {%- render 'rons-size-option-name', product: product, names: block.settings.size_option_names -%}
@@ -81,6 +116,12 @@
           {%- endif -%}
         </header>
 
+        {%- if request.design_mode and skipped_sizes != blank -%}
+          <p class="rons-editor-hint">
+            Размери без попълнени бюст, талия и ханш не се показват: {{ skipped_sizes | escape }}.
+          </p>
+        {%- endif -%}
+
         <div class="rons-sg__picker" role="group" aria-label="{{ block.settings.picker_label | escape }}">
           {%- for size in sizes -%}
             <button type="button" class="rons-sg__size" data-size-index="{{ forloop.index0 }}" aria-pressed="false">
@@ -108,20 +149,20 @@
               <dl class="rons-sg__measures">
                 <div>
                   <dt>{{ block.settings.label_bust | escape }}</dt>
-                  <dd>{{ bust[i] | default: '—' | escape }} <span>{{ unit | escape }}</span></dd>
+                  <dd>{{ bust[i] | escape }} <span>{{ unit | escape }}</span></dd>
                 </div>
                 <div>
                   <dt>{{ block.settings.label_waist | escape }}</dt>
-                  <dd>{{ waist[i] | default: '—' | escape }} <span>{{ unit | escape }}</span></dd>
+                  <dd>{{ waist[i] | escape }} <span>{{ unit | escape }}</span></dd>
                 </div>
                 <div>
                   <dt>{{ block.settings.label_hips | escape }}</dt>
-                  <dd>{{ hips[i] | default: '—' | escape }} <span>{{ unit | escape }}</span></dd>
+                  <dd>{{ hips[i] | escape }} <span>{{ unit | escape }}</span></dd>
                 </div>
                 {%- if has_garment -%}
                   <div>
                     <dt>{{ guide.garment_label.value | escape }}</dt>
-                    <dd>{{ garment[i] | default: '—' | escape }} <span>{{ unit | escape }}</span></dd>
+                    <dd>{{ garment[i] | escape }} <span>{{ unit | escape }}</span></dd>
                   </div>
                 {%- endif -%}
               </dl>
@@ -158,11 +199,11 @@
                 {%- assign i = forloop.index0 -%}
                 <tr data-size-index="{{ i }}">
                   <th scope="row">{{ size | escape }}</th>
-                  <td>{{ bust[i] | default: '—' | escape }}</td>
-                  <td>{{ waist[i] | default: '—' | escape }}</td>
-                  <td>{{ hips[i] | default: '—' | escape }}</td>
+                  <td>{{ bust[i] | escape }}</td>
+                  <td>{{ waist[i] | escape }}</td>
+                  <td>{{ hips[i] | escape }}</td>
                   {%- if has_garment -%}
-                    <td>{{ garment[i] | default: '—' | escape }}</td>
+                    <td>{{ garment[i] | escape }}</td>
                   {%- endif -%}
                 </tr>
               {%- endfor -%}

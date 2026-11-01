@@ -8,8 +8,8 @@
      → that entry.
   3. Otherwise the store default: the first Size Guides entry whose
      "Основна таблица" (is_default) field is ticked.
-  A guide is only used when it has at least one size, so no table is ever
-  shown without real measurements. All data comes from Shopify Admin
+  A guide is only used when at least one size has bust, waist and hips filled
+  in, so no table is ever shown without real measurements. All data comes from Shopify Admin
   (Content › Metaobjects); nothing is hardcoded here.
 
   Liquid snippets can't return objects, so callers capture the handle and
@@ -36,8 +36,20 @@
       endfor
     endif
 
-    if guide != blank and guide.sizes.value.size > 0
-      echo guide.system.handle
+    if guide != blank
+      # Usable only with at least one size that has bust, waist and hips.
+      assign unit = guide.unit.value | default: 'см' | strip
+      for raw_size in guide.sizes.value
+        assign i = forloop.index0
+        assign clean_size = raw_size | strip
+        assign clean_bust = guide.bust.value[i] | remove: unit | strip
+        assign clean_waist = guide.waist.value[i] | remove: unit | strip
+        assign clean_hips = guide.hips.value[i] | remove: unit | strip
+        if clean_size != blank and clean_bust != blank and clean_waist != blank and clean_hips != blank
+          echo guide.system.handle
+          break
+        endif
+      endfor
     endif
   endunless
 -%}
