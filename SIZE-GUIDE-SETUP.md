@@ -1,6 +1,8 @@
 # Size guide system – Shopify Admin setup
 
-The theme shows a size guide ("Кой е моят размер?") on product pages using data you manage in Shopify Admin. Measurements are never stored in the theme code or templates. These definitions must be created once in **Shopify Admin**; the theme cannot create them.
+The theme shows a size guide ("Кой е моят размер?") on product pages using data you manage in Shopify Admin. Measurements are never stored in the theme code or templates.
+
+> **Status for Rons Pijamas (h0d0gn-s1.myshopify.com):** the definitions in sections 1 and 2 and one empty default entry ("Основна таблица с размери", handle `osnovna-tablitsa`, Основна таблица ticked) were created on 2026-11-01 through the Shopify Admin API. You only need to fill in the measurements (section 3A). Sections 1 and 2 are kept as the reference specification.
 
 How the theme chooses a guide for a product:
 
@@ -27,7 +29,7 @@ Fields. Use these exact **keys**; you can use the Bulgarian names as field names
 | Основна таблица | `is_default` | True or false | No | Tick on **one** entry: the store default. |
 | Описание | `description` | Multi-line text | No | Short text under the title. |
 | Мерна единица | `unit` | Single line text | No | Usually `см`. If empty, `см` is shown. |
-| Размери | `sizes` | Single line text, **List of values** | Yes | In order, e.g. `S`, `M`, `L`, `XL`. Must match the product's size values (e.g. `S`) for the "Избери размер" button. |
+| Размери | `sizes` | Single line text, **List of values** | No* | In order, e.g. `S`, `M`, `L`, `XL`. Must match the product's size values (e.g. `S`) for the "Избери размер" button. *Not required in Admin so an entry can be saved before measurements exist; the theme shows no guide until at least one size is entered. |
 | Бюст | `bust` | Single line text, **List of values** | No | Same order as Размери, e.g. `84–88`. |
 | Талия | `waist` | Single line text, **List of values** | No | Same order as Размери. |
 | Ханш | `hips` | Single line text, **List of values** | No | Same order as Размери. |
