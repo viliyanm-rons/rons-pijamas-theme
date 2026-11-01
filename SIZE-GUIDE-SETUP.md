@@ -10,7 +10,7 @@ How the theme chooses a guide for a product:
 2. Product metafield **Таблица с размери** (`custom.size_guide`) points to a Size Guide → that guide.
 3. Otherwise → the Size Guide entry with **Основна таблица** ticked (the store default).
 
-A guide is only shown when it has at least one size. Until a definition and an entry exist, product pages simply show no size-guide link.
+A guide is only shown when at least one size has Бюст, Талия and Ханш all filled in. Sizes with a missing measurement are left out of the guide (in the Theme Editor a note lists them), so incomplete rows never appear as sizing advice. Until a definition and an entry exist, product pages simply show no size-guide link.
 
 ## 1. Metaobject definition "Size Guides"
 
@@ -39,7 +39,7 @@ Fields. Use these exact **keys**; you can use the Bulgarian names as field names
 | Как да се измериш | `how_to_measure` | Multi-line text | No | Measuring instructions. |
 | Илюстрация | `illustration` | File (images only) | No | Measuring illustration. |
 
-Lists are matched by position: the 1st bust value belongs to the 1st size, and so on. A missing value is shown as "—". Text lists allow ranges such as `84–88`.
+Lists are matched by position: the 1st bust value belongs to the 1st size, and so on. A size missing bust, waist or hips is not shown; a missing extra measurement is shown as "—". Values may include the unit (e.g. `85-88см`); the theme removes it and shows the unit once. Text lists allow ranges such as `84–88`.
 
 ## 2. Product metafield definitions
 
@@ -84,7 +84,7 @@ Customize › Products › Default product › **Product information** › block
 ## 5. Preview checklist
 
 - [ ] A product with no `custom.size_guide`: the link appears beside "Размер" and opens the **default** guide.
-- [ ] A product with `custom.size_guide` set: it shows **that** guide.
+- [ ] A product with `custom.size_guide` set (e.g. Халат „Midnight Safari“ → Основна таблица с размери): it shows **that** guide, with no "Liquid error" text.
 - [ ] A product with **Скрий таблицата с размери** ticked: no link.
 - [ ] Opening the guide highlights the size currently selected on the product.
 - [ ] Clicking a size in the guide only highlights it; the product's size does not change.
