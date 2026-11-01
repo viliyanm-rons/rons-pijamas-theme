@@ -94,10 +94,12 @@
           "type": "rons_stock",
           "settings": {
             "threshold": 5,
-            "text_one": "Остава само 1 брой",
-            "text_other": "Остават само [count] броя",
+            "text_one": "Остава само 1 брой!",
+            "text_other": "Остават само [count] броя!",
             "show_sold_out": true,
-            "text_sold_out": "Този вариант е изчерпан"
+            "text_sold_out": "Изчерпан",
+            "enabled": true,
+            "pulse": true
           }
         },
         "policies": {

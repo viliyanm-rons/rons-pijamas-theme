@@ -1,12 +1,18 @@
 {% comment %}
   Ron's Pijamas – honest low-stock indicator for the selected variant.
 
-  Shows a message only when ALL of these are true:
+  Shows a message only when the block's "Show low-stock warning" setting is on
+  and ALL of these are true:
   - Shopify tracks inventory for the variant (inventory_management: shopify)
   - the variant does not allow overselling (inventory_policy: deny)
   - the real inventory quantity is between 1 and the block's threshold
-  When the variant is sold out it can show a neutral sold-out note instead.
+  When the variant is sold out it can show a neutral "Изчерпан" note instead
+  (the Add to cart button shows Dawn's normal sold-out state either way).
   Nothing is shown for untracked or oversellable variants.
+
+  The dot's pulse is decorative (aria-hidden, CSS only) and stops for
+  customers who prefer reduced motion. The wrapper is a polite live region,
+  so only a changed message is announced.
 
   The wrapper id lets assets/rons-custom.js swap in the server-rendered message
   for the newly selected variant (Dawn's variant-change event carries it).
@@ -22,7 +28,7 @@
 
 {%- liquid
   assign state = 'none'
-  if variant != null
+  if block.settings.enabled and variant != null
     if variant.available == false
       if block.settings.show_sold_out
         assign state = 'sold_out'
@@ -37,7 +43,7 @@
 
 <div
   id="RonsStock-{{ section_id }}"
-  class="rons-stock rons-stock--{{ state }}"
+  class="rons-stock rons-stock--{{ state }}{% if block.settings.pulse %} rons-stock--pulse{% endif %}"
   role="status"
   aria-live="polite"
   {{ block.shopify_attributes }}
