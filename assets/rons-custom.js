@@ -261,3 +261,80 @@ document.addEventListener('submit', (event) => {
       button.classList.remove('loading');
     });
 });
+
+/*
+ * Size guide modal (snippets/rons-size-guide-modal.liquid)
+ *
+ * - Size buttons highlight a size's summary and table row inside the guide
+ *   only; they never change the product's variant.
+ * - When the guide opens, the size currently selected on the product is
+ *   highlighted (if the guide has it).
+ * - "Избери размер X" is the explicit action: it selects that value through
+ *   Dawn's own variant inputs (so price, stock and Add to cart update
+ *   normally) and closes the guide.
+ */
+function ronsSizeGuideSelect(modal, index) {
+  const selected = index === null ? null : String(index);
+  modal.querySelectorAll('.rons-sg__size').forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.sizeIndex === selected));
+  });
+  modal.querySelectorAll('.rons-sg__summary').forEach((summary) => {
+    summary.hidden = summary.dataset.sizeIndex !== selected;
+  });
+  modal.querySelectorAll('.rons-sg__table tbody tr').forEach((row) => {
+    row.classList.toggle('is-selected', row.dataset.sizeIndex === selected);
+  });
+  const prompt = modal.querySelector('[data-size-prompt]');
+  if (prompt) prompt.hidden = selected !== null;
+}
+
+function ronsSizeOptionContainer(sectionId) {
+  const productInfo = document.querySelector(`product-info[data-section="${sectionId}"]`);
+  return productInfo?.querySelector('.rons-size-guide__opener--option')?.closest('.product-form__input') || null;
+}
+
+document.addEventListener('click', (event) => {
+  const opener = event.target.closest?.('[data-rons-size-guide-open]');
+  if (opener) {
+    const sectionId = opener.dataset.ronsSizeGuideOpen;
+    const modal = document.getElementById(`SizeGuideModal-${sectionId}`);
+    if (!modal) return;
+    const container = ronsSizeOptionContainer(sectionId);
+    const current = (
+      container?.querySelector('input:checked')?.value ||
+      container?.querySelector('select')?.value ||
+      ''
+    )
+      .trim()
+      .toLowerCase();
+    const match = Array.from(modal.querySelectorAll('.rons-sg__size')).find(
+      (button) => current && button.textContent.trim().toLowerCase() === current,
+    );
+    ronsSizeGuideSelect(modal, match ? match.dataset.sizeIndex : null);
+    return;
+  }
+
+  const sizeButton = event.target.closest?.('.rons-sg__size');
+  if (sizeButton) {
+    ronsSizeGuideSelect(sizeButton.closest('[data-rons-size-guide]'), sizeButton.dataset.sizeIndex);
+    return;
+  }
+
+  const apply = event.target.closest?.('.rons-sg__apply');
+  if (apply) {
+    const modal = apply.closest('[data-rons-size-guide]');
+    const container = ronsSizeOptionContainer(modal.dataset.section);
+    const value = apply.dataset.variantValue;
+    const radio = Array.from(container?.querySelectorAll('input[type="radio"]') || []).find(
+      (input) => input.value === value,
+    );
+    const select = container?.querySelector('select');
+    if (radio && !radio.checked) {
+      radio.click();
+    } else if (!radio && select && select.value !== value) {
+      select.value = value;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    modal.hide?.();
+  }
+});

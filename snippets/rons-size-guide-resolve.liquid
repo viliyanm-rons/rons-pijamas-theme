@@ -1,0 +1,43 @@
+{% comment %}
+  Ron's Pijamas – decides which Size Guide (metaobject type `size_guide`) a
+  product uses and outputs that entry's handle, or nothing.
+
+  Rules, in order:
+  1. Product metafield custom.hide_size_guide is true → no guide.
+  2. Product metafield custom.size_guide (Metaobject reference → Size Guides)
+     → that entry.
+  3. Otherwise the store default: the first Size Guides entry whose
+     "Основна таблица" (is_default) field is ticked.
+  A guide is only used when it has at least one size, so no table is ever
+  shown without real measurements. All data comes from Shopify Admin
+  (Content › Metaobjects); nothing is hardcoded here.
+
+  Liquid snippets can't return objects, so callers capture the handle and
+  look the entry up:
+    {%- capture guide_handle -%}{% render 'rons-size-guide-resolve', product: product %}{%- endcapture -%}
+    {%- assign guide = shop.metaobjects.size_guide[guide_handle] -%}
+
+  Accepts:
+  - product: {Object}
+{% endcomment %}
+
+{%- liquid
+  unless product.metafields.custom.hide_size_guide.value == true
+    assign guide = null
+    assign product_guide = product.metafields.custom.size_guide
+    if product_guide.type == 'metaobject_reference' and product_guide.value != blank
+      assign guide = product_guide.value
+    else
+      for entry in shop.metaobjects.size_guide.values
+        if entry.is_default.value == true
+          assign guide = entry
+          break
+        endif
+      endfor
+    endif
+
+    if guide != blank and guide.sizes.value.size > 0
+      echo guide.system.handle
+    endif
+  endunless
+-%}
