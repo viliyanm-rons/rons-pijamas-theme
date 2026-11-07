@@ -17,8 +17,7 @@
         "announcement-1": {
           "type": "announcement",
           "settings": {
-            "text": "Открий колекцията на Ron's Pijamas",
-            "link": "shopify://collections/all"
+            "text": "Безплатна доставка над 100 евро"
           }
         }
       },

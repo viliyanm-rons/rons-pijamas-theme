@@ -113,12 +113,33 @@ body .customer .field input {
 /* ---------------------------------------------------------------------------
  * 4. Announcement bar & header
  * ------------------------------------------------------------------------- */
+/* Slim bar (~34px): text centred both ways, wraps cleanly if ever needed. */
 body .announcement-bar__message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.4rem;
+  margin: 0;
+  padding: 0.5rem 0;
   font-size: 1.1rem;
+  line-height: 1.4;
   letter-spacing: var(--rons-tracking-wide);
   text-transform: uppercase;
-  padding-top: 0.9rem;
-  padding-bottom: 0.9rem;
+  text-align: center;
+  font-variant-numeric: lining-nums;
+}
+
+@media screen and (max-width: 749px) {
+  body .announcement-bar__message {
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+  }
+}
+
+@media screen and (max-width: 359px) {
+  body .announcement-bar__message {
+    letter-spacing: 0.05em;
+  }
 }
 
 body .header__menu-item {
