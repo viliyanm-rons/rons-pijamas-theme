@@ -9,7 +9,7 @@ Everything below is configured in Shopify Admin. The theme only reads it; no lin
 | Menu "Главно меню (BG)" | `glavno-menyu` | Exists; the live theme still uses `main-menu` |
 | Smart collection "Нощници" (product type = Нощници) | `/collections/noshtnitsi` | 1 product; **not published** to Online Store |
 | Smart collection "Халати" (product type = Халати) | `/collections/halati` | 1 product; **not published** to Online Store |
-| Page "За нас" | `/pages/za-nas` | **Hidden**; no template assigned yet |
+| Page "За нас" | `/pages/za-nas` | **Hidden**; template `page.about` assigned |
 
 Reused existing resources: blog "News" (`/blogs/news`, no articles), page "Contact" (`/pages/contact`, template `contact`), and `/collections/all` for "Всички продукти".
 
@@ -31,10 +31,7 @@ Menu structure (`glavno-menyu`):
 ## To activate (after the PR is approved and merged)
 
 1. **Publish the two collections:** Products › Collections › Нощници › Publishing › Online Store. Repeat for Халати.
-2. **За нас page:** Online Store › Pages › За нас.
-   - Theme template: `page.about`.
-   - Visibility: Visible.
-   - Save.
+2. **За нас page:** Online Store › Pages › За нас › Visibility: Visible › Save. The template `page.about` is already assigned.
 3. **Contact page** (optional): Online Store › Pages › Contact. Rename the title to "Контакти". The template is already `contact`.
 4. **Blog** (optional): Online Store › Blog posts › Manage blogs › News. Rename it to "Блог". The handle `/blogs/news` stays. The page heading "Блог" is a theme setting either way.
 5. **Contact details:** Customize › Pages › Contact. Fill in the Имейл and Телефон blocks. Empty blocks are not shown. Social links are set in Theme settings › Social media.
