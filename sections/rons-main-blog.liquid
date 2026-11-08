@@ -1,0 +1,254 @@
+{% comment %}
+  Ron's Pijamas – editorial blog listing.
+
+  Works with any Shopify blog (Online Store › Blog posts). Articles, images,
+  excerpts and dates come from Shopify; nothing is hardcoded. The heading is
+  a setting (default "Блог"); when it is left empty the blog's own title is
+  used. Without published articles an empty state is shown instead of
+  sample content.
+{% endcomment %}
+
+{%- liquid
+  assign heading = section.settings.heading | default: blog.title
+  case section.settings.image_ratio
+    when 'landscape'
+      assign ratio = '3 / 2'
+    when 'square'
+      assign ratio = '1 / 1'
+    else
+      assign ratio = '4 / 5'
+  endcase
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="rons-blog color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    <header class="rons-blog__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1 class="rons-blog__title h0">{{ heading | escape }}</h1>
+      {%- if section.settings.intro != blank -%}
+        <div class="rons-blog__intro rte">{{ section.settings.intro }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- paginate blog.articles by section.settings.per_page -%}
+      {%- if blog.articles.size > 0 -%}
+        <ul class="rons-blog__grid" role="list" style="--rons-blog-ratio: {{ ratio }};">
+          {%- for article in blog.articles -%}
+            {%- liquid
+              assign featured = false
+              if section.settings.feature_first and forloop.first and paginate.current_page == 1
+                assign featured = true
+              endif
+              if article.excerpt != blank
+                assign excerpt = article.excerpt | strip_html | truncatewords: 30
+              else
+                assign excerpt = article.content | strip_html | truncatewords: 30
+              endif
+            -%}
+            <li class="rons-blog__item{% if featured %} rons-blog__item--featured{% endif %}">
+              <article class="rons-article-card{% if section.settings.show_image and article.image %} rons-article-card--image{% endif %}">
+                {%- if section.settings.show_image and article.image -%}
+                  <a href="{{ article.url }}" class="rons-article-card__media" tabindex="-1" aria-hidden="true">
+                    {%- if featured -%}
+                      {%- assign sizes = '(min-width: 990px) 60vw, (min-width: 750px) 50vw, 100vw' -%}
+                    {%- else -%}
+                      {%- assign sizes = '(min-width: 990px) 30vw, (min-width: 750px) 50vw, 100vw' -%}
+                    {%- endif -%}
+                    {{
+                      article.image
+                      | image_url: width: 1600
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '400, 600, 800, 1000, 1200, 1600',
+                        sizes: sizes,
+                        alt: article.image.alt
+                    }}
+                  </a>
+                {%- endif -%}
+                <div class="rons-article-card__body">
+                  {%- if section.settings.show_date -%}
+                    <p class="rons-article-card__date">{{ article.published_at | time_tag: format: 'date' }}</p>
+                  {%- endif -%}
+                  <h2 class="rons-article-card__title{% if featured %} h1{% else %} h3{% endif %}">
+                    <a href="{{ article.url }}" class="full-unstyled-link">{{ article.title | escape }}</a>
+                  </h2>
+                  {%- if section.settings.show_excerpt and excerpt != blank -%}
+                    <p class="rons-article-card__excerpt">{{ excerpt }}</p>
+                  {%- endif -%}
+                  {%- if section.settings.read_more_label != blank -%}
+                    <a href="{{ article.url }}" class="rons-article-card__more link underlined-link">
+                      {{- section.settings.read_more_label | escape -}}
+                      <span class="visually-hidden">: {{ article.title | escape }}</span>
+                    </a>
+                  {%- endif -%}
+                </div>
+              </article>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          {% render 'pagination', paginate: paginate %}
+        {%- endif -%}
+      {%- else -%}
+        <div class="rons-blog__empty">
+          {%- if section.settings.empty_text != blank -%}
+            <p>{{ section.settings.empty_text | escape }}</p>
+          {%- endif -%}
+          {%- if section.settings.empty_button_label != blank -%}
+            <a href="{{ routes.all_products_collection_url }}" class="button button--secondary">
+              {{- section.settings.empty_button_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Блог – списък със статии",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["blog"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Надзаглавие",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Заглавие",
+      "default": "Блог",
+      "info": "Ако е празно, се използва името на блога."
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Въведение"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Статии на страница",
+      "min": 3,
+      "max": 24,
+      "step": 3,
+      "default": 9
+    },
+    {
+      "type": "checkbox",
+      "id": "feature_first",
+      "label": "Открои най-новата статия",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Карти на статиите"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Показвай основното изображение",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Пропорция на изображението",
+      "options": [
+        { "value": "portrait", "label": "Портрет (4:5)" },
+        { "value": "landscape", "label": "Пейзаж (3:2)" },
+        { "value": "square", "label": "Квадрат" }
+      ],
+      "default": "landscape"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Показвай датата",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_excerpt",
+      "label": "Показвай откъс",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "read_more_label",
+      "label": "Текст на връзката",
+      "default": "Прочети статията"
+    },
+    {
+      "type": "header",
+      "content": "Когато няма статии"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Текст",
+      "default": "Все още няма публикувани статии."
+    },
+    {
+      "type": "text",
+      "id": "empty_button_label",
+      "label": "Бутон към продуктите",
+      "default": "Разгледай продуктите"
+    },
+    {
+      "type": "header",
+      "content": "Оформление"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Цветова схема",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Отстъп отгоре",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Отстъп отдолу",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

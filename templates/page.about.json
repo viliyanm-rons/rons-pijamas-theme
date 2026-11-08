@@ -1,0 +1,201 @@
+{
+  "sections": {
+    "hero": {
+      "type": "rons-hero",
+      "settings": {
+        "layout": "editorial",
+        "image_side": "right",
+        "desktop_height": "medium",
+        "mobile_height": "medium",
+        "overlay_style": "gradient",
+        "overlay_opacity": 30,
+        "text_color": "light",
+        "desktop_position": "bottom-left",
+        "mobile_alignment": "left",
+        "show_badge": false,
+        "badge_text": "",
+        "eyebrow": "За нас",
+        "heading": "Ron's Pijamas",
+        "heading_size": "h0",
+        "text": "Пижами, нощници и халати за спокойните моменти у дома.",
+        "button_label_1": "",
+        "button_link_1": "",
+        "button_label_2": "",
+        "button_link_2": ""
+      }
+    },
+    "intro": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Създадено за твоите моменти у дома",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Ron's Pijamas е за жените, които искат да се чувстват красиви и в най-спокойните си моменти. Вярваме, че бавната неделна сутрин, вечерният ритуал и спокойният сън заслужават дрехи, които са едновременно удобни и елегантни.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-1",
+        "full_width": true,
+        "padding_top": 64,
+        "padding_bottom": 48
+      }
+    },
+    "values": {
+      "type": "multicolumn",
+      "blocks": {
+        "value-1": {
+          "type": "column",
+          "settings": {
+            "title": "Комфорт",
+            "text": "<p>Модели, в които се чувстваш удобно – от бавната сутрин до спокойния сън.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "value-2": {
+          "type": "column",
+          "settings": {
+            "title": "Женственост",
+            "text": "<p>Пижами, нощници и халати, които са едновременно удобни и елегантни.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "value-3": {
+          "type": "column",
+          "settings": {
+            "title": "Внимание към детайла",
+            "text": "<p>Кройката, материята и усещането върху кожата са важни за нас.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "value-1",
+        "value-2",
+        "value-3"
+      ],
+      "settings": {
+        "title": "Нашата философия",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "button_label": "",
+        "button_link": "",
+        "columns_desktop": 3,
+        "column_alignment": "center",
+        "background_style": "none",
+        "color_scheme": "scheme-1",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 48,
+        "padding_bottom": 64
+      }
+    },
+    "materials": {
+      "type": "rons-editorial",
+      "settings": {
+        "layout": "split",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "color_scheme": "scheme-1",
+        "eyebrow": "Материи",
+        "heading": "Сатен и вискоза",
+        "heading_size": "h1",
+        "text": "<p>В колекцията ще откриеш модели от сатен и вискоза. Материята на всеки модел е посочена в описанието на продукта.</p>",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "moments": {
+      "type": "rons-editorial",
+      "settings": {
+        "layout": "split",
+        "image_position": "right",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "color_scheme": "scheme-1",
+        "eyebrow": "Колекцията",
+        "heading": "За всеки момент у дома",
+        "heading_size": "h1",
+        "text": "<p>Пижами, нощници и халати – за вечерния ритуал, за уикенда и за подарък.</p>",
+        "button_label": "Разгледай продуктите",
+        "button_link": "shopify://collections/all",
+        "button_style": "outline",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "cta": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Открий колекцията",
+            "heading_size": "h1"
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Разгледай всички модели на Ron's Pijamas.</p>"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Разгледай продуктите",
+            "button_link": "shopify://collections/all",
+            "button_style_secondary": false,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "scheme-3",
+        "full_width": true,
+        "padding_top": 72,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "intro",
+    "values",
+    "materials",
+    "moments",
+    "cta"
+  ]
+}
