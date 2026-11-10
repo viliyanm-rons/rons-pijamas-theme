@@ -140,6 +140,21 @@
             </ul>
           </nav>
           <div class="menu-drawer__utility-links">
+            {%- comment -%} Ron's Pijamas: account link for phones, where the header account icon is hidden {%- endcomment -%}
+            {%- if shop.customer_accounts_enabled -%}
+              <a
+                href="{{ routes.account_url }}"
+                class="menu-drawer__account link link--text focus-inset medium-hide large-up-hide"
+                rel="nofollow"
+              >
+                <span class="svg-wrapper" aria-hidden="true">{{ 'icon-account.svg' | inline_asset_content }}</span>
+                {%- if customer -%}
+                  {{ 'customer.account.title' | t }}
+                {%- else -%}
+                  {{ 'customer.log_in' | t }}
+                {%- endif -%}
+              </a>
+            {%- endif -%}
             {%- if show_country_selector or show_language_selector -%}
               <div class="menu-drawer__localization header-localization">
                 {%- if show_country_selector -%}
