@@ -338,3 +338,133 @@ document.addEventListener('click', (event) => {
     modal.hide?.();
   }
 });
+
+/* ---------------------------------------------------------------------------
+ * Navigation
+ * Desktop: dropdowns also open on mouse hover. Click, keyboard and Escape
+ * keep Dawn's native <details> behaviour. A click on a hover-opened menu
+ * keeps it open (instead of closing it) until focus or the pointer leaves.
+ * Mobile drawer: first-level sub-menus expand as an accordion in place.
+ * ------------------------------------------------------------------------- */
+const ronsCanHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+const ronsHoverTimers = new WeakMap();
+
+function ronsSetHeaderMenu(menu, open, viaHover = false) {
+  const details = menu?.querySelector(':scope > details');
+  if (!details) return;
+  if (viaHover && open) details.dataset.ronsHover = 'true';
+  if (!open) delete details.dataset.ronsHover;
+  if (details.open === open) return;
+  details.open = open;
+  details.querySelector(':scope > summary')?.setAttribute('aria-expanded', String(open));
+}
+
+document.addEventListener('mouseover', (event) => {
+  if (!ronsCanHover.matches) return;
+  const menu = event.target.closest?.('.header__inline-menu header-menu');
+  if (!menu) return;
+  clearTimeout(ronsHoverTimers.get(menu));
+  document.querySelectorAll('.header__inline-menu header-menu').forEach((other) => {
+    if (other !== menu) ronsSetHeaderMenu(other, false);
+  });
+  if (!menu.querySelector(':scope > details').open) ronsSetHeaderMenu(menu, true, true);
+});
+
+document.addEventListener('mouseout', (event) => {
+  const menu = event.target.closest?.('.header__inline-menu header-menu');
+  if (!menu || menu.contains(event.relatedTarget)) return;
+  const details = menu.querySelector(':scope > details');
+  if (!details?.dataset.ronsHover) return;
+  ronsHoverTimers.set(
+    menu,
+    setTimeout(() => ronsSetHeaderMenu(menu, false), 200),
+  );
+});
+
+document.addEventListener(
+  'click',
+  (event) => {
+    const summary = event.target.closest?.('summary');
+    if (!summary) return;
+
+    // Desktop: clicking a menu that hover already opened keeps it open.
+    const headerMenu = summary.closest('.header__inline-menu header-menu');
+    if (headerMenu && summary.parentElement.dataset.ronsHover) {
+      event.preventDefault();
+      event.stopPropagation();
+      delete summary.parentElement.dataset.ronsHover;
+      summary.setAttribute('aria-expanded', 'true');
+      return;
+    }
+
+    // Mobile drawer: accordion instead of Dawn's slide-in sub-menu.
+    if (summary.closest('#menu-drawer') && summary.matches('.menu-drawer__menu > li > details > summary')) {
+      event.stopPropagation();
+      const details = summary.parentElement;
+      requestAnimationFrame(() => summary.setAttribute('aria-expanded', String(details.open)));
+    }
+  },
+  true,
+);
+
+/* ---------------------------------------------------------------------------
+ * Contact form (sections/rons-contact.liquid): Bulgarian validation messages.
+ * Messages come from the section settings (data-rons-error). Shopify still
+ * validates the form on the server.
+ * ------------------------------------------------------------------------- */
+const ronsEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function ronsContactFieldValid(input) {
+  const value = input.value.trim();
+  if (!value) return false;
+  if (input.type === 'email') return ronsEmailPattern.test(value);
+  return true;
+}
+
+function ronsContactShowError(input, show) {
+  const error = document.getElementById(input.getAttribute('aria-describedby'));
+  if (show) {
+    input.setAttribute('aria-invalid', 'true');
+    if (error) {
+      error.textContent = input.dataset.ronsError || '';
+      error.hidden = false;
+    }
+  } else {
+    input.removeAttribute('aria-invalid');
+    if (error) {
+      error.textContent = '';
+      error.hidden = true;
+    }
+  }
+}
+
+document.addEventListener('submit', (event) => {
+  const form = event.target.closest?.('.rons-contact__form');
+  if (!form) return;
+  let firstInvalid = null;
+  form.querySelectorAll('[data-rons-error]').forEach((input) => {
+    const valid = ronsContactFieldValid(input);
+    ronsContactShowError(input, !valid);
+    if (!valid && !firstInvalid) firstInvalid = input;
+  });
+  if (firstInvalid) {
+    event.preventDefault();
+    firstInvalid.focus();
+  }
+});
+
+document.addEventListener('input', (event) => {
+  const input = event.target.closest?.('.rons-contact__form [data-rons-error]');
+  if (input && input.getAttribute('aria-invalid') === 'true' && ronsContactFieldValid(input)) {
+    ronsContactShowError(input, false);
+  }
+});
+
+document.addEventListener(
+  'blur',
+  (event) => {
+    const input = event.target.closest?.('.rons-contact__form [data-rons-error]');
+    if (input && input.value.trim() !== '') ronsContactShowError(input, !ronsContactFieldValid(input));
+  },
+  true,
+);

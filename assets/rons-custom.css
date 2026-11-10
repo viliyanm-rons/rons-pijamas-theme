@@ -2521,3 +2521,421 @@ body .rons-diagnostics__note {
   color: var(--rons-muted);
   font-size: 1.2rem;
 }
+
+/* ---------------------------------------------------------------------------
+ * 26. Navigation: desktop dropdown and mobile accordion
+ * ------------------------------------------------------------------------- */
+/* Desktop dropdown: slim hairline panel, no shadow (hover handled in rons-custom.js) */
+body .header__inline-menu .header__submenu.list-menu--disclosure {
+  top: 100%;
+  width: auto;
+  min-width: 22rem;
+  padding: 1.2rem 0;
+  border: 0.1rem solid var(--rons-hairline);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body .header__inline-menu .header__submenu .header__menu-item {
+  padding: 0.8rem 2.4rem;
+  white-space: nowrap;
+}
+
+body .header__inline-menu .header__submenu .header__menu-item:hover,
+body .header__inline-menu .header__submenu .list-menu__item--active {
+  text-decoration: underline;
+  text-underline-offset: 0.4rem;
+}
+
+body .header__inline-menu details > summary .icon-caret {
+  transition: transform var(--duration-short) ease;
+}
+
+/* Mobile drawer: sub-menus open as an accordion under their item instead of
+   sliding over the menu (rons-custom.js keeps Dawn's slide handler out). */
+.js body .menu-drawer .menu-drawer__menu details > .menu-drawer__submenu {
+  position: static;
+  transform: none;
+  visibility: visible;
+  background: transparent;
+  z-index: auto;
+  transition: none;
+}
+
+body .menu-drawer .menu-drawer__menu details:not([open]) > .menu-drawer__submenu {
+  display: none;
+}
+
+.js body .menu-drawer .menu-drawer__navigation .submenu-open {
+  visibility: visible;
+}
+
+body .menu-drawer .menu-drawer__submenu .menu-drawer__close-button {
+  display: none;
+}
+
+body .menu-drawer .menu-drawer__inner-submenu {
+  height: auto;
+  overflow: visible;
+}
+
+body .menu-drawer .menu-drawer__submenu .menu-drawer__menu {
+  padding-bottom: 1.2rem;
+}
+
+body .menu-drawer .menu-drawer__submenu .menu-drawer__menu > li {
+  border-bottom: 0;
+}
+
+body .menu-drawer .menu-drawer__submenu .menu-drawer__menu-item {
+  padding: 1rem 3rem 1rem 4.4rem;
+  font-size: 1.4rem;
+}
+
+/* Chevron instead of the slide-in arrow */
+body .menu-drawer summary.menu-drawer__menu-item > .svg-wrapper:first-of-type {
+  display: none;
+}
+
+.js body .menu-drawer summary.menu-drawer__menu-item .icon-caret {
+  display: block;
+  width: 1.2rem;
+  transition: transform var(--duration-short) ease;
+}
+
+body .menu-drawer details[open] > summary.menu-drawer__menu-item .icon-caret {
+  transform: rotate(180deg);
+}
+
+/* ---------------------------------------------------------------------------
+ * 27. Blog listing (sections/rons-main-blog.liquid) and articles
+ * ------------------------------------------------------------------------- */
+body .rons-blog__header {
+  max-width: 64rem;
+  margin: 0 auto 4rem;
+  text-align: center;
+}
+
+body .rons-blog__title {
+  margin: 0.8rem 0 0;
+}
+
+body .rons-blog__intro {
+  margin-top: 1.6rem;
+  color: var(--rons-muted);
+}
+
+body .rons-blog__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4.8rem 2.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body .rons-article-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+body .rons-article-card:not(.rons-article-card--image) {
+  padding-top: 2.4rem;
+  border-top: 0.1rem solid rgb(var(--color-foreground));
+}
+
+body .rons-article-card__media {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: var(--rons-blog-ratio, 3 / 2);
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+body .rons-article-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--rons-ease);
+}
+
+@media (hover: hover) {
+  body .rons-article-card:hover .rons-article-card__media img {
+    transform: scale(1.03);
+  }
+}
+
+body .rons-article-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 2rem;
+}
+
+body .rons-article-card:not(.rons-article-card--image) .rons-article-card__body {
+  padding-top: 0;
+}
+
+body .rons-article-card__date {
+  margin: 0 0 1rem;
+  font-size: var(--rons-label-size);
+  letter-spacing: var(--rons-tracking-wide);
+  text-transform: uppercase;
+  color: var(--rons-muted);
+}
+
+body .rons-article-card__title {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+body .rons-article-card__excerpt {
+  margin: 1.2rem 0 0;
+  color: var(--rons-muted);
+  line-height: 1.65;
+}
+
+body .rons-article-card__more {
+  margin-top: auto;
+  padding-top: 2rem;
+  font-size: 1.2rem;
+  letter-spacing: var(--rons-tracking-label);
+  text-transform: uppercase;
+}
+
+body .rons-blog .pagination-wrapper {
+  margin-top: 5.6rem;
+}
+
+body .rons-blog__empty {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 4.8rem 0;
+  border-top: 0.1rem solid var(--rons-hairline);
+  border-bottom: 0.1rem solid var(--rons-hairline);
+  text-align: center;
+}
+
+body .rons-blog__empty p {
+  margin: 0 0 2.4rem;
+  color: var(--rons-muted);
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-blog__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body .rons-blog__item--featured {
+    grid-column: 1 / -1;
+  }
+
+  body .rons-blog__item--featured .rons-article-card--image {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 4rem;
+    align-items: center;
+  }
+
+  body .rons-blog__item--featured .rons-article-card__body {
+    padding-top: 0;
+  }
+
+  body .rons-blog__item--featured .rons-article-card__more {
+    margin-top: 0;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  body .rons-blog__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6.4rem 3.2rem;
+  }
+}
+
+/* Article: readable measure and editorial rhythm */
+body .article-template__title {
+  font-size: calc(var(--font-heading-scale) * 3.4rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+body .article-template .circle-divider,
+body .article-template .caption-with-letter-spacing {
+  color: var(--rons-muted);
+}
+
+body .article-template__content {
+  max-width: 68rem;
+  font-size: 1.7rem;
+  line-height: 1.8;
+}
+
+body .article-template__content > * + * {
+  margin-top: 1.6em;
+}
+
+body .article-template__content h2,
+body .article-template__content h3 {
+  margin-top: 2em;
+  line-height: 1.25;
+}
+
+body .article-template__content blockquote {
+  margin: 2.4em 0;
+  padding: 0 0 0 2.4rem;
+  border-left: 0.1rem solid rgb(var(--color-foreground));
+  font-family: var(--font-heading-family);
+  font-size: 2.2rem;
+  line-height: 1.5;
+}
+
+body .article-template__content img {
+  width: 100%;
+  height: auto;
+}
+
+@media screen and (min-width: 750px) {
+  body .article-template__title {
+    font-size: calc(var(--font-heading-scale) * 4.8rem);
+  }
+
+  body .article-template__content {
+    font-size: 1.8rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * 28. Contact page (sections/rons-contact.liquid)
+ * ------------------------------------------------------------------------- */
+body .rons-contact__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+}
+
+body .rons-contact__title {
+  margin: 0.8rem 0 0;
+}
+
+body .rons-contact__text {
+  margin-top: 1.6rem;
+  color: var(--rons-muted);
+  line-height: 1.7;
+}
+
+body .rons-contact__details {
+  display: grid;
+  gap: 2.4rem;
+  margin-top: 3.2rem;
+  padding-top: 3.2rem;
+  border-top: 0.1rem solid var(--rons-hairline);
+}
+
+body .rons-contact__label {
+  margin: 0 0 0.6rem;
+  font-size: var(--rons-label-size);
+  letter-spacing: var(--rons-tracking-wide);
+  text-transform: uppercase;
+  color: var(--rons-muted);
+}
+
+body .rons-contact__detail a {
+  font-size: 1.6rem;
+  overflow-wrap: anywhere;
+}
+
+body .rons-contact__detail .rte > :first-child {
+  margin-top: 0;
+}
+
+body .rons-contact__social .list-social {
+  justify-content: flex-start;
+  margin-left: -1.1rem;
+}
+
+body .rons-contact__form {
+  display: grid;
+  gap: 2rem;
+}
+
+body .rons-contact__field {
+  display: grid;
+  gap: 0.8rem;
+}
+
+body .rons-contact__field-label {
+  font-size: 1.2rem;
+  letter-spacing: var(--rons-tracking-label);
+  text-transform: uppercase;
+}
+
+body .rons-contact__input {
+  width: 100%;
+  min-height: 4.8rem;
+  padding: 1.2rem 1.4rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.35);
+  border-radius: 0;
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-body-family);
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+body .rons-contact__textarea {
+  min-height: 16rem;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+body .rons-contact__input:focus {
+  outline: none;
+  border-color: rgb(var(--color-foreground));
+  box-shadow: 0 0 0 0.1rem rgb(var(--color-foreground));
+}
+
+body .rons-contact__input[aria-invalid='true'] {
+  border-color: rgb(var(--rons-alert));
+}
+
+body .rons-contact__error {
+  margin: 0;
+  font-size: 1.3rem;
+  color: rgb(var(--rons-alert));
+}
+
+body .rons-contact__note {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--rons-muted);
+}
+
+body .rons-contact__status {
+  padding: 1.6rem 2rem;
+  border: 0.1rem solid rgb(var(--color-foreground));
+}
+
+body .rons-contact__status p {
+  margin: 0;
+}
+
+body .rons-contact__status--error {
+  border-color: rgb(var(--rons-alert));
+  color: rgb(var(--rons-alert));
+}
+
+body .rons-contact__status:focus {
+  outline: none;
+}
+
+@media screen and (min-width: 990px) {
+  body .rons-contact__grid {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    gap: 9.6rem;
+    align-items: start;
+  }
+}
