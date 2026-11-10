@@ -119,6 +119,8 @@ body .announcement-bar__message {
   text-transform: uppercase;
   padding-top: 0.9rem;
   padding-bottom: 0.9rem;
+  /* The serif's default old-style figures make "100" read as "ıoo" */
+  font-variant-numeric: lining-nums;
 }
 
 body .header__menu-item {
