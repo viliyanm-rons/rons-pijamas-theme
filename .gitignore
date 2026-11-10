@@ -10,3 +10,9 @@ Thumbs.db
 .shopify
 node_modules
 *.zip
+# Development-only output (keep out of the theme repository)
+screenshots/
+test-results/
+playwright-report/
+*.log
+.env
