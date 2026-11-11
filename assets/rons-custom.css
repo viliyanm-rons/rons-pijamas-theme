@@ -2962,17 +2962,22 @@ body .rons-contact__status:focus {
  * (Dawn moves search to the left when customer accounts are on).
  * ------------------------------------------------------------------------- */
 @media screen and (min-width: 990px) {
+  /* Full-width header with equal 3.2rem side padding (Dawn caps it at the
+     page width and pads it 5rem), so the logo and icons sit near the edges
+     while the menu stays centred. */
   body .header.header--middle-left.header--has-menu:not(.drawer-menu) {
     grid-template-areas: 'heading navigation icons';
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     column-gap: 2.4rem;
     min-height: 7.6rem;
+    max-width: none;
+    padding-left: 3.2rem;
+    padding-right: 3.2rem;
   }
 
   body .header--middle-left:not(.drawer-menu) .header__heading,
   body .header--middle-left:not(.drawer-menu) .header__heading-link {
     justify-self: start;
-    margin-left: 0;
   }
 
   body .header--middle-left:not(.drawer-menu) .header__inline-menu {
@@ -2992,6 +2997,7 @@ body .rons-contact__status:focus {
   body .header--middle-left:not(.drawer-menu) .header__icons {
     justify-self: end;
     align-items: center;
+    padding-right: 0;
   }
 }
 
