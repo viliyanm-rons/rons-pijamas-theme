@@ -3071,8 +3071,8 @@ body .header__heading-link .h2 {
 
 @media screen and (max-width: 374px) {
   body .header__heading-link .h2 {
-    font-size: calc(var(--font-heading-scale) * 1.4rem);
-    letter-spacing: 0.06em;
+    font-size: calc(var(--font-heading-scale) * 1.3rem);
+    letter-spacing: 0.03em;
   }
 }
 
