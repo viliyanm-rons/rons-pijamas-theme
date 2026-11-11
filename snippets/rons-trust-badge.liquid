@@ -1,0 +1,54 @@
+{% comment %}
+  Ron's Pijamas – trust badge (stars, rating, customer count).
+
+  The wording is set once for the whole store in Theme settings › Значка за
+  доверие. Banners only choose whether to show the badge and where. Show it
+  only with accurate figures that can be backed up.
+
+  When "Hide on neighbouring banners" is on, a badge is hidden when the
+  section directly before it already shows one (CSS, see rons-custom.css).
+
+  Accepts:
+  - link: {String} optional link (overrides the global link)
+  - class: {String} extra classes
+
+  Usage:
+  {% render 'rons-trust-badge', link: section.settings.badge_link, class: 'rons-hero__badge' %}
+
+  Colours follow --rons-trust-fg / --rons-trust-shade (set by the hero and
+  editorial banners), so the badge stays readable on white and on photos.
+{% endcomment %}
+
+{%- liquid
+  assign rating = settings.trust_badge_rating | strip
+  assign label = settings.trust_badge_text | strip
+  assign url = link | default: settings.trust_badge_link
+  assign tag = 'p'
+  if url != blank
+    assign tag = 'a'
+  endif
+-%}
+
+{%- if rating != blank or label != blank -%}
+  <{{ tag }}
+    {% if url != blank %}
+      href="{{ url }}"
+    {% endif %}
+    class="rons-trust-badge rons-trust-badge--stars-{{ settings.trust_badge_stars | default: 'mono' }}{% if url != blank %} rons-trust-badge--link{% endif %}{% if class != blank %} {{ class }}{% endif %}"
+    {% if settings.trust_badge_hide_adjacent %}
+      data-rons-trust-hide-adjacent
+    {% endif %}
+  >
+    <span class="rons-trust-badge__stars" aria-hidden="true">
+      {%- for i in (1..5) -%}
+        <svg viewBox="0 0 20 20" focusable="false"><path d="M10 1.6l2.47 5.3 5.8.67-4.29 3.95 1.15 5.73L10 14.36l-5.13 2.89 1.15-5.73L1.73 7.57l5.8-.67z" fill="currentColor"/></svg>
+      {%- endfor -%}
+    </span>
+    {%- if rating != blank -%}
+      <span class="rons-trust-badge__rating">{{ rating | escape }}</span>
+    {%- endif -%}
+    {%- if label != blank -%}
+      <span class="rons-trust-badge__label">{{ label | escape }}</span>
+    {%- endif -%}
+  </{{ tag }}>
+{%- endif -%}

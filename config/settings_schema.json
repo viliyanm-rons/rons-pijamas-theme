@@ -1579,6 +1579,56 @@
     ]
   },
   {
+    "name": "Значка за доверие",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Звезди, оценка и брой клиенти, показвани в банерите на началната страница. Включва се отделно във всеки банер. Показвайте само точни данни, които можете да докажете."
+      },
+      {
+        "type": "text",
+        "id": "trust_badge_rating",
+        "label": "Оценка",
+        "default": "5.0 / 5"
+      },
+      {
+        "type": "text",
+        "id": "trust_badge_text",
+        "label": "Текст",
+        "default": "5000+ доволни клиентки"
+      },
+      {
+        "type": "url",
+        "id": "trust_badge_link",
+        "label": "Връзка (по избор)",
+        "info": "Напр. страница с вашите отзиви."
+      },
+      {
+        "type": "select",
+        "id": "trust_badge_stars",
+        "label": "Цвят на звездите",
+        "options": [
+          {
+            "value": "mono",
+            "label": "Като текста (черно/бяло)"
+          },
+          {
+            "value": "champagne",
+            "label": "Шампанско злато"
+          }
+        ],
+        "default": "mono"
+      },
+      {
+        "type": "checkbox",
+        "id": "trust_badge_hide_adjacent",
+        "label": "Скрий в съседни банери",
+        "info": "Не показва значката в банер, който е непосредствено след друг банер със значка.",
+        "default": true
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.customer_accounts.name",
     "settings": [
       {

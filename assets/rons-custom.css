@@ -2288,37 +2288,102 @@ body .rons-upsell__error {
 }
 
 /* ---------------------------------------------------------------------------
- * 24. Hero trust badge (sections/rons-hero.liquid)
- * A slim outlined pill in the hero's text colour.
+ * 24. Trust badge (snippets/rons-trust-badge.liquid)
+ * Slim hairline pill: stars, rating, customer count. Colours come from
+ * --rons-trust-fg / --rons-trust-shade so it reads on white and on photos;
+ * the shade is a faint tint (only visible over photos).
  * ------------------------------------------------------------------------- */
-body .rons-hero__badge {
+body .rons-trust-badge {
+  --rons-trust-fg: var(--color-foreground);
+  --rons-trust-shade: var(--color-background);
+  --rons-trust-star: rgb(var(--rons-trust-fg));
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem;
+  justify-content: center;
+  column-gap: 1.1rem;
+  row-gap: 0.2rem;
   width: fit-content;
   max-width: 100%;
+  margin: 0;
   padding: 0.6rem 1.4rem;
-  border: 0.1rem solid rgba(var(--rons-hero-fg), 0.45);
+  border: 0.1rem solid rgba(var(--rons-trust-fg), 0.4);
   border-radius: 10rem;
+  background: rgba(var(--rons-trust-shade), 0.22);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: rgb(var(--rons-trust-fg));
   font-family: var(--font-body-family);
   font-size: 1.15rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   line-height: 1.4;
-  color: rgb(var(--rons-hero-fg));
   text-decoration: none;
-  white-space: normal;
+  font-variant-numeric: lining-nums;
 }
 
-body .rons-hero__box > .rons-hero__badge + * {
-  margin-top: 1.8rem;
+body .rons-trust-badge--stars-champagne {
+  --rons-trust-star: #c4a76c;
 }
 
-body .rons-hero__badge--link {
+body .rons-trust-badge__stars {
+  display: inline-flex;
+  gap: 0.15rem;
+  color: var(--rons-trust-star);
+}
+
+body .rons-trust-badge__stars svg {
+  display: block;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+body .rons-trust-badge__rating {
+  font-weight: 500;
+}
+
+body .rons-trust-badge--link {
   transition: border-color var(--duration-short) ease;
 }
 
-body .rons-hero__badge--link:hover {
-  border-color: rgb(var(--rons-hero-fg));
+body .rons-trust-badge--link:hover {
+  border-color: rgb(var(--rons-trust-fg));
+}
+
+/* Neighbouring banners: no second badge right after a section with one */
+body .shopify-section:has([data-rons-trust-hide-adjacent]) + .shopify-section [data-rons-trust-hide-adjacent] {
+  display: none;
+}
+
+/* Phones: compact enough to stay on one line from 320px */
+@media screen and (max-width: 749px) {
+  body .rons-trust-badge {
+    column-gap: 0.8rem;
+    padding: 0.55rem 1.1rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+  }
+
+  body .rons-trust-badge__stars svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-trust-badge {
+    font-size: 1.2rem;
+  }
+}
+
+/* In the hero: follow the hero's text colour for each layout */
+body .rons-hero .rons-trust-badge {
+  --rons-trust-fg: var(--rons-hero-fg);
+  --rons-trust-shade: var(--rons-hero-shade);
+}
+
+body .rons-hero__box > .rons-hero__badge + *,
+body .rons-hero__box > * + .rons-hero__badge {
+  margin-top: 1.8rem;
 }
 
 body .rons-hero__content--mobile-center .rons-hero__badge {
@@ -2327,10 +2392,6 @@ body .rons-hero__content--mobile-center .rons-hero__badge {
 }
 
 @media screen and (min-width: 750px) {
-  body .rons-hero__badge {
-    font-size: 1.2rem;
-  }
-
   body .rons-hero__content--middle-center .rons-hero__badge,
   body .rons-hero__content--bottom-center .rons-hero__badge {
     margin-left: auto;
@@ -2347,6 +2408,17 @@ body .rons-hero__content--mobile-center .rons-hero__badge {
     margin-left: 0;
     margin-right: 0;
   }
+}
+
+/* In editorial banners: white on photos (overlay), scheme colours beside them */
+body .rons-editorial--overlay .rons-trust-badge {
+  --rons-trust-fg: 255, 255, 255;
+  --rons-trust-shade: 0, 0, 0;
+}
+
+body .rons-editorial--overlay .rons-editorial__badge {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ---------------------------------------------------------------------------

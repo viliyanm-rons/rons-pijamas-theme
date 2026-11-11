@@ -44,8 +44,10 @@
   endif
 
   assign show_badge = false
-  if section.settings.show_badge and section.settings.badge_text != blank
-    assign show_badge = true
+  if section.settings.show_badge
+    if settings.trust_badge_rating != blank or settings.trust_badge_text != blank
+      assign show_badge = true
+    endif
   endif
 
   assign has_text = false
@@ -134,21 +136,23 @@
     {%- if has_text -%}
       <div class="rons-hero__content page-width rons-hero__content--{{ section.settings.desktop_position }} rons-hero__content--mobile-{{ section.settings.mobile_alignment }}">
         <div class="rons-hero__box">
-          {%- if show_badge -%}
-            {%- if section.settings.badge_link != blank -%}
-              <a href="{{ section.settings.badge_link }}" class="rons-hero__badge rons-hero__badge--link">
-                {{- section.settings.badge_text | escape -}}
-              </a>
-            {%- else -%}
-              <p class="rons-hero__badge">{{ section.settings.badge_text | escape }}</p>
-            {%- endif -%}
-          {%- endif -%}
+          {%- liquid
+            if show_badge
+              capture badge
+                render 'rons-trust-badge', link: section.settings.badge_link, class: 'rons-hero__badge'
+              endcapture
+            endif
+            if section.settings.badge_position == 'above_heading'
+              echo badge
+            endif
+          -%}
           {%- if section.settings.eyebrow != blank -%}
             <p class="rons-hero__eyebrow rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
           {%- endif -%}
           {%- if section.settings.heading != blank -%}
             <h2 class="rons-hero__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
           {%- endif -%}
+          {%- if section.settings.badge_position == 'below_heading' %}{{ badge }}{% endif -%}
           {%- if section.settings.text != blank -%}
             <p class="rons-hero__text">{{ section.settings.text }}</p>
           {%- endif -%}
@@ -169,6 +173,7 @@
               {%- endif -%}
             </div>
           {%- endif -%}
+          {%- if section.settings.badge_position == 'near_buttons' %}{{ badge }}{% endif -%}
         </div>
       </div>
     {%- endif -%}
@@ -411,20 +416,25 @@
       "type": "checkbox",
       "id": "show_badge",
       "label": "Show trust badge",
-      "info": "Only turn on when the rating and customer numbers are accurate and can be backed up.",
+      "info": "Text and star colour are set once in Theme settings › Значка за доверие. Only turn on when the figures are accurate and can be backed up.",
       "default": false
     },
     {
-      "type": "text",
-      "id": "badge_text",
-      "label": "Badge text",
-      "default": "★ 5.0 оценка | 1000+ доволни клиенти"
+      "type": "select",
+      "id": "badge_position",
+      "label": "Badge position",
+      "options": [
+        { "value": "above_heading", "label": "Above the heading" },
+        { "value": "below_heading", "label": "Below the heading" },
+        { "value": "near_buttons", "label": "Below the buttons" }
+      ],
+      "default": "above_heading"
     },
     {
       "type": "url",
       "id": "badge_link",
       "label": "Badge link (optional)",
-      "info": "e.g. a page or app listing your reviews."
+      "info": "Overrides the link from Theme settings for this banner."
     },
     {
       "type": "header",
