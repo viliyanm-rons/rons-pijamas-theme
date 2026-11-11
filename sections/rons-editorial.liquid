@@ -13,6 +13,12 @@
 
 {%- liquid
   assign image = section.settings.image
+  assign badge = ''
+  if section.settings.show_badge
+    capture badge
+      render 'rons-trust-badge', link: section.settings.badge_link, class: 'rons-editorial__badge'
+    endcapture
+  endif
   assign show_button = false
   if section.settings.button_label != blank and section.settings.button_link != blank
     assign show_button = true
@@ -69,12 +75,14 @@
           {%- if image == blank -%}
             <p class="rons-editor-hint">Избери снимка. Дотогава този раздел е скрит за клиентите.</p>
           {%- endif -%}
+          {%- if section.settings.badge_position == 'above_heading' %}{{ badge }}{% endif -%}
           {%- if section.settings.eyebrow != blank -%}
             <p class="rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
           {%- endif -%}
           {%- if section.settings.heading != blank -%}
             <h2 class="rons-editorial__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
           {%- endif -%}
+          {%- if section.settings.badge_position == 'below_heading' %}{{ badge }}{% endif -%}
           {%- if section.settings.text != blank -%}
             <div class="rons-editorial__text rte">{{ section.settings.text }}</div>
           {%- endif -%}
@@ -86,6 +94,7 @@
               {{- section.settings.button_label | escape -}}
             </a>
           {%- endif -%}
+          {%- if section.settings.badge_position == 'near_buttons' %}{{ badge }}{% endif -%}
         </div>
       </div>
     </div>
@@ -210,6 +219,34 @@
         { "value": "outline", "label": "Outline" }
       ],
       "default": "outline"
+    },
+    {
+      "type": "header",
+      "content": "Trust badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show trust badge",
+      "info": "Text and star colour are set once in Theme settings › Значка за доверие. Only turn on when the figures are accurate and can be backed up.",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "badge_position",
+      "label": "Badge position",
+      "options": [
+        { "value": "above_heading", "label": "Above the heading" },
+        { "value": "below_heading", "label": "Below the heading" },
+        { "value": "near_buttons", "label": "Below the button" }
+      ],
+      "default": "below_heading"
+    },
+    {
+      "type": "url",
+      "id": "badge_link",
+      "label": "Badge link (optional)",
+      "info": "Overrides the link from Theme settings for this banner."
     },
     {
       "type": "header",
