@@ -3146,8 +3146,8 @@ body .rons-contact__status:focus {
   }
 }
 
-/* Small desktops: keep the wordmark from crowding the centred menu */
-@media screen and (min-width: 990px) and (max-width: 1199px) {
+/* Small desktops (990–1279px): keep the wordmark from crowding the centred menu */
+@media screen and (min-width: 990px) and (max-width: 1279px) {
   body .header--middle-left .header__heading-link .h2 {
     font-size: calc(var(--font-heading-scale) * 2rem);
     letter-spacing: 0.12em;
@@ -3160,6 +3160,15 @@ body .rons-contact__status:focus {
 
   body .header--middle-left:not(.drawer-menu) .header__inline-menu summary.header__menu-item {
     padding-right: 2.4rem;
+  }
+
+  /* Keep the split item (Продукти + caret) tight, as on wider screens */
+  body .header--middle-left:not(.drawer-menu) .header__inline-menu .rons-menu-split__link {
+    padding-right: 0.2rem;
+  }
+
+  body .header--middle-left:not(.drawer-menu) .header__inline-menu summary.rons-menu-split__toggle {
+    padding: 0;
   }
 }
 
