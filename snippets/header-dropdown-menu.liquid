@@ -8,21 +8,54 @@
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
     {%- for link in section.settings.menu.links -%}
-      <li>
+      {%- comment -%}
+        Ron's Pijamas: a parent item with its own URL is a real link (e.g. Продукти →
+        all products) followed by a caret button that opens its dropdown.
+      {%- endcomment -%}
+      {%- liquid
+        assign split = false
+        if link.links != blank and link.url != blank and link.url != '#'
+          assign split = true
+        endif
+      -%}
+      <li{% if split %} class="rons-menu-split"{% endif %}>
         {%- if link.links != blank -%}
+          {%- if split -%}
+            <a
+              id="HeaderMenu-{{ link.handle }}-link"
+              href="{{ link.url }}"
+              class="header__menu-item list-menu__item link link--text focus-inset rons-menu-split__link"
+              {% if link.current %}
+                aria-current="page"
+              {% endif %}
+            >
+              <span
+                {%- if link.current or link.child_active %}
+                  class="header__active-menu-item"
+                {% endif %}
+              >
+                {{- link.title | escape -}}
+              </span>
+            </a>
+          {%- endif -%}
           <header-menu>
             <details id="Details-HeaderMenu-{{ forloop.index }}">
               <summary
                 id="HeaderMenu-{{ link.handle }}"
-                class="header__menu-item list-menu__item link focus-inset"
+                class="header__menu-item list-menu__item link focus-inset{% if split %} rons-menu-split__toggle{% endif %}"
+                {% if split %}
+                  aria-label="{{ link.title | escape }}"
+                {% endif %}
               >
-                <span
-                  {%- if link.child_active %}
-                    class="header__active-menu-item"
-                  {% endif %}
-                >
-                  {{- link.title | escape -}}
-                </span>
+                {%- unless split -%}
+                  <span
+                    {%- if link.child_active %}
+                      class="header__active-menu-item"
+                    {% endif %}
+                  >
+                    {{- link.title | escape -}}
+                  </span>
+                {%- endunless -%}
                 {{- 'icon-caret.svg' | inline_asset_content -}}
               </summary>
               <ul

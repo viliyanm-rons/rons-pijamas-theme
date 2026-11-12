@@ -359,9 +359,16 @@ function ronsSetHeaderMenu(menu, open, viaHover = false) {
   details.querySelector(':scope > summary')?.setAttribute('aria-expanded', String(open));
 }
 
+// Hover target is the whole menu item, so a split item (link + caret
+// button, e.g. Продукти) opens on the link too.
+function ronsHoverMenu(target) {
+  const item = target.closest?.('.header__inline-menu .list-menu--inline > li');
+  return item?.querySelector(':scope > header-menu') || null;
+}
+
 document.addEventListener('mouseover', (event) => {
   if (!ronsCanHover.matches) return;
-  const menu = event.target.closest?.('.header__inline-menu header-menu');
+  const menu = ronsHoverMenu(event.target);
   if (!menu) return;
   clearTimeout(ronsHoverTimers.get(menu));
   document.querySelectorAll('.header__inline-menu header-menu').forEach((other) => {
@@ -371,8 +378,8 @@ document.addEventListener('mouseover', (event) => {
 });
 
 document.addEventListener('mouseout', (event) => {
-  const menu = event.target.closest?.('.header__inline-menu header-menu');
-  if (!menu || menu.contains(event.relatedTarget)) return;
+  const menu = ronsHoverMenu(event.target);
+  if (!menu || menu.parentElement.contains(event.relatedTarget)) return;
   const details = menu.querySelector(':scope > details');
   if (!details?.dataset.ronsHover) return;
   ronsHoverTimers.set(

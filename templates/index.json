@@ -132,9 +132,9 @@
         "category-1": {
           "type": "category",
           "settings": {
-            "collection": "frontpage",
+            "collection": "pizhami",
             "image": "shopify://shop_images/0-0-64099-0-000600.jpg",
-            "title": "Сатенени пижами",
+            "title": "Пижами",
             "cta": "Разгледай",
             "link": ""
           }
@@ -142,8 +142,8 @@
         "category-2": {
           "type": "category",
           "settings": {
-            "collection": "",
-            "title": "Памучни пижами",
+            "collection": "noshtnitsi",
+            "title": "Нощници",
             "cta": "Разгледай",
             "link": ""
           }
@@ -151,17 +151,8 @@
         "category-3": {
           "type": "category",
           "settings": {
-            "collection": "",
-            "title": "Нощници",
-            "cta": "Разгледай",
-            "link": ""
-          }
-        },
-        "category-4": {
-          "type": "category",
-          "settings": {
-            "collection": "",
-            "title": "Домашно облекло",
+            "collection": "halati",
+            "title": "Халати",
             "cta": "Разгледай",
             "link": ""
           }
@@ -170,23 +161,22 @@
       "block_order": [
         "category-1",
         "category-2",
-        "category-3",
-        "category-4"
+        "category-3"
       ],
       "settings": {
         "caption": "",
         "heading": "Пазарувай по категория",
         "heading_size": "h1",
         "heading_alignment": "center",
-        "layout": "campaign",
+        "layout": "grid",
         "show_numbers": true,
         "image_ratio": "portrait",
-        "label_position": "overlay",
+        "label_position": "below",
         "overlay_opacity": 35,
-        "columns_desktop": 4,
+        "columns_desktop": 3,
         "color_scheme": "scheme-1",
         "columns_mobile": "2",
-        "swipe_on_mobile": false,
+        "swipe_on_mobile": true,
         "padding_top": 48,
         "padding_bottom": 64
       }

@@ -2691,6 +2691,66 @@ body .menu-drawer details[open] > summary.menu-drawer__menu-item .icon-caret {
   transform: rotate(180deg);
 }
 
+/* Split parent item (link + caret button), e.g. Продукти → all products.
+   The dropdown hangs from the whole item, aligned to its left edge. */
+body .header__inline-menu .rons-menu-split {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+body .header__inline-menu .rons-menu-split__link {
+  padding-right: 0.2rem;
+}
+
+body .header__inline-menu .rons-menu-split details {
+  position: static;
+}
+
+body .header__inline-menu summary.rons-menu-split__toggle {
+  position: relative;
+  width: 2.6rem;
+  min-height: 4.4rem;
+  padding: 0;
+}
+
+body .header__inline-menu summary.rons-menu-split__toggle .icon-caret {
+  right: 0.9rem;
+}
+
+body .header__inline-menu .rons-menu-split .header__submenu {
+  top: 100%;
+  left: 0;
+}
+
+/* Mobile drawer: the label is a link; the caret button on the right of the
+   same row expands the accordion below it. */
+body .menu-drawer .rons-drawer-split {
+  position: relative;
+}
+
+body .menu-drawer .rons-drawer-split__link {
+  display: flex;
+  align-items: center;
+  min-height: 5.6rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 6.4rem;
+}
+
+body .menu-drawer summary.rons-drawer-split__toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6.4rem;
+  height: 5.6rem;
+  padding: 0;
+}
+
+body .menu-drawer summary.rons-drawer-split__toggle > .svg-wrapper {
+  right: 2.6rem;
+}
+
 /* ---------------------------------------------------------------------------
  * 27. Blog listing (sections/rons-main-blog.liquid) and articles
  * ------------------------------------------------------------------------- */
