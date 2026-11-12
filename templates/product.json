@@ -34,9 +34,19 @@
         "size_guide": {
           "type": "size_guide",
           "settings": {
-            "label": "Таблица с размери",
+            "size_option_names": "Размер, Size",
+            "label": "Кой е моят размер?",
             "heading": "Таблица с размери",
-            "page": ""
+            "picker_label": "Избери размер",
+            "prompt": "Избери размер, за да видиш мерките.",
+            "apply_label": "Избери размер [size]",
+            "label_size": "Размер",
+            "label_bust": "Бюст",
+            "label_waist": "Талия",
+            "label_hips": "Ханш",
+            "unit_note": "Всички мерки са в [unit].",
+            "advice_heading": "Съвет за размера",
+            "how_to_heading": "Как да се измериш"
           }
         },
         "buy_buttons": {

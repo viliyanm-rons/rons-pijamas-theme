@@ -488,7 +488,7 @@
                 {%- when 'rons_gift_message' -%}
                   {%- render 'rons-gift-message', block: block, product_form_id: product_form_id -%}
                 {%- when 'size_guide' -%}
-                  {%- render 'rons-size-guide-opener', block: block, product: product -%}
+                  {%- render 'rons-size-guide-opener', product: product, placement: 'block' -%}
                 {%- when 'share' -%}
                   {% liquid
                     assign share_url = product.selected_variant.url | default: product.url | prepend: request.origin
@@ -1571,42 +1571,92 @@
       "settings": [
         {
           "type": "paragraph",
-          "content": "Hidden until real measurements are added. Shows the product metafield custom.size_guide (page or rich text) when set, otherwise the page or size chart image below."
+          "content": "Measurements come from Shopify Admin › Content › Metaobjects › Size Guides. A product uses its custom.size_guide entry, otherwise the entry marked \"Основна таблица\". Products with custom.hide_size_guide = true show no guide. The link appears beside the size option; this block's position is only used for products without a size option."
+        },
+        {
+          "type": "text",
+          "id": "size_option_names",
+          "label": "Size option names",
+          "info": "Comma-separated product option names that are sizes.",
+          "default": "Размер, Size"
         },
         {
           "type": "text",
           "id": "label",
           "label": "Link label",
-          "default": "Таблица с размери"
+          "default": "Кой е моят размер?"
         },
         {
           "type": "text",
           "id": "heading",
-          "label": "Heading",
+          "label": "Small heading above the title",
           "default": "Таблица с размери"
         },
         {
-          "type": "page",
-          "id": "page",
-          "label": "Size guide page",
-          "info": "A page with your size table, e.g. built with a table in the page editor."
+          "type": "header",
+          "content": "Texts in the guide"
         },
         {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Size chart image"
+          "type": "text",
+          "id": "picker_label",
+          "label": "Size buttons label (screen readers)",
+          "default": "Избери размер"
         },
         {
-          "type": "richtext",
-          "id": "intro",
-          "label": "Introduction",
-          "info": "Shown above the size chart image."
+          "type": "text",
+          "id": "prompt",
+          "label": "Prompt before a size is chosen",
+          "default": "Избери размер, за да видиш мерките."
         },
         {
-          "type": "richtext",
-          "id": "notes",
-          "label": "Notes",
-          "info": "Shown below the size chart image."
+          "type": "text",
+          "id": "apply_label",
+          "label": "Select size button",
+          "info": "[size] is replaced with the size.",
+          "default": "Избери размер [size]"
+        },
+        {
+          "type": "text",
+          "id": "label_size",
+          "label": "Size column",
+          "default": "Размер"
+        },
+        {
+          "type": "text",
+          "id": "label_bust",
+          "label": "Bust",
+          "default": "Бюст"
+        },
+        {
+          "type": "text",
+          "id": "label_waist",
+          "label": "Waist",
+          "default": "Талия"
+        },
+        {
+          "type": "text",
+          "id": "label_hips",
+          "label": "Hips",
+          "default": "Ханш"
+        },
+        {
+          "type": "text",
+          "id": "unit_note",
+          "label": "Unit note under the table",
+          "info": "[unit] is replaced with the guide's unit.",
+          "default": "Всички мерки са в [unit]."
+        },
+        {
+          "type": "text",
+          "id": "advice_heading",
+          "label": "Fit advice heading",
+          "default": "Съвет за размера"
+        },
+        {
+          "type": "text",
+          "id": "how_to_heading",
+          "label": "Measuring heading",
+          "default": "Как да се измериш"
         }
       ]
     },

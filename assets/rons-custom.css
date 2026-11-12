@@ -375,8 +375,31 @@ body .product__info-container .product__description {
   line-height: 1.8;
 }
 
-/* Size guide trigger (main-product "Size guide" block) */
-body .rons-size-guide__opener {
+/* Size guide link: beside the size option label, or at the block position */
+body .product-form__input:has(> .rons-size-guide__opener--option) {
+  position: relative;
+}
+
+/* A fieldset's legend sits outside its content box; floating it puts it in
+   normal flow so the link can line up with it */
+body .product-form__input:has(> .rons-size-guide__opener--option) > legend {
+  float: left;
+  width: 100%;
+  padding-right: 18rem;
+}
+
+body .product-form__input:has(> .rons-size-guide__opener--option) > legend + * + * {
+  clear: left;
+}
+
+body .rons-size-guide__opener--option {
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: 1;
+}
+
+body .rons-size-guide__opener--block {
   display: block;
   margin: -0.6rem 0 1.2rem;
 }
@@ -384,13 +407,14 @@ body .rons-size-guide__opener {
 body .rons-size-guide__button {
   display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.6rem;
+  min-height: 2.4rem;
   padding: 0;
   border: 0;
   background: none;
   font-family: inherit;
   font-size: 1.25rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   color: rgb(var(--color-foreground));
   text-decoration: underline;
   text-underline-offset: 0.35rem;
@@ -398,8 +422,8 @@ body .rons-size-guide__button {
 }
 
 body .rons-size-guide__button .svg-wrapper {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 body .rons-size-guide__button .svg-wrapper svg {
@@ -407,46 +431,209 @@ body .rons-size-guide__button .svg-wrapper svg {
   height: 100%;
 }
 
-body .rons-size-guide .product-popup-modal__content-info > * + * {
-  margin-top: 1.6rem;
+/* Size guide modal (snippets/rons-size-guide-modal.liquid) */
+body .rons-size-guide .rons-sg {
+  height: auto;
+  max-height: calc(100% - 6rem);
+  padding: 0 2rem 2.4rem;
 }
 
-body .rons-size-guide__intro {
+@media screen and (max-width: 749px) {
+  /* Mobile: a sheet anchored to the bottom of the screen */
+  body .rons-size-guide .rons-sg {
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    max-height: 88vh;
+    max-height: 88svh;
+    margin: 0;
+    padding-bottom: calc(2.4rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-size-guide .rons-sg {
+    width: min(72rem, 90%);
+    margin-top: 6rem;
+    padding: 0 4rem 3.2rem;
+  }
+}
+
+body .rons-size-guide .rons-sg__inner {
+  padding-top: 3.2rem;
+  padding-right: 0;
+}
+
+/* Only the title area needs to clear Dawn's floating close button */
+body .rons-sg__header {
+  padding-right: 5.6rem;
+}
+
+body .rons-sg__inner > * + * {
+  margin-top: 2.4rem;
+}
+
+body .rons-sg__header > * {
+  margin: 0;
+}
+
+body .rons-sg__header > * + * {
+  margin-top: 0.8rem;
+}
+
+body .rons-sg__description,
+body .rons-sg__unit,
+body .rons-sg__prompt {
+  color: var(--rons-muted);
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+
+body .rons-sg__picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+body .rons-sg__size {
+  min-width: 5.2rem;
+  min-height: 4.4rem;
+  padding: 0 1.4rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.25);
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-family: inherit;
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+body .rons-sg__size:hover {
+  border-color: rgb(var(--color-foreground));
+}
+
+body .rons-sg__size[aria-pressed='true'] {
+  background: rgb(var(--color-foreground));
+  border-color: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+body .rons-sg__size:focus-visible,
+body .rons-sg__apply:focus-visible {
+  outline: 0.2rem solid rgb(var(--color-foreground));
+  outline-offset: 0.3rem;
+}
+
+body .rons-sg__prompt {
+  margin: 0;
+}
+
+body .rons-sg__measures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.1rem;
+  margin: 0 0 1.6rem;
+  border: 0.1rem solid var(--rons-hairline);
+  background: var(--rons-hairline);
+}
+
+body .rons-sg__measures > div {
+  padding: 1.4rem 1.6rem;
+  background: rgb(var(--color-background));
+}
+
+body .rons-sg__measures dt {
+  font-size: 1.1rem;
+  letter-spacing: var(--rons-tracking-label);
+  text-transform: uppercase;
   color: var(--rons-muted);
 }
 
-/* Tables from a size guide page or metafield */
-body .rons-size-guide .rte table {
-  display: block;
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-collapse: collapse;
-  font-size: 1.35rem;
-  text-align: center;
-  table-layout: auto;
+body .rons-sg__measures dd {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-heading-family);
+  font-size: calc(var(--font-heading-scale) * 2.4rem);
+  line-height: 1.2;
 }
 
-body .rons-size-guide .rte th,
-body .rons-size-guide .rte td {
+body .rons-sg__measures dd span {
+  font-family: var(--font-body-family);
+  font-size: 1.3rem;
+  color: var(--rons-muted);
+}
+
+body .rons-sg__table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+body .rons-sg__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+body .rons-sg__table th,
+body .rons-sg__table td {
   padding: 1.1rem 0.8rem;
-  border: 0;
   border-bottom: 0.1rem solid var(--rons-hairline);
   white-space: nowrap;
 }
 
-body .rons-size-guide .rte thead th,
-body .rons-size-guide .rte tr:first-child th {
-  font-weight: 500;
+body .rons-sg__table thead th {
   font-size: 1.1rem;
+  font-weight: 500;
   letter-spacing: var(--rons-tracking-label);
   text-transform: uppercase;
   border-bottom-color: rgb(var(--color-foreground));
 }
 
-body .rons-size-guide__image img {
+body .rons-sg__table tbody th {
+  font-weight: 500;
+}
+
+body .rons-sg__table tr.is-selected th,
+body .rons-sg__table tr.is-selected td {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+body .rons-sg__unit {
+  margin: 0.8rem 0 0;
+  font-size: 1.2rem;
+}
+
+body .rons-sg__subheading {
+  margin: 0 0 0.6rem;
+  font-size: 1.15rem;
+  letter-spacing: var(--rons-tracking-label);
+  text-transform: uppercase;
+}
+
+body .rons-sg__advice p,
+body .rons-sg__how p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+body .rons-sg__how-body {
+  display: grid;
+  gap: 1.6rem;
+  align-items: start;
+}
+
+body .rons-sg__illustration img {
+  display: block;
   width: 100%;
+  max-width: 28rem;
   height: auto;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-sg__how-body:has(.rons-sg__illustration) {
+    grid-template-columns: 28rem minmax(0, 1fr);
+  }
 }
 
 /* ---------------------------------------------------------------------------
