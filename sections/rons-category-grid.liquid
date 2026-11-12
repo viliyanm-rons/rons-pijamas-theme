@@ -54,11 +54,19 @@
   if section.settings.layout == 'campaign' and shown_tiles == 4
     assign campaign = true
   endif
+  # Editorial: exactly three tiles – the first is the large card, the other
+  # two stack beside it. Labels always sit on the images.
+  assign editorial = false
+  assign label_position = section.settings.label_position
+  if section.settings.layout == 'editorial' and shown_tiles == 3
+    assign editorial = true
+    assign label_position = 'overlay'
+  endif
   assign tile_number = 0
 -%}
 
 {%- if live_tiles > 0 or request.design_mode -%}
-  <div class="rons-category-grid rons-category-grid--{{ section.settings.label_position }}{% if campaign %} rons-category-grid--campaign{% endif %} color-{{ section.settings.color_scheme }} gradient">
+  <div class="rons-category-grid rons-category-grid--{{ label_position }}{% if campaign %} rons-category-grid--campaign{% endif %}{% if editorial %} rons-category-grid--editorial{% endif %} color-{{ section.settings.color_scheme }} gradient">
     <div class="page-width section-{{ section.id }}-padding">
       {%- if section.settings.heading != blank or section.settings.caption != blank -%}
         <div class="rons-category-grid__header rons-category-grid__header--{{ section.settings.heading_alignment }}">
@@ -95,6 +103,16 @@
               continue
             endif
             assign tile_image = block.settings.image | default: tile_collection.featured_image
+            assign tile_photo = true
+            if tile_image == blank
+              assign tile_photo = false
+            endif
+            # Editorial cards are large: an automatic (collection) photo that is
+            # too small would pixelate, so the card shows as a black title tile
+            # instead. A photo chosen on the block is always used.
+            if editorial and block.settings.image == blank and tile_image.width < 800
+              assign tile_photo = false
+            endif
             assign tile_title = block.settings.title | default: tile_collection.title
             if tile_title == blank and request.design_mode
               assign tile_title = 'Избери колекция'
@@ -121,14 +139,30 @@
                 href="{{ tile_link }}"
               {% endif %}
             >
-              <div class="rons-category-tile__media{% if tile_image == blank %} rons-category-tile__media--empty{% endif %}">
-                {%- if tile_image != blank -%}
+              <div class="rons-category-tile__media{% unless tile_photo %} rons-category-tile__media--empty{% endunless %}">
+                {%- if tile_photo -%}
+                  {%- liquid
+                    assign tile_sizes = sizes
+                    if editorial
+                      if tile_number == 1
+                        assign tile_sizes = '(min-width: 750px) 60vw, 100vw'
+                      else
+                        assign tile_sizes = '(min-width: 750px) 38vw, 50vw'
+                      endif
+                    endif
+                    assign tile_focus = 'object-position: ' | append: tile_image.presentation.focal_point
+                  -%}
                   {{
                     tile_image
-                    | image_url: width: 1200
-                    | image_tag: loading: 'lazy', widths: '360, 540, 720, 900, 1200', sizes: sizes, alt: tile_title
+                    | image_url: width: 2000
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '360, 540, 720, 900, 1200, 1600, 2000',
+                      sizes: tile_sizes,
+                      alt: tile_title,
+                      style: tile_focus
                   }}
-                {%- elsif request.design_mode -%}
+                {%- elsif request.design_mode and editorial == false -%}
                   {{ 'collection-apparel-' | append: placeholder_index | placeholder_svg_tag: 'placeholder-svg' }}
                 {%- endif -%}
               </div>
@@ -141,7 +175,10 @@
                   {%- endif -%}
                   <span class="rons-category-tile__title h3">{{ tile_title | escape }}</span>
                   {%- if block.settings.cta != blank and tile_link != blank -%}
-                    <span class="rons-category-tile__cta">{{ block.settings.cta | escape }}</span>
+                    <span class="rons-category-tile__cta">
+                      {{- block.settings.cta | escape -}}
+                      {%- if editorial %}<span class="rons-category-tile__arrow" aria-hidden="true">→</span>{% endif -%}
+                    </span>
                   {%- endif -%}
                 </span>
               {%- endif -%}
@@ -225,6 +262,10 @@
         {
           "value": "grid",
           "label": "Even grid"
+        },
+        {
+          "value": "editorial",
+          "label": "Editorial (one large, two stacked – exactly three)"
         }
       ],
       "default": "campaign",

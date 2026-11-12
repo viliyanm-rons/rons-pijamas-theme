@@ -1979,6 +1979,214 @@ body .rons-category-grid--campaign li:nth-child(n + 3) .rons-category-tile__titl
 }
 
 /* ---------------------------------------------------------------------------
+ * 21b. Shop by category – editorial layout (exactly three categories)
+ * Mobile: the first (large) card full width, the other two side by side.
+ * Desktop: two stacked cards on the left (~39%), the large card on the right
+ * (~61%) spanning both rows; its ratio sets the height, so the left column
+ * always matches it exactly and nothing shifts while images load.
+ * Labels sit on the images; the hover/focus state zooms the photo, deepens
+ * the shade and reveals the call to action.
+ * ------------------------------------------------------------------------- */
+body .rons-category-grid--editorial .rons-category-grid__list,
+body .rons-category-grid--editorial .rons-category-grid__list--swipe {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  gap: 1.2rem;
+  overflow: visible;
+}
+
+body .rons-category-grid--editorial .rons-category-grid__list > li:nth-child(1) {
+  grid-column: 1 / -1;
+}
+
+body .rons-category-grid--editorial .rons-category-tile {
+  height: 100%;
+  overflow: hidden;
+}
+
+body .rons-category-grid--editorial .rons-category-tile__media {
+  aspect-ratio: 3 / 4;
+}
+
+body .rons-category-grid--editorial li:nth-child(1) .rons-category-tile__media {
+  aspect-ratio: 4 / 5;
+}
+
+/* Shade for legible white text, plus a darker veil that fades in on hover */
+body .rons-category-grid--editorial .rons-category-tile__media::after {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.12) 45%, rgba(0, 0, 0, 0) 70%);
+}
+
+body .rons-category-grid--editorial .rons-category-tile__media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.16);
+  opacity: 0;
+  transition: opacity 0.35s var(--rons-ease);
+  pointer-events: none;
+}
+
+body .rons-category-grid--editorial .rons-category-tile__media img {
+  transition: transform 0.4s var(--rons-ease);
+}
+
+body .rons-category-grid--editorial .rons-category-tile__label {
+  left: 1.6rem;
+  right: 1.6rem;
+  bottom: 1.6rem;
+  z-index: 2;
+  gap: 0.6rem;
+}
+
+body .rons-category-grid--editorial .rons-category-tile__title {
+  font-size: calc(var(--font-heading-scale) * 2.2rem);
+  line-height: 1.05;
+}
+
+body .rons-category-grid--editorial li:nth-child(1) .rons-category-tile__title {
+  font-size: calc(var(--font-heading-scale) * 3.2rem);
+}
+
+body .rons-category-grid--editorial .rons-category-tile__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: fit-content;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-bottom: 0.1rem solid currentColor;
+  padding-bottom: 0.3rem;
+}
+
+body .rons-category-grid--editorial .rons-category-tile__arrow {
+  transition: transform 0.35s var(--rons-ease);
+}
+
+/* No photo (or only a low-resolution one): solid black title card */
+body .rons-category-grid--editorial .rons-category-tile__media--empty {
+  display: block; /* Dawn hides empty divs */
+  background: #000;
+}
+
+body .rons-category-grid--editorial .rons-category-tile__media--empty::after {
+  display: none;
+}
+
+/* Hover and keyboard focus share one state */
+body .rons-category-grid--editorial .rons-category-tile:hover .rons-category-tile__media img,
+body .rons-category-grid--editorial .rons-category-tile:focus-visible .rons-category-tile__media img {
+  transform: scale(1.05);
+}
+
+body .rons-category-grid--editorial .rons-category-tile:hover .rons-category-tile__media::before,
+body .rons-category-grid--editorial .rons-category-tile:focus-visible .rons-category-tile__media::before {
+  opacity: 1;
+}
+
+body .rons-category-grid--editorial .rons-category-tile:hover .rons-category-tile__arrow,
+body .rons-category-grid--editorial .rons-category-tile:focus-visible .rons-category-tile__arrow {
+  transform: translateX(0.3rem);
+}
+
+body .rons-category-grid--editorial .rons-category-tile:focus-visible {
+  outline: 0.2rem solid #fff;
+  outline-offset: -0.8rem;
+  box-shadow: none;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-category-grid--editorial .rons-category-grid__list,
+  body .rons-category-grid--editorial .rons-category-grid__list--swipe {
+    grid-template-columns: minmax(0, 39fr) minmax(0, 61fr);
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 1.6rem;
+  }
+
+  body .rons-category-grid--editorial .rons-category-grid__list > li:nth-child(1) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  body .rons-category-grid--editorial .rons-category-grid__list > li:nth-child(2) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  body .rons-category-grid--editorial .rons-category-grid__list > li:nth-child(3) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  /* The large card's ratio sets the height; the two small cards fill their rows */
+  body .rons-category-grid--editorial li:nth-child(n + 2) .rons-category-tile__media {
+    aspect-ratio: auto;
+    height: 100%;
+  }
+
+  body .rons-category-grid--editorial .rons-category-tile__label {
+    left: 2.8rem;
+    right: 2.8rem;
+    bottom: 2.6rem;
+  }
+
+  body .rons-category-grid--editorial .rons-category-tile__title {
+    font-size: calc(var(--font-heading-scale) * 3.6rem);
+  }
+
+  body .rons-category-grid--editorial li:nth-child(1) .rons-category-tile__title {
+    font-size: calc(var(--font-heading-scale) * 4.8rem);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  body .rons-category-grid--editorial .rons-category-grid__list,
+  body .rons-category-grid--editorial .rons-category-grid__list--swipe {
+    gap: 2rem;
+  }
+
+  body .rons-category-grid--editorial .rons-category-tile__label {
+    left: 3.6rem;
+    right: 3.6rem;
+    bottom: 3.2rem;
+  }
+}
+
+/* Mouse users: the call to action rises in on hover; touch users always see it */
+@media (hover: hover) and (pointer: fine) {
+  body .rons-category-grid--editorial .rons-category-tile__cta {
+    opacity: 0;
+    transform: translateY(0.6rem);
+    transition: opacity 0.35s var(--rons-ease), transform 0.35s var(--rons-ease);
+  }
+
+  body .rons-category-grid--editorial .rons-category-tile:hover .rons-category-tile__cta,
+  body .rons-category-grid--editorial .rons-category-tile:focus-visible .rons-category-tile__cta {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Reduced motion: no zoom or movement; the shade and the CTA still change */
+@media (prefers-reduced-motion: reduce) {
+  body .rons-category-grid--editorial .rons-category-tile__media img,
+  body .rons-category-grid--editorial .rons-category-tile__cta,
+  body .rons-category-grid--editorial .rons-category-tile__arrow,
+  body .rons-category-grid--editorial .rons-category-tile:hover .rons-category-tile__media img,
+  body .rons-category-grid--editorial .rons-category-tile:focus-visible .rons-category-tile__media img,
+  body .rons-category-grid--editorial .rons-category-tile:hover .rons-category-tile__arrow,
+  body .rons-category-grid--editorial .rons-category-tile:focus-visible .rons-category-tile__arrow,
+  body .rons-category-grid--editorial .rons-category-tile:hover .rons-category-tile__cta,
+  body .rons-category-grid--editorial .rons-category-tile:focus-visible .rons-category-tile__cta {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
  * 22. Header, mobile menu and footer refinements
  * ------------------------------------------------------------------------- */
 /* Wordmark when no logo image is uploaded */

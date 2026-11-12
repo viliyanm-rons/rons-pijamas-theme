@@ -168,7 +168,7 @@
         "heading": "Пазарувай по категория",
         "heading_size": "h1",
         "heading_alignment": "center",
-        "layout": "grid",
+        "layout": "editorial",
         "show_numbers": true,
         "image_ratio": "portrait",
         "label_position": "below",
