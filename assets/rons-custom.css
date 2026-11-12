@@ -124,8 +124,9 @@ body .announcement-bar__message {
 }
 
 body .header__menu-item {
-  font-size: 1.2rem;
-  letter-spacing: var(--rons-tracking-label);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.02rem;
   text-transform: uppercase;
 }
 
@@ -135,8 +136,9 @@ body .header__menu-item .icon-caret {
 
 body .mega-menu__link,
 body .header__submenu .header__menu-item {
-  font-size: 1.3rem;
-  letter-spacing: 0.04em;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.02rem;
   text-transform: none;
 }
 
@@ -2009,9 +2011,11 @@ body .menu-drawer__menu > li {
 }
 
 body .menu-drawer__menu-item {
+  min-height: 4.4rem;
   padding-top: 1.6rem;
   padding-bottom: 1.6rem;
-  font-size: 1.4rem;
+  font-size: 1.7rem;
+  font-weight: 600;
   letter-spacing: var(--rons-tracking-label);
   text-transform: uppercase;
 }
@@ -2621,14 +2625,21 @@ body .header__inline-menu .header__submenu.list-menu--disclosure {
 }
 
 body .header__inline-menu .header__submenu .header__menu-item {
-  padding: 0.8rem 2.4rem;
+  min-height: 4.4rem;
+  padding: 1rem 2.4rem;
   white-space: nowrap;
 }
 
 body .header__inline-menu .header__submenu .header__menu-item:hover,
+body .header__inline-menu .header__submenu .header__menu-item:focus-visible,
 body .header__inline-menu .header__submenu .list-menu__item--active {
   text-decoration: underline;
-  text-underline-offset: 0.4rem;
+  text-decoration-thickness: 0.1rem;
+  text-underline-offset: 0.5rem;
+}
+
+body .header__inline-menu .header__submenu .list-menu__item--active {
+  font-weight: 600;
 }
 
 body .header__inline-menu details > summary .icon-caret {
@@ -2672,8 +2683,10 @@ body .menu-drawer .menu-drawer__submenu .menu-drawer__menu > li {
 }
 
 body .menu-drawer .menu-drawer__submenu .menu-drawer__menu-item {
+  min-height: 4.4rem;
   padding: 1rem 3rem 1rem 4.4rem;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
+  font-weight: 500;
 }
 
 /* Chevron instead of the slide-in arrow */
