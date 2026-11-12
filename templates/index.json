@@ -208,6 +208,9 @@
         "button_label": "Открий колекцията",
         "button_link": "shopify://collections/all",
         "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
         "padding_top": 64,
         "padding_bottom": 64
       }
@@ -293,13 +296,13 @@
     "gifts": {
       "type": "rons-editorial",
       "settings": {
-        "image": "shopify://shop_images/generated-image.png",
+        "image": "shopify://shop_images/1086.jpg",
         "layout": "overlay",
         "image_position": "left",
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 30,
-        "color_scheme": "scheme-3",
+        "color_scheme": "scheme-5",
         "eyebrow": "Идеи за подарък",
         "heading": "Подари комфорт и красота",
         "heading_size": "h0",
@@ -307,6 +310,9 @@
         "button_label": "Виж подаръците",
         "button_link": "",
         "button_style": "outline",
+        "show_badge": true,
+        "badge_position": "below_heading",
+        "badge_link": "",
         "padding_top": 0,
         "padding_bottom": 0
       }
