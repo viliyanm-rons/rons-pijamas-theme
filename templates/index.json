@@ -213,33 +213,41 @@
         "benefit-1": {
           "type": "item",
           "settings": {
-            "icon": "lock",
-            "heading": "Сигурно плащане",
-            "text": "Плащането се обработва защитено чрез Shopify"
+            "icon": "outline_star",
+            "heading": "Хиляди доволни клиентки",
+            "text": "Доверие, изградено с всяка поръчка.",
+            "link": "",
+            "show": true
           }
         },
         "benefit-2": {
           "type": "item",
           "settings": {
-            "icon": "truck",
-            "heading": "Доставка",
-            "text": "Опциите и цените се виждат преди плащане"
+            "icon": "outline_truck",
+            "heading": "Безплатна доставка над 100 €",
+            "text": "Повече комфорт, без разход за доставка.",
+            "link": "",
+            "show": true
           }
         },
         "benefit-3": {
           "type": "item",
           "settings": {
-            "icon": "return",
-            "heading": "Връщане и замяна",
-            "text": "Условията са описани в нашата политика"
+            "icon": "outline_clock",
+            "heading": "Изпращане до 24 часа",
+            "text": "Твоята поръчка, подготвена с внимание.",
+            "link": "",
+            "show": true
           }
         },
         "benefit-4": {
           "type": "item",
           "settings": {
-            "icon": "chat_bubble",
-            "heading": "Обслужване",
-            "text": "Пиши ни при всякакви въпроси"
+            "icon": "outline_diamond",
+            "heading": "Подбрани материи. Истински комфорт.",
+            "text": "Sleepwear, създаден с внимание към детайла.",
+            "link": "",
+            "show": true
           }
         }
       },
@@ -251,7 +259,7 @@
       ],
       "settings": {
         "alignment": "center",
-        "show_border": true,
+        "show_border": false,
         "color_scheme": "scheme-1",
         "padding_top": 40,
         "padding_bottom": 40
@@ -417,11 +425,11 @@
   },
   "order": [
     "hero",
+    "benefits",
     "bestsellers",
     "customer_reviews",
     "categories",
     "brand_story",
-    "benefits",
     "new_arrivals",
     "gifts",
     "faq",

@@ -1,7 +1,8 @@
 {% comment %}
   Ron's Pijamas – trust bar.
-  A row of reassurance points (delivery, returns, fabric, secure checkout).
-  Swipes horizontally on mobile and becomes a grid on desktop.
+  A row of reassurance points. Four columns from 750px, a 2 x 2 grid on
+  phones. Each item: icon (incl. thin outline icons), heading, text,
+  optional link and a show/hide switch.
 {% endcomment %}
 
 {%- style -%}
@@ -18,7 +19,16 @@
   }
 {%- endstyle -%}
 
-{%- if section.blocks.size == 0 -%}
+{%- liquid
+  assign visible_items = 0
+  for block in section.blocks
+    unless block.settings.show == false
+      assign visible_items = visible_items | plus: 1
+    endunless
+  endfor
+-%}
+
+{%- if visible_items == 0 -%}
   {%- if request.design_mode -%}
     <div class="page-width section-{{ section.id }}-padding">
       <p class="rons-editor-hint">Добави предимства, които отговарят на публикуваните ти политики.</p>
@@ -27,11 +37,12 @@
 {%- else -%}
   <div
     class="rons-trust-bar rons-trust-bar--{{ section.settings.alignment }} color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_border %} rons-trust-bar--bordered{% endif %}"
-    style="--rons-columns: {{ section.blocks.size | at_most: 4 | at_least: 1 }};{% if section.settings.show_border %} border-top: 0.1rem solid var(--rons-hairline); border-bottom: 0.1rem solid var(--rons-hairline);{% endif %}"
+    style="--rons-columns: {{ visible_items | at_most: 4 | at_least: 1 }};{% if section.settings.show_border %} border-top: 0.1rem solid var(--rons-hairline); border-bottom: 0.1rem solid var(--rons-hairline);{% endif %}"
   >
     <div class="page-width section-{{ section.id }}-padding">
       <ul class="rons-trust-bar__list" role="list">
         {%- for block in section.blocks -%}
+          {%- if block.settings.show == false -%}{%- continue -%}{%- endif -%}
           <li
             class="rons-trust-bar__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
             {{ block.shopify_attributes }}
@@ -40,6 +51,9 @@
               style="--animation-order: {{ forloop.index }};"
             {% endif %}
           >
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="rons-trust-bar__link">
+            {%- endif -%}
             {%- if block.settings.image != blank -%}
               <span class="rons-trust-bar__icon">
                 {{
@@ -47,6 +61,11 @@
                   | image_url: width: 112
                   | image_tag: loading: 'lazy', widths: '56, 112', sizes: '28px'
                 }}
+              </span>
+            {%- elsif block.settings.icon contains 'outline_' -%}
+              {%- assign outline_icon = block.settings.icon | remove: 'outline_' -%}
+              <span class="rons-trust-bar__icon rons-trust-bar__icon--outline" aria-hidden="true">
+                {%- render 'rons-outline-icon', icon: outline_icon -%}
               </span>
             {%- elsif block.settings.icon != 'none' -%}
               <span class="rons-trust-bar__icon" aria-hidden="true">
@@ -61,6 +80,9 @@
                 <p class="rons-trust-bar__text">{{ block.settings.text }}</p>
               {%- endif -%}
             </div>
+            {%- if block.settings.link != blank -%}
+              </a>
+            {%- endif -%}
           </li>
         {%- endfor -%}
       </ul>
@@ -148,6 +170,22 @@
               "label": "None"
             },
             {
+              "value": "outline_star",
+              "label": "Star (thin outline)"
+            },
+            {
+              "value": "outline_truck",
+              "label": "Truck (thin outline)"
+            },
+            {
+              "value": "outline_clock",
+              "label": "Clock (thin outline)"
+            },
+            {
+              "value": "outline_diamond",
+              "label": "Diamond (thin outline)"
+            },
+            {
               "value": "truck",
               "label": "Truck"
             },
@@ -228,13 +266,24 @@
           "type": "inline_richtext",
           "id": "heading",
           "label": "Heading",
-          "default": "Сигурно плащане"
+          "default": "Предимство"
         },
         {
           "type": "inline_richtext",
           "id": "text",
           "label": "Text",
           "info": "Only state what your published policies guarantee."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show",
+          "label": "Show this item",
+          "default": true
         }
       ]
     }

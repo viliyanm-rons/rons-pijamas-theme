@@ -1,0 +1,20 @@
+{% comment %}
+  Ron's Pijamas – thin outline icons (24 × 24, 1.25 stroke, currentColor).
+
+  Accepts:
+  - icon: {String} star | truck | clock | diamond
+
+  Usage:
+  {% render 'rons-outline-icon', icon: 'clock' %}
+{% endcomment %}
+
+{%- case icon -%}
+  {%- when 'star' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M12 3.2l2.6 5.5 6 .7-4.5 4.1 1.2 5.9L12 16.4l-5.3 3 1.2-5.9-4.5-4.1 6-.7z"/></svg>
+  {%- when 'truck' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round" stroke-linecap="round" focusable="false" aria-hidden="true"><path d="M2.5 6.5h11v9.5h-11zM13.5 9.5h4l3 3.2v3.3h-7"/><circle cx="6.5" cy="17.5" r="1.7"/><circle cx="17" cy="17.5" r="1.7"/></svg>
+  {%- when 'clock' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" focusable="false" aria-hidden="true"><circle cx="12" cy="12" r="8.75"/><path d="M12 7v5.2l3.4 2"/></svg>
+  {%- when 'diamond' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round" focusable="false" aria-hidden="true"><path d="M7 4.5h10l4 5-9 10.5L3 9.5zM3 9.5h18M9.5 4.5L8 9.5l4 10.5 4-10.5-1.5-5"/></svg>
+{%- endcase -%}
