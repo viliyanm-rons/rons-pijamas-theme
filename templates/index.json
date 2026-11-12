@@ -38,6 +38,64 @@
         "button_link_2": ""
       }
     },
+    "benefits": {
+      "type": "rons-trust-bar",
+      "blocks": {
+        "benefit-1": {
+          "type": "item",
+          "settings": {
+            "icon": "outline_star",
+            "heading": "Хиляди доволни клиентки",
+            "text": "Доверие, изградено с всяка поръчка.",
+            "link": "",
+            "show": true
+          }
+        },
+        "benefit-2": {
+          "type": "item",
+          "settings": {
+            "icon": "outline_truck",
+            "heading": "Безплатна доставка над 100 €",
+            "text": "Повече комфорт, без разход за доставка.",
+            "link": "",
+            "show": true
+          }
+        },
+        "benefit-3": {
+          "type": "item",
+          "settings": {
+            "icon": "outline_clock",
+            "heading": "Изпращане до 24 часа",
+            "text": "Твоята поръчка, подготвена с внимание.",
+            "link": "",
+            "show": true
+          }
+        },
+        "benefit-4": {
+          "type": "item",
+          "settings": {
+            "icon": "outline_diamond",
+            "heading": "Подбрани материи. Истински комфорт.",
+            "text": "Sleepwear, създаден с внимание към детайла.",
+            "link": "",
+            "show": true
+          }
+        }
+      },
+      "block_order": [
+        "benefit-1",
+        "benefit-2",
+        "benefit-3",
+        "benefit-4"
+      ],
+      "settings": {
+        "alignment": "center",
+        "show_border": false,
+        "color_scheme": "scheme-1",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
     "bestsellers": {
       "type": "featured-collection",
       "settings": {
@@ -207,64 +265,6 @@
         "padding_bottom": 64
       }
     },
-    "benefits": {
-      "type": "rons-trust-bar",
-      "blocks": {
-        "benefit-1": {
-          "type": "item",
-          "settings": {
-            "icon": "outline_star",
-            "heading": "Хиляди доволни клиентки",
-            "text": "Доверие, изградено с всяка поръчка.",
-            "link": "",
-            "show": true
-          }
-        },
-        "benefit-2": {
-          "type": "item",
-          "settings": {
-            "icon": "outline_truck",
-            "heading": "Безплатна доставка над 100 €",
-            "text": "Повече комфорт, без разход за доставка.",
-            "link": "",
-            "show": true
-          }
-        },
-        "benefit-3": {
-          "type": "item",
-          "settings": {
-            "icon": "outline_clock",
-            "heading": "Изпращане до 24 часа",
-            "text": "Твоята поръчка, подготвена с внимание.",
-            "link": "",
-            "show": true
-          }
-        },
-        "benefit-4": {
-          "type": "item",
-          "settings": {
-            "icon": "outline_diamond",
-            "heading": "Подбрани материи. Истински комфорт.",
-            "text": "Sleepwear, създаден с внимание към детайла.",
-            "link": "",
-            "show": true
-          }
-        }
-      },
-      "block_order": [
-        "benefit-1",
-        "benefit-2",
-        "benefit-3",
-        "benefit-4"
-      ],
-      "settings": {
-        "alignment": "center",
-        "show_border": false,
-        "color_scheme": "scheme-1",
-        "padding_top": 40,
-        "padding_bottom": 40
-      }
-    },
     "new_arrivals": {
       "type": "featured-collection",
       "settings": {
@@ -424,17 +424,6 @@
     },
     "instagram": {
       "type": "rons-instagram",
-      "settings": {
-        "eyebrow": "Instagram",
-        "heading": "Последвай ни в Instagram",
-        "heading_size": "h1",
-        "handle": "@rons_pijamas",
-        "profile_url": "https://www.instagram.com/rons_pijamas",
-        "button_label": "Последвай ни",
-        "color_scheme": "scheme-1",
-        "padding_top": 64,
-        "padding_bottom": 72
-      },
       "blocks": {
         "instafeed": {
           "type": "shopify://apps/instafeed/blocks/app-block/c447db20-095d-4a10-9725-b5977662c9d5",
@@ -455,7 +444,24 @@
           }
         }
       },
-      "block_order": ["instafeed"]
+      "block_order": [
+        "instafeed"
+      ],
+      "settings": {
+        "eyebrow": "Instagram",
+        "heading": "Последвай ни в Instagram",
+        "heading_size": "h1",
+        "handle": "@rons_pijamas",
+        "profile_url": "https://www.instagram.com/rons_pijamas",
+        "follower_count": "10,2K",
+        "follower_label": "последователи",
+        "follower_label_one": "последовател",
+        "follower_icon": "users",
+        "button_label": "Последвай ни",
+        "color_scheme": "scheme-1",
+        "padding_top": 64,
+        "padding_bottom": 72
+      }
     }
   },
   "order": [
