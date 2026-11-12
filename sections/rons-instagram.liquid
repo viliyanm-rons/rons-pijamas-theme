@@ -6,6 +6,11 @@
   posts to apps the owner authorises). Add the app's block to this section
   in the Theme Editor. Without an app block, customers see the header and
   the follow button only.
+
+  Follower count: Instafeed doesn't provide the account's follower count
+  (its feed data leaves it empty), so the merchant types the current figure
+  from Instagram in the Theme Editor and updates it by hand. A plain number
+  ("5240") is shown grouped ("5 240"); empty hides the line.
 {% endcomment %}
 
 {%- style -%}
@@ -30,6 +35,28 @@
       assign has_feed = true
     endif
   endfor
+
+  # Follower count: group a plain number in threes with non-breaking spaces.
+  assign followers_raw = section.settings.follower_count | strip
+  assign followers = followers_raw | remove: ' ' | remove: ' ' | remove: ' '
+  assign followers_check = followers | plus: 0 | round | abs | append: ''
+  assign followers_label = section.settings.follower_label | strip
+  if followers != blank and followers_check == followers
+    if followers == '1' and section.settings.follower_label_one != blank
+      assign followers_label = section.settings.follower_label_one | strip
+    endif
+    assign digits = followers | split: ''
+    assign followers = ''
+    for digit in digits
+      assign followers = followers | append: digit
+      assign left = digits.size | minus: forloop.index | modulo: 3
+      if left == 0 and forloop.last == false
+        assign followers = followers | append: ' '
+      endif
+    endfor
+  else
+    assign followers = followers_raw | escape
+  endif
 -%}
 
 <div class="rons-instagram color-{{ section.settings.color_scheme }} gradient">
@@ -45,6 +72,19 @@
         <a href="{{ profile_url }}" class="rons-instagram__handle link underlined-link" target="_blank" rel="noopener">
           {{- section.settings.handle | escape -}}
         </a>
+      {%- endif -%}
+      {%- if followers != blank -%}
+        <p class="rons-instagram__followers">
+          {%- if section.settings.follower_icon != 'none' -%}
+            <span class="rons-instagram__followers-icon">
+              {%- render 'rons-outline-icon', icon: section.settings.follower_icon -%}
+            </span>
+          {%- endif -%}
+          <span>
+            <span class="rons-instagram__followers-count">{{ followers }}</span>
+            {%- if followers_label != blank %} {{ followers_label | escape }}{% endif -%}
+          </span>
+        </p>
       {%- endif -%}
     </div>
 
@@ -116,6 +156,43 @@
       "id": "profile_url",
       "label": "Връзка към профила",
       "info": "Ако е празно, се използва връзката от Настройки на темата › Социални мрежи."
+    },
+    {
+      "type": "header",
+      "content": "Брой последователи"
+    },
+    {
+      "type": "paragraph",
+      "content": "Instafeed не предоставя броя последователи, затова той не се обновява автоматично. Въведи точния текущ брой от профила в Instagram и го обновявай ръчно. Ако полето е празно, редът не се показва."
+    },
+    {
+      "type": "text",
+      "id": "follower_count",
+      "label": "Брой последователи",
+      "info": "Само цифри, напр. 5240 (показва се като „5 240“). Не въвеждай приблизителен или непроверен брой."
+    },
+    {
+      "type": "text",
+      "id": "follower_label",
+      "label": "Текст след броя",
+      "default": "последователи"
+    },
+    {
+      "type": "text",
+      "id": "follower_label_one",
+      "label": "Текст след броя (за 1)",
+      "default": "последовател"
+    },
+    {
+      "type": "select",
+      "id": "follower_icon",
+      "label": "Икона",
+      "options": [
+        { "value": "users", "label": "Хора" },
+        { "value": "instagram", "label": "Instagram" },
+        { "value": "none", "label": "Без икона" }
+      ],
+      "default": "users"
     },
     {
       "type": "text",
