@@ -421,6 +421,20 @@
         "padding_top": 64,
         "padding_bottom": 72
       }
+    },
+    "instagram": {
+      "type": "rons-instagram",
+      "settings": {
+        "eyebrow": "Instagram",
+        "heading": "Последвай ни в Instagram",
+        "heading_size": "h1",
+        "handle": "@rons_pijamas",
+        "profile_url": "https://www.instagram.com/rons_pijamas",
+        "button_label": "Последвай ни",
+        "color_scheme": "scheme-1",
+        "padding_top": 64,
+        "padding_bottom": 72
+      }
     }
   },
   "order": [
@@ -433,6 +447,7 @@
     "new_arrivals",
     "gifts",
     "faq",
-    "newsletter"
+    "newsletter",
+    "instagram"
   ]
 }

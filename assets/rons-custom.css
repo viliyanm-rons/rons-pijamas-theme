@@ -2213,6 +2213,57 @@ body .rons-category-grid--editorial .rons-category-tile:focus-visible {
 }
 
 /* ---------------------------------------------------------------------------
+ * 21c. Instagram (sections/rons-instagram.liquid)
+ * Centered editorial header, the feed app's grid, and a follow button.
+ * The app draws the posts; the frame keeps them within the page width.
+ * ------------------------------------------------------------------------- */
+body .rons-instagram__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 3.2rem;
+  text-align: center;
+}
+
+body .rons-instagram__heading {
+  margin: 0;
+}
+
+body .rons-instagram__handle {
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+  text-underline-offset: 0.4rem;
+}
+
+body .rons-instagram__feed {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+body .rons-instagram__hint {
+  max-width: 64rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+body .rons-instagram__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 3.2rem;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-instagram__header {
+    margin-bottom: 4.8rem;
+  }
+
+  body .rons-instagram__handle {
+    font-size: 1.5rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
  * 22. Header, mobile menu and footer refinements
  * ------------------------------------------------------------------------- */
 /* Wordmark when no logo image is uploaded */
