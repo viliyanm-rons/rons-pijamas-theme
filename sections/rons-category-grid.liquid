@@ -151,13 +151,27 @@
                       endif
                     endif
                     assign tile_focus = 'object-position: ' | append: tile_image.presentation.focal_point
+                    # Only offer sizes the original can provide, so browsers get honest srcset widths
+                    assign tile_widths = ''
+                    assign candidate_widths = '360,540,720,900,1200,1600,2000' | split: ','
+                    for candidate in candidate_widths
+                      assign candidate_px = candidate | plus: 0
+                      if candidate_px < tile_image.width
+                        assign tile_widths = tile_widths | append: candidate | append: ','
+                      endif
+                    endfor
+                    if tile_image.width <= 2000
+                      assign tile_widths = tile_widths | append: tile_image.width
+                    else
+                      assign tile_widths = tile_widths | remove_last: ','
+                    endif
                   -%}
                   {{
                     tile_image
                     | image_url: width: 2000
                     | image_tag:
                       loading: 'lazy',
-                      widths: '360, 540, 720, 900, 1200, 1600, 2000',
+                      widths: tile_widths,
                       sizes: tile_sizes,
                       alt: tile_title,
                       style: tile_focus
