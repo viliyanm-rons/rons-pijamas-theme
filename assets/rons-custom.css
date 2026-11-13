@@ -1868,6 +1868,7 @@ body .rons-editorial--overlay .rons-editorial__button.button--secondary::after {
 
 /* Placeholder panel until a photo is chosen (customers only) */
 body .rons-editorial__media--empty {
+  display: block; /* Dawn hides empty divs */
   background: #efebe6;
 }
 
