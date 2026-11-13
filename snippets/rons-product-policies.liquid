@@ -38,12 +38,12 @@
           <ul class="rons-policy-links list-unstyled">
             {%- if has_shipping_policy -%}
               <li>
-                <a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title | escape }}</a>
+                <a href="{{ shop.shipping_policy.url }}">{% render 'rons-l10n-label', label: shop.shipping_policy.title %}</a>
               </li>
             {%- endif -%}
             {%- if has_refund_policy -%}
               <li>
-                <a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title | escape }}</a>
+                <a href="{{ shop.refund_policy.url }}">{% render 'rons-l10n-label', label: shop.refund_policy.title %}</a>
               </li>
             {%- endif -%}
           </ul>

@@ -1,0 +1,81 @@
+{% comment %}
+  Ron's Pijamas – Bulgarian names for Shopify's built-in English labels.
+
+  The store's language is English, so Shopify names sort options, default
+  filters (Search & Discovery) and policies in English. This prints the
+  Bulgarian name for those exact default names and leaves any other label
+  (custom filter names, product option values such as S/M/L) as it is.
+
+  Accepts:
+  - label: {String} the label from Shopify (option.name, filter.label, value.label, policy.title)
+
+  Usage:
+  {% render 'rons-l10n-label', label: filter.label %}
+{% endcomment %}
+
+{%- liquid
+  assign key = ''
+  case label
+    when 'Featured'
+      assign key = 'featured'
+    when 'Best selling'
+      assign key = 'best_selling'
+    when 'Relevance', 'Most relevant'
+      assign key = 'relevance'
+    when 'Alphabetically, A-Z'
+      assign key = 'title_ascending'
+    when 'Alphabetically, Z-A'
+      assign key = 'title_descending'
+    when 'Price, low to high'
+      assign key = 'price_ascending'
+    when 'Price, high to low'
+      assign key = 'price_descending'
+    when 'Date, old to new'
+      assign key = 'created_ascending'
+    when 'Date, new to old'
+      assign key = 'created_descending'
+    when 'Availability'
+      assign key = 'availability'
+    when 'In stock'
+      assign key = 'in_stock'
+    when 'Out of stock'
+      assign key = 'out_of_stock'
+    when 'Price'
+      assign key = 'price'
+    when 'Size'
+      assign key = 'size'
+    when 'Color', 'Colour'
+      assign key = 'color'
+    when 'Product type'
+      assign key = 'product_type'
+    when 'Vendor', 'Brand'
+      assign key = 'vendor'
+    when 'Material'
+      assign key = 'material'
+    when 'Products'
+      assign key = 'products'
+    when 'Privacy policy', 'Privacy Policy'
+      assign key = 'privacy_policy'
+    when 'Refund policy', 'Refund Policy'
+      assign key = 'refund_policy'
+    when 'Shipping policy', 'Shipping Policy'
+      assign key = 'shipping_policy'
+    when 'Terms of service', 'Terms of Service'
+      assign key = 'terms_of_service'
+    when 'Terms of sale', 'Terms of Sale'
+      assign key = 'terms_of_sale'
+    when 'Contact information', 'Contact Information'
+      assign key = 'contact_information'
+    when 'Legal notice', 'Legal Notice'
+      assign key = 'legal_notice'
+    when 'Subscription policy', 'Subscription Policy'
+      assign key = 'subscription_policy'
+  endcase
+-%}
+
+{%- if key != blank -%}
+  {%- assign t_key = 'products.facets.labels.' | append: key -%}
+  {{- t_key | t -}}
+{%- else -%}
+  {{- label | escape -}}
+{%- endif -%}

@@ -309,7 +309,7 @@
               {%- if policy != blank -%}
                 <li>
                   <small class="copyright__content"
-                    ><a href="{{ policy.url }}">{{ policy.title | escape }}</a></small
+                    ><a href="{{ policy.url }}">{% render 'rons-l10n-label', label: policy.title %}</a></small
                   >
                 </li>
               {%- endif -%}
