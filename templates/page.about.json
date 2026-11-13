@@ -89,6 +89,7 @@
     },
     "fabrics": {
       "type": "rons-editorial",
+      "disabled": true,
       "settings": {
         "show_placeholder": true,
         "layout": "split",
@@ -115,6 +116,7 @@
     },
     "listening": {
       "type": "rons-editorial",
+      "disabled": true,
       "settings": {
         "show_placeholder": true,
         "layout": "split",
@@ -141,6 +143,7 @@
     },
     "rebrand": {
       "type": "rons-editorial",
+      "disabled": true,
       "settings": {
         "show_placeholder": true,
         "layout": "split",
@@ -167,6 +170,7 @@
     },
     "closing": {
       "type": "rons-editorial",
+      "disabled": true,
       "settings": {
         "show_placeholder": true,
         "layout": "overlay",
