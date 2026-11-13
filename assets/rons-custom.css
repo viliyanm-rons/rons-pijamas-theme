@@ -1866,6 +1866,110 @@ body .rons-editorial--overlay .rons-editorial__button.button--secondary::after {
   }
 }
 
+/* Placeholder panel until a photo is chosen (customers only) */
+body .rons-editorial__media--empty {
+  background: #efebe6;
+}
+
+body .rons-editorial__media--empty::before {
+  content: '';
+  position: absolute;
+  inset: 1.6rem;
+  border: 0.1rem solid rgba(0, 0, 0, 0.08);
+}
+
+body .rons-editorial--overlay .rons-editorial__media--empty {
+  background: linear-gradient(160deg, #2b2826 0%, #121212 100%);
+}
+
+body .rons-editorial--overlay .rons-editorial__media--empty::before {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Style "Story": long-form brand chapters (About page) */
+body .rons-editorial--story .rons-editorial__heading {
+  max-width: 20ch;
+  text-wrap: balance;
+}
+
+body .rons-editorial--story .rons-editorial__text {
+  max-width: 56rem;
+  font-size: 1.6rem;
+  line-height: 1.85;
+  color: rgba(var(--color-foreground), 0.82);
+}
+
+body .rons-editorial--story .rons-editorial__text p {
+  margin: 0;
+}
+
+body .rons-editorial--story .rons-editorial__text p + p {
+  margin-top: 1.2em;
+}
+
+body .rons-editorial--story .rons-editorial__content > * + * {
+  margin-top: 2rem;
+}
+
+body .rons-editorial--story .rons-editorial__button {
+  margin-top: 3.2rem !important;
+}
+
+body .rons-editorial--story.rons-editorial--split .rons-editorial__inner {
+  gap: 4rem;
+}
+
+body .rons-editorial--story.rons-editorial--overlay .rons-editorial__heading,
+body .rons-editorial--story.rons-editorial--overlay .rons-editorial__text {
+  max-width: 64rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body .rons-editorial--story.rons-editorial--overlay .rons-editorial__text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Tablet: story chapters stay stacked (image first) with a calmer crop */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  body .rons-editorial--story.rons-editorial--split .rons-editorial__inner {
+    grid-template-columns: 1fr;
+    gap: 4.8rem;
+  }
+
+  body .rons-editorial--story.rons-editorial--split .rons-editorial__media {
+    order: 0;
+    aspect-ratio: 5 / 4;
+  }
+
+  body .rons-editorial--story.rons-editorial--split .rons-editorial__content {
+    padding: 0;
+    max-width: 64rem;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-editorial--story .rons-editorial__text {
+    font-size: 1.7rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  body .rons-editorial--story.rons-editorial--split .rons-editorial__inner {
+    grid-template-columns: 6fr 5fr;
+    gap: 9.6rem;
+  }
+
+  body .rons-editorial--story.rons-editorial--split.rons-editorial--image-right .rons-editorial__inner {
+    grid-template-columns: 5fr 6fr;
+  }
+
+  body .rons-editorial--story.rons-editorial--split .rons-editorial__content,
+  body .rons-editorial--story.rons-editorial--split.rons-editorial--image-right .rons-editorial__content {
+    padding: 0;
+  }
+}
+
 /* ---------------------------------------------------------------------------
  * 20. Colour swatches on product cards (snippets/rons-card-swatches.liquid)
  * ------------------------------------------------------------------------- */

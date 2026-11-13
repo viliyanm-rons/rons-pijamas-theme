@@ -8,11 +8,26 @@
 
   This is an image-led section: customers only see it once an image is
   chosen. In the Theme Editor it shows a placeholder and a hint until then.
-  The button only renders when it has both a label and a link.
+  With "Show a placeholder until a photo is chosen" on, customers see a plain
+  neutral panel instead (dark under text on image), so a story page can go
+  up before its photos. The button only renders when it has both a label
+  and a link.
+
+  Style "Story" (About page): larger, airier body text and wider spacing.
+  "Reveal on scroll" uses Dawn's own animation (theme setting Animations ›
+  Reveal sections on scroll), which is skipped for reduced-motion users.
 {% endcomment %}
 
 {%- liquid
   assign image = section.settings.image
+  assign show_section = false
+  if image != blank or section.settings.show_placeholder or request.design_mode
+    assign show_section = true
+  endif
+  assign reveal = ''
+  if section.settings.reveal and settings.animations_reveal_on_scroll
+    assign reveal = ' scroll-trigger animate--slide-in'
+  endif
   assign badge = ''
   if section.settings.show_badge
     capture badge
@@ -33,7 +48,7 @@
   endcase
 -%}
 
-{%- if image != blank or request.design_mode -%}
+{%- if show_section -%}
   {%- style -%}
     .section-{{ section.id }}-padding {
       padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -48,13 +63,13 @@
     }
   {%- endstyle -%}
 
-  <div class="rons-editorial rons-editorial--{{ section.settings.layout }} rons-editorial--image-{{ section.settings.image_position }} color-{{ section.settings.color_scheme }} gradient">
+  <div class="rons-editorial rons-editorial--{{ section.settings.layout }} rons-editorial--image-{{ section.settings.image_position }}{% if section.settings.style == 'story' %} rons-editorial--story{% endif %} color-{{ section.settings.color_scheme }} gradient">
     <div class="section-{{ section.id }}-padding{% unless section.settings.layout == 'overlay' and section.settings.full_width %} page-width{% endunless %}">
       <div
         class="rons-editorial__inner"
         style="--rons-ratio: {{ ratio }}; --rons-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};{% if image != blank %} --rons-focal: {{ image.presentation.focal_point }};{% endif %}"
       >
-        <div class="rons-editorial__media">
+        <div class="rons-editorial__media{% if image == blank and request.design_mode == false %} rons-editorial__media--empty{% endif %}{{ reveal }}"{% if reveal != blank %} style="--animation-order: 1;"{% endif %}>
           {%- if image != blank -%}
             {%- if section.settings.layout == 'overlay' -%}
               {%- assign sizes = '100vw' -%}
@@ -66,14 +81,20 @@
               | image_url: width: 2400
               | image_tag: loading: 'lazy', widths: '450, 750, 1100, 1500, 1920, 2400', sizes: sizes, alt: image.alt
             }}
-          {%- else -%}
+          {%- elsif request.design_mode -%}
             {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
           {%- endif -%}
         </div>
 
-        <div class="rons-editorial__content">
-          {%- if image == blank -%}
-            <p class="rons-editor-hint">Избери снимка. Дотогава този раздел е скрит за клиентите.</p>
+        <div class="rons-editorial__content{{ reveal }}"{% if reveal != blank %} style="--animation-order: 2;"{% endif %}>
+          {%- if image == blank and request.design_mode -%}
+            <p class="rons-editor-hint">
+              {%- if section.settings.show_placeholder -%}
+                Избери снимка. Дотогава клиентите виждат неутрален панел.
+              {%- else -%}
+                Избери снимка. Дотогава този раздел е скрит за клиентите.
+              {%- endif -%}
+            </p>
           {%- endif -%}
           {%- if section.settings.badge_position == 'above_heading' %}{{ badge }}{% endif -%}
           {%- if section.settings.eyebrow != blank -%}
@@ -114,7 +135,14 @@
       "type": "image_picker",
       "id": "image",
       "label": "Image",
-      "info": "Customers only see this section once an image is chosen."
+      "info": "Customers only see this section once an image is chosen, unless the placeholder below is on."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_placeholder",
+      "label": "Show a placeholder until a photo is chosen",
+      "info": "Customers see a plain neutral panel in place of the photo.",
+      "default": false
     },
     {
       "type": "select",
@@ -162,6 +190,23 @@
       "unit": "%",
       "label": "Image shade (text on image)",
       "default": 30
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "story", "label": "Story (longer text)" }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "checkbox",
+      "id": "reveal",
+      "label": "Reveal on scroll",
+      "info": "Needs Theme settings › Animations › Reveal sections on scroll.",
+      "default": false
     },
     {
       "type": "color_scheme",

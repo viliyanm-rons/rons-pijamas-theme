@@ -10,112 +10,32 @@
 {
   "sections": {
     "hero": {
-      "type": "rons-hero",
+      "type": "rons-editorial",
       "settings": {
-        "layout": "editorial",
-        "image_side": "right",
-        "desktop_height": "medium",
-        "mobile_height": "medium",
-        "overlay_style": "gradient",
-        "overlay_opacity": 30,
-        "text_color": "light",
-        "desktop_position": "bottom-left",
-        "mobile_alignment": "left",
-        "show_badge": false,
-        "eyebrow": "За нас",
-        "heading": "Ron's Pijamas",
-        "heading_size": "h0",
-        "text": "Пижами, нощници и халати за спокойните моменти у дома.",
-        "button_label_1": "",
-        "button_link_1": "",
-        "button_label_2": "",
-        "button_link_2": ""
-      }
-    },
-    "intro": {
-      "type": "rich-text",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Създадено за твоите моменти у дома",
-            "heading_size": "h1"
-          }
-        },
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Ron's Pijamas е за жените, които искат да се чувстват красиви и в най-спокойните си моменти. Вярваме, че бавната неделна сутрин, вечерният ритуал и спокойният сън заслужават дрехи, които са едновременно удобни и елегантни.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "heading",
-        "text"
-      ],
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "scheme-1",
+        "layout": "overlay",
+        "image_position": "left",
+        "image_ratio": "portrait",
         "full_width": true,
-        "padding_top": 64,
-        "padding_bottom": 48
-      }
-    },
-    "values": {
-      "type": "multicolumn",
-      "blocks": {
-        "value-1": {
-          "type": "column",
-          "settings": {
-            "title": "Комфорт",
-            "text": "<p>Модели, в които се чувстваш удобно – от бавната сутрин до спокойния сън.</p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "value-2": {
-          "type": "column",
-          "settings": {
-            "title": "Женственост",
-            "text": "<p>Пижами, нощници и халати, които са едновременно удобни и елегантни.</p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "value-3": {
-          "type": "column",
-          "settings": {
-            "title": "Внимание към детайла",
-            "text": "<p>Кройката, материята и усещането върху кожата са важни за нас.</p>",
-            "link_label": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "value-1",
-        "value-2",
-        "value-3"
-      ],
-      "settings": {
-        "title": "Нашата философия",
-        "heading_size": "h1",
-        "image_width": "full",
-        "image_ratio": "adapt",
+        "overlay_opacity": 40,
+        "show_placeholder": true,
+        "style": "story",
+        "reveal": false,
+        "color_scheme": "scheme-1",
+        "eyebrow": "НАШАТА ИСТОРИЯ",
+        "heading": "Красотата започва у дома.",
+        "heading_size": "h0",
+        "text": "<p>Вярваме, че красивите дрехи не са запазени само за специалните поводи. Понякога най-ценните моменти са онези, в които сме просто себе си — с чаша кафе сутрин, с любимата книга вечер или в тишината след дълъг ден.</p><p>Точно тогава заслужаваме да се чувстваме красиви, женствени и истински добре в кожата си.</p><p>Това е светът на Ron’s Pijamas.</p>",
         "button_label": "",
         "button_link": "",
-        "columns_desktop": 3,
-        "column_alignment": "center",
-        "background_style": "none",
-        "color_scheme": "scheme-1",
-        "columns_mobile": "1",
-        "swipe_on_mobile": false,
-        "padding_top": 48,
-        "padding_bottom": 64
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     },
-    "materials": {
+    "beginnings": {
       "type": "rons-editorial",
       "settings": {
         "layout": "split",
@@ -123,19 +43,25 @@
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 30,
+        "show_placeholder": true,
+        "style": "story",
+        "reveal": true,
         "color_scheme": "scheme-1",
-        "eyebrow": "Материи",
-        "heading": "Сатен и вискоза",
+        "eyebrow": "2019 · НАЧАЛОТО",
+        "heading": "Всичко започна с едно желание.",
         "heading_size": "h1",
-        "text": "<p>В колекцията ще откриеш модели от сатен и вискоза. Материята на всеки модел е посочена в описанието на продукта.</p>",
+        "text": "<p>През 2019 година се роди Ron’s Pijamas. Но нашата история започна с нещо съвсем лично — любовта към красивите пижами и желанието да изглеждаме добре дори когато никой не ни вижда.</p><p>Търсехме луксозно домашно облекло, което съчетава женственост, красиви кройки и истински комфорт. Но все нещо липсваше.</p><p>Понякога моделът беше красив, но неудобен. Друг път материята беше приятна, но кройката не стоеше така, както ни се искаше.</p><p>Затова започнахме да създаваме собствени модели за себе си. Избирахме материи, променяхме кройки и обръщахме внимание на всеки малък детайл.</p><p>И тогава си зададохме един въпрос: защо да запазим това усещане само за себе си?</p><p>Така се роди Ron’s Pijamas — от жени, които обичат красивото, за жени, които искат да го усещат всеки ден.</p>",
         "button_label": "",
         "button_link": "",
         "button_style": "outline",
-        "padding_top": 0,
-        "padding_bottom": 0
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
       }
     },
-    "moments": {
+    "philosophy": {
       "type": "rons-editorial",
       "settings": {
         "layout": "split",
@@ -143,67 +69,136 @@
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 30,
-        "color_scheme": "scheme-1",
-        "eyebrow": "Колекцията",
-        "heading": "За всеки момент у дома",
+        "show_placeholder": true,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-2",
+        "eyebrow": "НАШАТА ФИЛОСОФИЯ",
+        "heading": "Не е нужен специален повод, за да се чувстваш красива.",
         "heading_size": "h1",
-        "text": "<p>Пижами, нощници и халати – за вечерния ритуал, за уикенда и за подарък.</p>",
-        "button_label": "Разгледай продуктите",
-        "button_link": "shopify://collections/all",
+        "text": "<p>Познато ли ти е онова усещане, когато се прибираш вкъщи, оставяш целия ден зад гърба си и най-накрая имаш време само за себе си?</p><p>Вярваме, че точно тези моменти заслужават малко повече красота.</p><p>Не е нужно да излизаш навън, за да облечеш нещо специално. Не е нужно някой да те види, за да се почувстваш прекрасна.</p><p>Искаме домашното облекло да бъде продължение на твоя стил, а не компромис с него.</p>",
+        "button_label": "",
+        "button_link": "",
         "button_style": "outline",
-        "padding_top": 0,
-        "padding_bottom": 0
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
       }
     },
-    "cta": {
-      "type": "rich-text",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Открий колекцията",
-            "heading_size": "h1"
-          }
-        },
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Разгледай всички модели на Ron's Pijamas.</p>"
-          }
-        },
-        "button": {
-          "type": "button",
-          "settings": {
-            "button_label": "Разгледай продуктите",
-            "button_link": "shopify://collections/all",
-            "button_style_secondary": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading",
-        "text",
-        "button"
-      ],
+    "fabrics": {
+      "type": "rons-editorial",
       "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "scheme-3",
+        "layout": "split",
+        "image_position": "left",
+        "image_ratio": "portrait",
         "full_width": true,
-        "padding_top": 72,
-        "padding_bottom": 72
+        "overlay_opacity": 30,
+        "show_placeholder": true,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-1",
+        "eyebrow": "",
+        "heading": "",
+        "heading_size": "h1",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "listening": {
+      "type": "rons-editorial",
+      "settings": {
+        "layout": "split",
+        "image_position": "right",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "show_placeholder": true,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-2",
+        "eyebrow": "",
+        "heading": "",
+        "heading_size": "h1",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "rebrand": {
+      "type": "rons-editorial",
+      "settings": {
+        "layout": "split",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "show_placeholder": true,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-1",
+        "eyebrow": "",
+        "heading": "",
+        "heading_size": "h1",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "closing": {
+      "type": "rons-editorial",
+      "settings": {
+        "layout": "overlay",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 40,
+        "show_placeholder": true,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-1",
+        "eyebrow": "",
+        "heading": "",
+        "heading_size": "h1",
+        "text": "",
+        "button_label": "",
+        "button_link": "shopify://collections/all",
+        "button_style": "solid",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     }
   },
   "order": [
     "hero",
-    "intro",
-    "values",
-    "materials",
-    "moments",
-    "cta"
+    "beginnings",
+    "philosophy",
+    "fabrics",
+    "listening",
+    "rebrand",
+    "closing"
   ]
 }
