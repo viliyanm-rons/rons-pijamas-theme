@@ -26,14 +26,39 @@
           <nav class="menu-drawer__navigation">
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">
               {%- for link in section.settings.menu.links -%}
-                <li>
+                {%- liquid
+                  assign split = false
+                  if link.links != blank and link.url != blank and link.url != '#'
+                    assign split = true
+                  endif
+                -%}
+                <li{% if split %} class="rons-drawer-split"{% endif %}>
                   {%- if link.links != blank -%}
+                    {%- comment -%}
+                      Ron's Pijamas: the parent's own URL stays reachable (e.g. Продукти → all
+                      products); the caret button on the right expands the accordion.
+                    {%- endcomment -%}
+                    {%- if split -%}
+                      <a
+                        id="HeaderDrawer-{{ link.handle }}-link"
+                        href="{{ link.url }}"
+                        class="menu-drawer__menu-item list-menu__item link link--text focus-inset rons-drawer-split__link{% if link.current or link.child_active %} menu-drawer__menu-item--active{% endif %}"
+                        {% if link.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{- link.title | escape -}}
+                      </a>
+                    {%- endif -%}
                     <details id="Details-menu-drawer-menu-item-{{ forloop.index }}">
                       <summary
                         id="HeaderDrawer-{{ link.handle }}"
-                        class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}"
+                        class="menu-drawer__menu-item list-menu__item link link--text focus-inset{% if link.child_active %} menu-drawer__menu-item--active{% endif %}{% if split %} rons-drawer-split__toggle{% endif %}"
+                        {% if split %}
+                          aria-label="{{ link.title | escape }}"
+                        {% endif %}
                       >
-                        {{ link.title | escape }}
+                        {%- unless split %}{{ link.title | escape }}{% endunless %}
                         <span class="svg-wrapper">
                           {{- 'icon-arrow.svg' | inline_asset_content -}}
                         </span>
@@ -140,6 +165,21 @@
             </ul>
           </nav>
           <div class="menu-drawer__utility-links">
+            {%- comment -%} Ron's Pijamas: account link for phones, where the header account icon is hidden {%- endcomment -%}
+            {%- if shop.customer_accounts_enabled -%}
+              <a
+                href="{{ routes.account_url }}"
+                class="menu-drawer__account link link--text focus-inset medium-hide large-up-hide"
+                rel="nofollow"
+              >
+                <span class="svg-wrapper" aria-hidden="true">{{ 'icon-account.svg' | inline_asset_content }}</span>
+                {%- if customer -%}
+                  {{ 'customer.account.title' | t }}
+                {%- else -%}
+                  {{ 'customer.log_in' | t }}
+                {%- endif -%}
+              </a>
+            {%- endif -%}
             {%- if show_country_selector or show_language_selector -%}
               <div class="menu-drawer__localization header-localization">
                 {%- if show_country_selector -%}

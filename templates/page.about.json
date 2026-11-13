@@ -1,0 +1,208 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "rons-editorial",
+      "settings": {
+        "show_placeholder": true,
+        "layout": "overlay",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 40,
+        "style": "story",
+        "reveal": false,
+        "color_scheme": "scheme-1",
+        "eyebrow": "НАШАТА ИСТОРИЯ",
+        "heading": "Красотата започва у дома.",
+        "heading_size": "h0",
+        "text": "<p>Вярваме, че красивите дрехи не са само за специалните поводи. Понякога най-ценните моменти са онези, в които сме просто себе си — с чаша кафе сутрин, с любимата книга вечер или в тишината след дълъг ден.</p><p>Точно тогава заслужаваме да се чувстваме красиви, женствени и истински добре в кожата си. Вкъщи. В нашето сигурност място.</p><p>Това е светът на Ron’s Pijamas.</p>",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "beginnings": {
+      "type": "rons-editorial",
+      "settings": {
+        "show_placeholder": true,
+        "layout": "split",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-1",
+        "eyebrow": "2019 · НАЧАЛОТО",
+        "heading": "Всичко започна с едно желание.",
+        "heading_size": "h1",
+        "text": "<p>През 2019 година се роди Ron’s Pijamas. Но нашата история започна с нещо съвсем лично — любовта към красивите пижами и желанието да изглеждаме добре дори когато никой не ни вижда.</p><p>Търсехме луксозно домашно облекло, което съчетава женственост, красиви кройки и истински комфорт. Но все нещо липсваше.</p><p>Понякога моделът беше красив, но неудобен. Друг път материята беше приятна, но кройката не стоеше така, както ни се искаше.</p><p>Затова започнахме да създаваме собствени модели за себе си. Избирахме материи, променяхме кройки и обръщахме внимание на всеки малък детайл.</p><p>И тогава си зададохме един въпрос: защо да запазим това усещане само за себе си?</p><p>Така се роди Ron’s Pijamas — от жени, които обичат красивото, за жени, които искат да го усещат всеки ден.</p>",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "philosophy": {
+      "type": "rons-editorial",
+      "settings": {
+        "show_placeholder": true,
+        "layout": "split",
+        "image_position": "right",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-2",
+        "eyebrow": "НАШАТА ФИЛОСОФИЯ",
+        "heading": "Не е нужен специален повод, за да се чувстваш красива.",
+        "heading_size": "h1",
+        "text": "<p>Познато ли ти е онова усещане, когато се прибираш вкъщи, оставяш целия ден зад гърба си и най-накрая имаш време само за себе си?</p><p>Вярваме, че точно тези моменти заслужават малко повече красота.</p><p>Не е нужно да излизаш навън, за да облечеш нещо специално. Не е нужно някой да те види, за да се почувстваш прекрасна.</p><p>Искаме домашното облекло да бъде продължение на твоя стил, а не компромис с него.</p>",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "fabrics": {
+      "type": "rons-editorial",
+      "disabled": true,
+      "settings": {
+        "show_placeholder": true,
+        "layout": "split",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-1",
+        "eyebrow": "",
+        "heading": "",
+        "heading_size": "h1",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "listening": {
+      "type": "rons-editorial",
+      "disabled": true,
+      "settings": {
+        "show_placeholder": true,
+        "layout": "split",
+        "image_position": "right",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-2",
+        "eyebrow": "",
+        "heading": "",
+        "heading_size": "h1",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "rebrand": {
+      "type": "rons-editorial",
+      "disabled": true,
+      "settings": {
+        "show_placeholder": true,
+        "layout": "split",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 30,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-1",
+        "eyebrow": "",
+        "heading": "",
+        "heading_size": "h1",
+        "text": "",
+        "button_label": "",
+        "button_link": "",
+        "button_style": "outline",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    },
+    "closing": {
+      "type": "rons-editorial",
+      "disabled": true,
+      "settings": {
+        "show_placeholder": true,
+        "layout": "overlay",
+        "image_position": "left",
+        "image_ratio": "portrait",
+        "full_width": true,
+        "overlay_opacity": 40,
+        "style": "story",
+        "reveal": true,
+        "color_scheme": "scheme-1",
+        "eyebrow": "",
+        "heading": "",
+        "heading_size": "h1",
+        "text": "",
+        "button_label": "",
+        "button_link": "shopify://collections/all",
+        "button_style": "solid",
+        "show_badge": false,
+        "badge_position": "below_heading",
+        "badge_link": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "beginnings",
+    "philosophy",
+    "fabrics",
+    "listening",
+    "rebrand",
+    "closing"
+  ]
+}

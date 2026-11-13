@@ -1,0 +1,31 @@
+{% comment %}
+  Ron's Pijamas – outputs the name of the product's size option: the first
+  option whose name matches one of the comma-separated names (case- and
+  space-insensitive), or nothing.
+
+  Accepts:
+  - product: {Object}
+  - names: {String} e.g. "Размер, Size"
+
+  Usage:
+  {%- capture size_option_name -%}{% render 'rons-size-option-name', product: product, names: 'Размер, Size' %}{%- endcapture -%}
+{% endcomment %}
+
+{%- liquid
+  assign size_names = names | downcase | split: ','
+  assign found = false
+  for product_option in product.options_with_values
+    assign product_option_name = product_option.name | downcase | strip
+    for size_name in size_names
+      assign clean_size_name = size_name | strip
+      if clean_size_name != blank and product_option_name == clean_size_name
+        echo product_option.name
+        assign found = true
+        break
+      endif
+    endfor
+    if found
+      break
+    endif
+  endfor
+-%}

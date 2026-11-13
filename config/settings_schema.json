@@ -147,6 +147,21 @@
     ]
   },
   {
+    "name": "Typography (Cyrillic)",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Shopify's font library only includes Latin letters, so Bulgarian text would fall back to system fonts. When this is on, the store uses self-hosted Cormorant Garamond (headings) and Jost (body), which render Latin and Cyrillic in the same design, and the Typography font pickers are ignored."
+      },
+      {
+        "type": "checkbox",
+        "id": "rons_custom_fonts",
+        "label": "Use Ron's Pijamas fonts (Latin + Cyrillic)",
+        "default": true
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.layout.name",
     "settings": [
       {
@@ -616,6 +631,18 @@
         "unit": "px",
         "label": "t:settings_schema.global.settings.blur.label",
         "default": 0
+      }
+    ]
+  },
+  {
+    "name": "Product cards (Ron's Pijamas)",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "rons_card_swatches",
+        "label": "Show colour swatches",
+        "info": "Shows the colours of the first option that has swatches set up in Shopify (Products › Variants › Option values).",
+        "default": true
       }
     ]
   },
@@ -1467,27 +1494,28 @@
         "type": "checkbox",
         "id": "rons_free_shipping_enable",
         "label": "Show free delivery progress bar",
-        "default": true
+        "default": false,
+        "info": "Only turn on once the threshold below matches a free shipping rate in Settings > Shipping and delivery."
       },
       {
         "type": "number",
         "id": "rons_free_shipping_threshold",
         "label": "Free delivery threshold",
-        "info": "In your store's default currency, e.g. 60. Match this to your shipping rates. Hidden for customers shopping in another currency.",
-        "default": 60
+        "info": "In your store's default currency, e.g. 60. Must match the minimum order value of your free shipping rate in Settings > Shipping and delivery. The bar stays hidden while this is 0, and for customers shopping in another currency.",
+        "default": 0
       },
       {
         "type": "text",
         "id": "rons_free_shipping_message",
         "label": "Progress message",
         "info": "Use [amount] for the amount left to spend.",
-        "default": "You are [amount] away from free delivery"
+        "default": "Още [amount] до безплатна доставка"
       },
       {
         "type": "text",
         "id": "rons_free_shipping_success",
         "label": "Success message",
-        "default": "Congratulations, your delivery is free"
+        "default": "Доставката ти е безплатна"
       },
       {
         "type": "header",
@@ -1497,18 +1525,105 @@
         "type": "text",
         "id": "rons_cart_trust_1",
         "label": "Reassurance line 1",
-        "default": "Secure checkout"
+        "default": "Сигурно плащане"
       },
       {
         "type": "text",
         "id": "rons_cart_trust_2",
         "label": "Reassurance line 2",
-        "default": "30-day free returns"
+        "info": "Only state what your published policies guarantee."
       },
       {
         "type": "checkbox",
         "id": "rons_cart_payment_icons",
         "label": "Show payment icons",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Complementary products"
+      },
+      {
+        "type": "collection",
+        "id": "rons_cart_upsell_collection",
+        "label": "Collection to suggest from",
+        "info": "Products already in the cart and sold-out products are skipped. Leave empty to hide."
+      },
+      {
+        "type": "range",
+        "id": "rons_cart_upsell_count",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "label": "Number of products",
+        "default": 2
+      },
+      {
+        "type": "text",
+        "id": "rons_cart_upsell_heading",
+        "label": "Heading",
+        "default": "Комбинирай с"
+      },
+      {
+        "type": "text",
+        "id": "rons_cart_upsell_add_label",
+        "label": "Add button label",
+        "default": "Добави"
+      },
+      {
+        "type": "text",
+        "id": "rons_cart_upsell_choose_label",
+        "label": "Choose options label",
+        "default": "Избери"
+      }
+    ]
+  },
+  {
+    "name": "Значка за доверие",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Звезди, оценка и брой клиенти, показвани в банерите на началната страница. Включва се отделно във всеки банер. Показвайте само точни данни, които можете да докажете."
+      },
+      {
+        "type": "text",
+        "id": "trust_badge_rating",
+        "label": "Оценка",
+        "default": "5.0 / 5"
+      },
+      {
+        "type": "text",
+        "id": "trust_badge_text",
+        "label": "Текст",
+        "default": "5000+ доволни клиентки"
+      },
+      {
+        "type": "url",
+        "id": "trust_badge_link",
+        "label": "Връзка (по избор)",
+        "info": "Напр. страница с вашите отзиви."
+      },
+      {
+        "type": "select",
+        "id": "trust_badge_stars",
+        "label": "Цвят на звездите",
+        "options": [
+          {
+            "value": "mono",
+            "label": "Като текста (черно/бяло)"
+          },
+          {
+            "value": "champagne",
+            "label": "Шампанско злато"
+          }
+        ],
+        "default": "mono"
+      },
+      {
+        "type": "checkbox",
+        "id": "trust_badge_hide_adjacent",
+        "label": "Скрий в съседни банери",
+        "info": "Не показва значката в банер, който е непосредствено след друг банер със значка.",
         "default": true
       }
     ]

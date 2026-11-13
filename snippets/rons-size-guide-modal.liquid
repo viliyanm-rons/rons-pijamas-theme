@@ -1,101 +1,248 @@
 {% comment %}
-  Ron's Pijamas – size guide modal for the main-product "Size guide" block.
-  Uses Dawn's <modal-dialog> and product popup styles.
+  Ron's Pijamas – interactive size guide modal.
 
-  Content priority:
-  1. Product metafield custom.size_guide (page reference or rich text)
-  2. The page selected on the block
-  3. The block's image, notes and (optionally) the built-in size table
+  Content comes only from the Size Guides metaobject resolved by
+  snippets/rons-size-guide-resolve.liquid (product guide → store default →
+  none). Every measurement is read from Shopify Admin; nothing is hardcoded.
+
+  - Size buttons highlight a size, its summary and its table row.
+  - On open, the size currently selected on the product is highlighted
+    (assets/rons-custom.js).
+  - "Избери размер X" explicitly selects that size on the product; choosing
+    a size inside the guide never changes the variant by itself.
+  - Uses Dawn's <modal-dialog>: focus trap, Escape to close, focus returns
+    to the link.
+
+  Lists in the metaobject are matched by position: the first bust/waist/hips
+  value belongs to the first size, and so on. Only sizes with bust, waist and
+  hips all filled in are shown; incomplete sizes are left out (and listed in
+  a Theme Editor-only hint), so partial rows never look like valid advice.
+  Values are trimmed and a trailing unit (e.g. "85-88см") is removed because
+  the unit is shown once on its own.
 
   Accepts:
   - block: {Object} the size_guide block
-  - product: {Object} the current product
+  - product: {Object}
 
   Usage:
   {% render 'rons-size-guide-modal', block: block, product: product %}
 {% endcomment %}
 
-{%- liquid
-  assign size_guide_metafield = product.metafields.custom.size_guide
-  assign heading = block.settings.heading | default: block.settings.label
--%}
+{%- capture guide_handle -%}{% render 'rons-size-guide-resolve', product: product %}{%- endcapture -%}
+{%- assign guide_handle = guide_handle | strip -%}
+{%- if guide_handle != blank -%}
+  {%- liquid
+    assign guide = shop.metaobjects.size_guide[guide_handle]
+    assign unit = guide.unit.value | default: 'см' | strip
+    assign raw_bust = guide.bust.value
+    assign raw_waist = guide.waist.value
+    assign raw_hips = guide.hips.value
+    assign raw_garment = guide.garment.value
+    assign has_garment = false
+    if guide.garment_label.value != blank and raw_garment.size > 0
+      assign has_garment = true
+    endif
 
-<modal-dialog
-  id="SizeGuideModal-{{ block.id }}"
-  class="product-popup-modal rons-size-guide"
-  {{ block.shopify_attributes }}
->
-  <div
-    role="dialog"
-    aria-label="{{ heading | escape }}"
-    aria-modal="true"
-    class="product-popup-modal__content"
-    tabindex="-1"
+    # Keep only complete sizes, as cleaned parallel lists.
+    assign sep = '§§'
+    assign list_sizes = ''
+    assign list_bust = ''
+    assign list_waist = ''
+    assign list_hips = ''
+    assign list_garment = ''
+    assign skipped_sizes = ''
+    for raw_size in guide.sizes.value
+      assign i = forloop.index0
+      assign clean_size = raw_size | strip
+      assign clean_bust = raw_bust[i] | remove: unit | strip
+      assign clean_waist = raw_waist[i] | remove: unit | strip
+      assign clean_hips = raw_hips[i] | remove: unit | strip
+      assign clean_garment = raw_garment[i] | remove: unit | strip | default: '—'
+      if clean_size != blank and clean_bust != blank and clean_waist != blank and clean_hips != blank
+        assign list_sizes = list_sizes | append: sep | append: clean_size
+        assign list_bust = list_bust | append: sep | append: clean_bust
+        assign list_waist = list_waist | append: sep | append: clean_waist
+        assign list_hips = list_hips | append: sep | append: clean_hips
+        assign list_garment = list_garment | append: sep | append: clean_garment
+      elsif clean_size != blank
+        assign skipped_sizes = skipped_sizes | append: ', ' | append: clean_size
+      endif
+    endfor
+    assign sizes = list_sizes | remove_first: sep | split: sep
+    assign bust = list_bust | remove_first: sep | split: sep
+    assign waist = list_waist | remove_first: sep | split: sep
+    assign hips = list_hips | remove_first: sep | split: sep
+    assign garment = list_garment | remove_first: sep | split: sep
+    assign skipped_sizes = skipped_sizes | remove_first: ', '
+  -%}
+  {%- capture size_option_name -%}
+    {%- render 'rons-size-option-name', product: product, names: block.settings.size_option_names -%}
+  {%- endcapture -%}
+  {%- liquid
+    assign size_option_name = size_option_name | strip
+    assign size_option = product.options_with_values | where: 'name', size_option_name | first
+  -%}
+
+  <modal-dialog
+    id="SizeGuideModal-{{ section.id }}"
+    class="product-popup-modal rons-size-guide"
+    data-rons-size-guide
+    {{ block.shopify_attributes }}
   >
-    <button
-      id="ModalClose-{{ block.id }}"
-      type="button"
-      class="product-popup-modal__toggle"
-      aria-label="{{ 'accessibility.close' | t }}"
+    <div
+      role="dialog"
+      aria-labelledby="SizeGuideTitle-{{ section.id }}"
+      aria-modal="true"
+      class="product-popup-modal__content rons-sg"
+      tabindex="-1"
     >
-      {{- 'icon-close.svg' | inline_asset_content -}}
-    </button>
-    <div class="product-popup-modal__content-info">
-      <h2 class="h2">{{ heading | escape }}</h2>
+      <button
+        id="ModalClose-SizeGuide-{{ section.id }}"
+        type="button"
+        class="product-popup-modal__toggle"
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        {{- 'icon-close.svg' | inline_asset_content -}}
+      </button>
 
-      {%- if size_guide_metafield != blank -%}
-        <div class="rte">
-          {%- if size_guide_metafield.type == 'page_reference' -%}
-            {{ size_guide_metafield.value.content }}
-          {%- else -%}
-            {{ size_guide_metafield | metafield_tag }}
+      <div class="product-popup-modal__content-info rons-sg__inner">
+        <header class="rons-sg__header">
+          {%- if block.settings.heading != blank -%}
+            <p class="rons-eyebrow">{{ block.settings.heading | escape }}</p>
           {%- endif -%}
+          <h2 id="SizeGuideTitle-{{ section.id }}" class="rons-sg__title h2">{{ guide.title.value | escape }}</h2>
+          {%- if guide.description.value != blank -%}
+            <p class="rons-sg__description">{{ guide.description.value | escape | newline_to_br }}</p>
+          {%- endif -%}
+        </header>
+
+        {%- if request.design_mode and skipped_sizes != blank -%}
+          <p class="rons-editor-hint">
+            Размери без попълнени бюст, талия и ханш не се показват: {{ skipped_sizes | escape }}.
+          </p>
+        {%- endif -%}
+
+        <div class="rons-sg__picker" role="group" aria-label="{{ block.settings.picker_label | escape }}">
+          {%- for size in sizes -%}
+            <button type="button" class="rons-sg__size" data-size-index="{{ forloop.index0 }}" aria-pressed="false">
+              {{- size | escape -}}
+            </button>
+          {%- endfor -%}
         </div>
-      {%- elsif block.settings.page != blank -%}
-        <div class="rte">{{ block.settings.page.content }}</div>
-      {%- else -%}
-        {%- if block.settings.intro != blank -%}
-          <div class="rons-size-guide__intro rte">{{ block.settings.intro }}</div>
-        {%- endif -%}
 
-        {%- if block.settings.show_default_table -%}
-          <div class="rons-size-guide__table-wrapper">
-            <table class="rons-size-guide__table">
-              <thead>
-                <tr>
-                  <th scope="col">{{ block.settings.column_size | escape }}</th>
-                  <th scope="col">EU</th>
-                  <th scope="col">{{ block.settings.column_bust | escape }}</th>
-                  <th scope="col">{{ block.settings.column_waist | escape }}</th>
-                  <th scope="col">{{ block.settings.column_hips | escape }}</th>
+        <div class="rons-sg__summaries" aria-live="polite">
+          <p class="rons-sg__prompt" data-size-prompt>{{ block.settings.prompt | escape }}</p>
+          {%- for size in sizes -%}
+            {%- liquid
+              assign i = forloop.index0
+              assign variant_value = ''
+              for value in size_option.values
+                assign value_down = value | downcase | strip
+                assign size_down = size | downcase | strip
+                if value_down == size_down
+                  assign variant_value = value
+                  break
+                endif
+              endfor
+            -%}
+            <div class="rons-sg__summary" data-size-index="{{ i }}" hidden>
+              <dl class="rons-sg__measures">
+                <div>
+                  <dt>{{ block.settings.label_bust | escape }}</dt>
+                  <dd>{{ bust[i] | escape }} <span>{{ unit | escape }}</span></dd>
+                </div>
+                <div>
+                  <dt>{{ block.settings.label_waist | escape }}</dt>
+                  <dd>{{ waist[i] | escape }} <span>{{ unit | escape }}</span></dd>
+                </div>
+                <div>
+                  <dt>{{ block.settings.label_hips | escape }}</dt>
+                  <dd>{{ hips[i] | escape }} <span>{{ unit | escape }}</span></dd>
+                </div>
+                {%- if has_garment -%}
+                  <div>
+                    <dt>{{ guide.garment_label.value | escape }}</dt>
+                    <dd>{{ garment[i] | escape }} <span>{{ unit | escape }}</span></dd>
+                  </div>
+                {%- endif -%}
+              </dl>
+              {%- if variant_value != '' -%}
+                <button
+                  type="button"
+                  class="button button--full-width rons-sg__apply"
+                  data-variant-value="{{ variant_value | escape }}"
+                  data-size-option="{{ size_option_name | escape }}"
+                >
+                  {{ block.settings.apply_label | replace: '[size]', size | escape }}
+                </button>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <div class="rons-sg__table-wrapper">
+          <table class="rons-sg__table">
+            <caption class="visually-hidden">{{ guide.title.value | escape }} ({{ unit | escape }})</caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ block.settings.label_size | escape }}</th>
+                <th scope="col">{{ block.settings.label_bust | escape }}</th>
+                <th scope="col">{{ block.settings.label_waist | escape }}</th>
+                <th scope="col">{{ block.settings.label_hips | escape }}</th>
+                {%- if has_garment -%}
+                  <th scope="col">{{ guide.garment_label.value | escape }}</th>
+                {%- endif -%}
+              </tr>
+            </thead>
+            <tbody>
+              {%- for size in sizes -%}
+                {%- assign i = forloop.index0 -%}
+                <tr data-size-index="{{ i }}">
+                  <th scope="row">{{ size | escape }}</th>
+                  <td>{{ bust[i] | escape }}</td>
+                  <td>{{ waist[i] | escape }}</td>
+                  <td>{{ hips[i] | escape }}</td>
+                  {%- if has_garment -%}
+                    <td>{{ garment[i] | escape }}</td>
+                  {%- endif -%}
                 </tr>
-              </thead>
-              <tbody>
-                <tr><th scope="row">XS</th><td>34</td><td>80–84</td><td>62–66</td><td>88–92</td></tr>
-                <tr><th scope="row">S</th><td>36</td><td>84–88</td><td>66–70</td><td>92–96</td></tr>
-                <tr><th scope="row">M</th><td>38</td><td>88–92</td><td>70–74</td><td>96–100</td></tr>
-                <tr><th scope="row">L</th><td>40</td><td>92–96</td><td>74–78</td><td>100–104</td></tr>
-                <tr><th scope="row">XL</th><td>42</td><td>96–100</td><td>78–82</td><td>104–108</td></tr>
-                <tr><th scope="row">XXL</th><td>44</td><td>100–106</td><td>82–88</td><td>108–114</td></tr>
-              </tbody>
-            </table>
+              {%- endfor -%}
+            </tbody>
+          </table>
+          <p class="rons-sg__unit">{{ block.settings.unit_note | replace: '[unit]', unit | escape }}</p>
+        </div>
+
+        {%- if guide.fit_advice.value != blank -%}
+          <div class="rons-sg__advice">
+            <p class="rons-sg__subheading">{{ block.settings.advice_heading | escape }}</p>
+            <p>{{ guide.fit_advice.value | escape | newline_to_br }}</p>
           </div>
         {%- endif -%}
 
-        {%- if block.settings.image != blank -%}
-          <div class="rons-size-guide__image">
-            {{
-              block.settings.image
-              | image_url: width: 1400
-              | image_tag: loading: 'lazy', widths: '600, 900, 1400', sizes: '(min-width: 750px) 70vw, 100vw'
-            }}
+        {%- if guide.how_to_measure.value != blank or guide.illustration.value != blank -%}
+          <div class="rons-sg__how">
+            <p class="rons-sg__subheading">{{ block.settings.how_to_heading | escape }}</p>
+            <div class="rons-sg__how-body">
+              {%- if guide.illustration.value != blank -%}
+                <div class="rons-sg__illustration">
+                  {{
+                    guide.illustration.value
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '300, 450, 600, 900',
+                      sizes: '(min-width: 750px) 280px, 70vw',
+                      alt: block.settings.how_to_heading
+                  }}
+                </div>
+              {%- endif -%}
+              {%- if guide.how_to_measure.value != blank -%}
+                <p>{{ guide.how_to_measure.value | escape | newline_to_br }}</p>
+              {%- endif -%}
+            </div>
           </div>
         {%- endif -%}
-
-        {%- if block.settings.notes != blank -%}
-          <div class="rons-size-guide__intro rte">{{ block.settings.notes }}</div>
-        {%- endif -%}
-      {%- endif -%}
+      </div>
     </div>
-  </div>
-</modal-dialog>
+  </modal-dialog>
+{%- endif -%}

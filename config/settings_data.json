@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": "Dawn",
   "presets": {
@@ -9,61 +18,61 @@
           "settings": {
             "background": "#FFFFFF",
             "background_gradient": "",
-            "text": "#111111",
-            "button": "#111111",
+            "text": "#000000",
+            "button": "#000000",
             "button_label": "#FFFFFF",
-            "secondary_button_label": "#111111",
-            "shadow": "#111111"
+            "secondary_button_label": "#000000",
+            "shadow": "#000000"
           }
         },
         "scheme-2": {
           "settings": {
-            "background": "#F6F4F1",
+            "background": "#F5F5F5",
             "background_gradient": "",
-            "text": "#111111",
-            "button": "#111111",
+            "text": "#000000",
+            "button": "#000000",
             "button_label": "#FFFFFF",
-            "secondary_button_label": "#111111",
-            "shadow": "#111111"
+            "secondary_button_label": "#000000",
+            "shadow": "#000000"
           }
         },
         "scheme-3": {
           "settings": {
-            "background": "#111111",
+            "background": "#000000",
             "background_gradient": "",
             "text": "#FFFFFF",
             "button": "#FFFFFF",
-            "button_label": "#111111",
+            "button_label": "#000000",
             "secondary_button_label": "#FFFFFF",
-            "shadow": "#111111"
+            "shadow": "#000000"
           }
         },
         "scheme-4": {
           "settings": {
-            "background": "#EDE7E1",
+            "background": "#FFFFFF",
             "background_gradient": "",
-            "text": "#111111",
-            "button": "#111111",
-            "button_label": "#FFFFFF",
-            "secondary_button_label": "#111111",
-            "shadow": "#111111"
+            "text": "#000000",
+            "button": "#FFFFFF",
+            "button_label": "#000000",
+            "secondary_button_label": "#000000",
+            "shadow": "#000000"
           }
         },
         "scheme-5": {
           "settings": {
-            "background": "#F4E9E6",
+            "background": "#000000",
             "background_gradient": "",
-            "text": "#111111",
-            "button": "#111111",
+            "text": "#FFFFFF",
+            "button": "#000000",
             "button_label": "#FFFFFF",
-            "secondary_button_label": "#111111",
-            "shadow": "#111111"
+            "secondary_button_label": "#FFFFFF",
+            "shadow": "#000000"
           }
         }
       },
-      "type_header_font": "bodoni_moda_n4",
-      "heading_scale": 100,
-      "type_body_font": "jost_n4",
+      "type_header_font": "assistant_n4",
+      "heading_scale": 115,
+      "type_body_font": "assistant_n4",
       "body_scale": 100,
       "page_width": 1400,
       "spacing_sections": 0,
@@ -95,7 +104,7 @@
       "card_style": "standard",
       "card_image_padding": 0,
       "card_text_alignment": "left",
-      "card_color_scheme": "scheme-2",
+      "card_color_scheme": "scheme-1",
       "card_border_thickness": 0,
       "card_border_opacity": 10,
       "card_corner_radius": 0,
@@ -106,7 +115,7 @@
       "collection_card_style": "standard",
       "collection_card_image_padding": 0,
       "collection_card_text_alignment": "left",
-      "collection_card_color_scheme": "scheme-2",
+      "collection_card_color_scheme": "scheme-1",
       "collection_card_border_thickness": 0,
       "collection_card_border_opacity": 10,
       "collection_card_corner_radius": 0,
@@ -117,7 +126,7 @@
       "blog_card_style": "standard",
       "blog_card_image_padding": 0,
       "blog_card_text_alignment": "left",
-      "blog_card_color_scheme": "scheme-2",
+      "blog_card_color_scheme": "scheme-1",
       "blog_card_border_thickness": 0,
       "blog_card_border_opacity": 10,
       "blog_card_corner_radius": 0,
@@ -155,9 +164,9 @@
       "badge_position": "top left",
       "badge_corner_radius": 0,
       "sale_badge_color_scheme": "scheme-3",
-      "sold_out_badge_color_scheme": "scheme-2",
+      "sold_out_badge_color_scheme": "scheme-1",
       "brand_headline": "Ron's Pijamas",
-      "brand_description": "<p>Refined sleepwear and loungewear for women, designed for slow mornings and beautiful nights.</p>",
+      "brand_description": "<p>Пижами и домашно облекло за жени.</p>",
       "brand_image_width": 100,
       "social_twitter_link": "",
       "social_facebook_link": "",
@@ -174,16 +183,17 @@
       "currency_code_enabled": true,
       "cart_type": "drawer",
       "show_vendor": false,
-      "show_cart_note": false,
+      "show_cart_note": true,
       "cart_drawer_collection": "",
       "cart_color_scheme": "scheme-1",
-      "rons_free_shipping_enable": true,
-      "rons_free_shipping_threshold": 60,
-      "rons_free_shipping_message": "You are [amount] away from free delivery",
-      "rons_free_shipping_success": "Congratulations, your delivery is free",
-      "rons_cart_trust_1": "Secure checkout",
-      "rons_cart_trust_2": "30-day free returns",
+      "rons_free_shipping_enable": false,
+      "rons_free_shipping_threshold": 0,
+      "rons_free_shipping_message": "Още [amount] до безплатна доставка",
+      "rons_free_shipping_success": "Доставката ти е безплатна",
+      "rons_cart_trust_1": "Сигурно плащане",
+      "rons_cart_trust_2": "",
       "rons_cart_payment_icons": true,
+      "rons_custom_fonts": true,
       "sections": {
         "main-password-header": {
           "type": "main-password-header",
@@ -197,7 +207,13 @@
             "color_scheme": "scheme-1"
           }
         }
-      }
+      },
+      "rons_card_swatches": true,
+      "rons_cart_upsell_collection": "",
+      "rons_cart_upsell_count": 2,
+      "rons_cart_upsell_heading": "Комбинирай с",
+      "rons_cart_upsell_add_label": "Добави",
+      "rons_cart_upsell_choose_label": "Избери"
     }
   }
 }

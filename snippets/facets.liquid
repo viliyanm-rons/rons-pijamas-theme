@@ -82,7 +82,7 @@
                     <facet-remove>
                       <a href="{{ value.url_to_remove }}" class="active-facets__button active-facets__button--light">
                         <span class="active-facets__button-inner button button--tertiary">
-                          {{ filter.label | escape }}: {{ value.label | escape }}
+                          {% render 'rons-l10n-label', label: filter.label %}: {% render 'rons-l10n-label', label: value.label %}
                           <span class="svg-wrapper">
                             {{- 'icon-close-small.svg' | inline_asset_content -}}
                           </span>
@@ -140,11 +140,11 @@
                   >
                     <summary
                       class="facets__summary caption-large focus-offset"
-                      aria-label="{{ filter.label | escape }} ({{ 'products.facets.filters_selected.one' | t: count: filter.active_values.size }})"
+                      aria-label="{% render 'rons-l10n-label', label: filter.label %} ({{ 'products.facets.filters_selected.one' | t: count: filter.active_values.size }})"
                     >
                       <div>
                         <span class="facets__summary-label">
-                          {{- filter.label | escape }}
+                          {%- render 'rons-l10n-label', label: filter.label %}
                           {%- if filter_type == 'vertical' -%}
                             <span class="facets__selected{% if filter.active_values.size == 0 %} hidden{% endif %}">
                               ({{ filter.active_values.size }})</span
@@ -183,7 +183,7 @@
                         </div>
                       {%- endif -%}
                       <fieldset class="facets-wrap parent-wrap {% if filter_type == 'vertical' %} facets-wrap-vertical{% endif %}">
-                        <legend class="visually-hidden">{{ filter.label | escape }}</legend>
+                        <legend class="visually-hidden">{% render 'rons-l10n-label', label: filter.label %}</legend>
                         {%- liquid
                           assign sorted_values = filter.values
                           # Keep the selected values grouped together when operator is AND
@@ -211,10 +211,10 @@
 
                             {%- capture text_value -%}
                               <span class="facet-checkbox__text" aria-hidden="true">
-                                <span class="facet-checkbox__text-label">{{- value.label | escape }}</span> ({{- value.count -}})
+                                <span class="facet-checkbox__text-label">{%- render 'rons-l10n-label', label: value.label %}</span> ({{- value.count -}})
                               </span>
                               <span class="visually-hidden">
-                                {{- value.label | escape }} (
+                                {%- render 'rons-l10n-label', label: value.label %} (
                                 {%- if value.count == 1 -%}
                                   {{- 'products.facets.product_count_simple.one' | t: count: value.count -}}
                                 {%- else -%}
@@ -311,7 +311,7 @@
                   >
                     <summary class="facets__summary caption-large focus-offset">
                       <div>
-                        <span>{{ filter.label | escape }}</span>
+                        <span>{% render 'rons-l10n-label', label: filter.label %}</span>
                         {{- 'icon-caret.svg' | inline_asset_content -}}
                       </div>
                     </summary>
@@ -348,7 +348,7 @@
                   <facet-remove>
                     <a href="{{ value.url_to_remove }}" class="active-facets__button active-facets__button--light">
                       <span class="active-facets__button-inner button button--tertiary">
-                        {{ filter.label | escape }}: {{ value.label | escape }}
+                        {% render 'rons-l10n-label', label: filter.label %}: {% render 'rons-l10n-label', label: value.label %}
                         <span class="svg-wrapper">
                           {{- 'icon-close-small.svg' | inline_asset_content -}}
                         </span>
@@ -411,7 +411,7 @@
                           selected="selected"
                         {% endif %}
                       >
-                        {{ option.name | escape }}
+                        {% render 'rons-l10n-label', label: option.name %}
                       </option>
                     {%- endfor -%}
                   </select>
@@ -532,7 +532,7 @@
                       >
                         <summary class="mobile-facets__summary focus-inset">
                           <div>
-                            <span>{{ filter.label | escape }}</span>
+                            <span>{% render 'rons-l10n-label', label: filter.label %}</span>
                             <span class="mobile-facets__arrow">
                               {{- 'icon-arrow.svg' | inline_asset_content -}}
                             </span>
@@ -548,7 +548,7 @@
                             type="button"
                           >
                             {{- 'icon-arrow.svg' | inline_asset_content -}}
-                            <span>{{ filter.label | escape }}</span>
+                            <span>{% render 'rons-l10n-label', label: filter.label %}</span>
                             {%- if filter.operator == 'AND' -%}
                               <span class="facets__and-helptext">
                                 {{ 'products.facets.filter_and_operator_subtitle' | t }}
@@ -580,10 +580,10 @@
 
                               {%- capture text_value -%}
                                 <span class="facet-checkbox__text" aria-hidden="true">
-                                  <span class="facet-checkbox__text-label">{{- value.label | escape }}</span> ({{- value.count -}})
+                                  <span class="facet-checkbox__text-label">{%- render 'rons-l10n-label', label: value.label %}</span> ({{- value.count -}})
                                 </span>
                                 <span class="visually-hidden">
-                                  {{- value.label | escape }} (
+                                  {%- render 'rons-l10n-label', label: value.label %} (
                                   {%- if value.count == '1' -%}
                                     {{- 'products.facets.product_count_simple.one' | t: count: value.count -}}
                                   {%- else -%}
@@ -674,7 +674,7 @@
                       >
                         <summary class="mobile-facets__summary focus-inset">
                           <div>
-                            <span>{{ filter.label | escape }}</span>
+                            <span>{% render 'rons-l10n-label', label: filter.label %}</span>
                             <span class="mobile-facets__arrow">
                               {{- 'icon-arrow.svg' | inline_asset_content -}}
                             </span>
@@ -690,7 +690,7 @@
                             type="button"
                           >
                             {{- 'icon-arrow.svg' | inline_asset_content -}}
-                            {{ filter.label | escape }}
+                            {% render 'rons-l10n-label', label: filter.label %}
                           </button>
 
                           {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
@@ -744,7 +744,7 @@
                                 selected="selected"
                               {% endif %}
                             >
-                              {{ option.name | escape }}
+                              {% render 'rons-l10n-label', label: option.name %}
                             </option>
                           {%- endfor -%}
                         </select>
@@ -793,7 +793,7 @@
         <facet-remove>
           <a href="{{ value.url_to_remove }}" class="active-facets__button active-facets__button--light">
             <span class="active-facets__button-inner button button--tertiary">
-              {{ filter.label | escape }}: {{ value.label | escape }}
+              {% render 'rons-l10n-label', label: filter.label %}: {% render 'rons-l10n-label', label: value.label %}
               <span class="svg-wrapper">
                 {{- 'icon-close-small.svg' | inline_asset_content -}}
               </span>
@@ -851,7 +851,7 @@
                       selected="selected"
                     {% endif %}
                   >
-                    {{ option.name | escape }}
+                    {% render 'rons-l10n-label', label: option.name %}
                   </option>
                 {%- endfor -%}
               </select>
@@ -906,7 +906,7 @@
               <facet-remove>
                 <a href="{{ value.url_to_remove }}" class="active-facets__button active-facets__button--light">
                   <span class="active-facets__button-inner button button--tertiary">
-                    {{ filter.label | escape }}: {{ value.label | escape }}
+                    {% render 'rons-l10n-label', label: filter.label %}: {% render 'rons-l10n-label', label: value.label %}
                     <span class="svg-wrapper">
                       {{- 'icon-close-small.svg' | inline_asset_content -}}
                     </span>

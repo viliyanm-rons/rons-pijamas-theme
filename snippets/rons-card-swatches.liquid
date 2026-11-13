@@ -1,0 +1,51 @@
+{% comment %}
+  Ron's Pijamas – colour swatches on product cards.
+  Shows the values of the first product option that has Shopify swatches
+  configured (Products › option › swatch colour or image). Indicators only:
+  the card itself links to the product. Hidden when no option has swatches.
+  Controlled by Theme settings › Product cards › Show colour swatches.
+
+  Accepts:
+  - product: {Object} the card's product
+
+  Usage:
+  {% render 'rons-card-swatches', product: card_product %}
+{% endcomment %}
+
+{%- if settings.rons_card_swatches -%}
+  {%- for option in product.options_with_values -%}
+    {%- assign swatch_count = option.values | map: 'swatch' | compact | size -%}
+    {%- if swatch_count > 0 -%}
+      {%- assign max_swatches = 5 -%}
+      <div class="rons-card-swatches">
+        <span class="visually-hidden">{{ option.name | escape }}:</span>
+        <ul class="rons-card-swatches__list" role="list">
+          {%- for value in option.values limit: max_swatches -%}
+            {%- liquid
+              assign swatch_value = null
+              if value.swatch.image
+                assign swatch_url = value.swatch.image | image_url: width: 40
+                assign swatch_value = 'url(' | append: swatch_url | append: ') center / cover'
+              elsif value.swatch.color
+                assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+              endif
+            -%}
+            <li
+              class="rons-card-swatch"
+              title="{{ value | escape }}"
+              {% if swatch_value %}
+                style="background: {{ swatch_value }};"
+              {% endif %}
+            >
+              <span class="visually-hidden">{{ value | escape }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+        {%- if option.values.size > max_swatches -%}
+          <span class="rons-card-swatches__more" aria-hidden="true">+{{ option.values.size | minus: max_swatches }}</span>
+        {%- endif -%}
+      </div>
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}

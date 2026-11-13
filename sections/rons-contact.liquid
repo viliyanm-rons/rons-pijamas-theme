@@ -1,0 +1,378 @@
+{% comment %}
+  Ron's Pijamas – contact page.
+
+  Uses Shopify's native contact form: messages arrive at the store's
+  sender email (Settings › Notifications). Field labels, the Bulgarian
+  validation messages and the success message are section settings.
+
+  Contact details are blocks (email, phone, text, social links). Nothing is
+  prefilled: a block only shows once it has content, so no contact
+  information is ever invented. Social links come from Theme settings ›
+  Social media.
+
+  Validation: the browser's own messages follow the visitor's browser
+  language, so the form uses novalidate and assets/rons-custom.js shows the
+  Bulgarian messages below. Shopify still validates on the server; its
+  errors are shown with the same messages.
+{% endcomment %}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign form_id = 'RonsContactForm-' | append: section.id
+  assign has_social = false
+  if settings.social_instagram_link != blank or settings.social_facebook_link != blank or settings.social_tiktok_link != blank or settings.social_pinterest_link != blank or settings.social_youtube_link != blank or settings.social_twitter_link != blank or settings.social_snapchat_link != blank or settings.social_tumblr_link != blank or settings.social_vimeo_link != blank
+    assign has_social = true
+  endif
+-%}
+
+<div class="rons-contact color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width section-{{ section.id }}-padding">
+    <div class="rons-contact__grid">
+      <div class="rons-contact__intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h1 class="rons-contact__title h0">{{ section.settings.heading | default: page.title | escape }}</h1>
+        {%- if section.settings.text != blank -%}
+          <div class="rons-contact__text rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+
+        {%- capture details -%}
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'email' -%}
+                {%- assign email = block.settings.email | strip -%}
+                {%- if email != blank -%}
+                  <div class="rons-contact__detail" {{ block.shopify_attributes }}>
+                    <p class="rons-contact__label">{{ block.settings.label | escape }}</p>
+                    <a href="mailto:{{ email | escape }}" class="link underlined-link">{{ email | escape }}</a>
+                  </div>
+                {%- endif -%}
+              {%- when 'phone' -%}
+                {%- assign phone = block.settings.phone | strip -%}
+                {%- if phone != blank -%}
+                  {%- assign phone_link = phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | remove: '/' -%}
+                  <div class="rons-contact__detail" {{ block.shopify_attributes }}>
+                    <p class="rons-contact__label">{{ block.settings.label | escape }}</p>
+                    <a href="tel:{{ phone_link | escape }}" class="link underlined-link">{{ phone | escape }}</a>
+                  </div>
+                {%- endif -%}
+              {%- when 'text' -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="rons-contact__detail" {{ block.shopify_attributes }}>
+                    {%- if block.settings.label != blank -%}
+                      <p class="rons-contact__label">{{ block.settings.label | escape }}</p>
+                    {%- endif -%}
+                    <div class="rte">{{ block.settings.text }}</div>
+                  </div>
+                {%- endif -%}
+              {%- when 'social' -%}
+                {%- if has_social -%}
+                  <div class="rons-contact__detail rons-contact__social" {{ block.shopify_attributes }}>
+                    {%- if block.settings.label != blank -%}
+                      <p class="rons-contact__label">{{ block.settings.label | escape }}</p>
+                    {%- endif -%}
+                    {%- render 'social-icons' -%}
+                  </div>
+                {%- endif -%}
+            {%- endcase -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+
+        {%- if details != blank -%}
+          <div class="rons-contact__details">{{ details }}</div>
+        {%- elsif request.design_mode -%}
+          <p class="rons-editor-hint">
+            Добави имейл, телефон или текст в блоковете на тази секция. Социалните мрежи се въвеждат в Настройки на
+            темата › Социални мрежи. Празните блокове не се показват на клиентите.
+          </p>
+        {%- endif -%}
+      </div>
+
+      <div class="rons-contact__form-wrapper">
+        {%- form 'contact', id: form_id, class: 'rons-contact__form', novalidate: 'novalidate' -%}
+          {%- liquid
+            assign error_email = false
+            assign error_other = false
+            if form.errors
+              if form.errors contains 'email'
+                assign error_email = true
+              else
+                assign error_other = true
+              endif
+            endif
+          -%}
+          {%- if form.posted_successfully? -%}
+            <div class="rons-contact__status rons-contact__status--success" role="status" tabindex="-1" autofocus>
+              <p>{{ section.settings.success_message | escape }}</p>
+            </div>
+          {%- elsif error_other -%}
+            <div class="rons-contact__status rons-contact__status--error" role="alert" tabindex="-1" autofocus>
+              <p>{{ section.settings.error_general | escape }}</p>
+            </div>
+          {%- endif -%}
+
+          <div class="rons-contact__field" data-rons-field>
+            <label for="{{ form_id }}-name" class="rons-contact__field-label">
+              {{- section.settings.label_name | escape }} <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="{{ form_id }}-name"
+              class="rons-contact__input"
+              type="text"
+              name="contact[{{ 'templates.contact.form.name' | t }}]"
+              autocomplete="name"
+              required
+              aria-required="true"
+              data-rons-error="{{ section.settings.error_name | escape }}"
+              aria-describedby="{{ form_id }}-name-error"
+              value="{{ form.name }}"
+            >
+            <p id="{{ form_id }}-name-error" class="rons-contact__error" hidden></p>
+          </div>
+
+          <div class="rons-contact__field" data-rons-field>
+            <label for="{{ form_id }}-email" class="rons-contact__field-label">
+              {{- section.settings.label_email | escape }} <span aria-hidden="true">*</span>
+            </label>
+            <input
+              id="{{ form_id }}-email"
+              class="rons-contact__input"
+              type="email"
+              name="contact[email]"
+              autocomplete="email"
+              autocapitalize="off"
+              spellcheck="false"
+              required
+              aria-required="true"
+              data-rons-error="{{ section.settings.error_email | escape }}"
+              {% if error_email %}
+                aria-invalid="true"
+              {% endif %}
+              aria-describedby="{{ form_id }}-email-error"
+              value="{{ form.email }}"
+            >
+            <p id="{{ form_id }}-email-error" class="rons-contact__error"{% unless error_email %} hidden{% endunless %}>
+              {%- if error_email %}{{ section.settings.error_email | escape }}{% endif -%}
+            </p>
+          </div>
+
+          <div class="rons-contact__field" data-rons-field>
+            <label for="{{ form_id }}-body" class="rons-contact__field-label">
+              {{- section.settings.label_message | escape }} <span aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="{{ form_id }}-body"
+              class="rons-contact__input rons-contact__textarea"
+              name="contact[body]"
+              rows="6"
+              required
+              aria-required="true"
+              data-rons-error="{{ section.settings.error_message | escape }}"
+              aria-describedby="{{ form_id }}-body-error"
+            >
+              {{- form.body -}}
+            </textarea>
+            <p id="{{ form_id }}-body-error" class="rons-contact__error" hidden></p>
+          </div>
+
+          {%- if section.settings.required_note != blank -%}
+            <p class="rons-contact__note">{{ section.settings.required_note | escape }}</p>
+          {%- endif -%}
+
+          <button type="submit" class="button button--full-width rons-contact__submit">
+            {{- section.settings.submit_label | escape -}}
+          </button>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Контакти – форма",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Надзаглавие",
+      "default": "Контакти"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Заглавие",
+      "default": "Свържи се с нас"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Въведение",
+      "default": "<p>Имаш въпрос за продукт, размер или поръчка? Напиши ни чрез формата и ще ти отговорим.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Полета на формата"
+    },
+    {
+      "type": "text",
+      "id": "label_name",
+      "label": "Име",
+      "default": "Име"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Имейл",
+      "default": "Имейл"
+    },
+    {
+      "type": "text",
+      "id": "label_message",
+      "label": "Съобщение",
+      "default": "Съобщение"
+    },
+    {
+      "type": "text",
+      "id": "required_note",
+      "label": "Бележка за задължителните полета",
+      "default": "Полетата, отбелязани с *, са задължителни."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Бутон",
+      "default": "Изпрати съобщението"
+    },
+    {
+      "type": "header",
+      "content": "Съобщения"
+    },
+    {
+      "type": "text",
+      "id": "error_name",
+      "label": "Липсващо име",
+      "default": "Моля, въведи своето име."
+    },
+    {
+      "type": "text",
+      "id": "error_email",
+      "label": "Невалиден имейл",
+      "default": "Моля, въведи валиден имейл адрес, напр. ime@primer.bg."
+    },
+    {
+      "type": "text",
+      "id": "error_message",
+      "label": "Липсващо съобщение",
+      "default": "Моля, напиши своето съобщение."
+    },
+    {
+      "type": "text",
+      "id": "error_general",
+      "label": "Обща грешка",
+      "default": "Съобщението не беше изпратено. Моля, провери полетата и опитай отново."
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Успешно изпратено",
+      "default": "Благодарим ти! Съобщението ти е изпратено успешно."
+    },
+    {
+      "type": "header",
+      "content": "Оформление"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Цветова схема",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Отстъп отгоре",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Отстъп отдолу",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "email",
+      "name": "Имейл",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Етикет", "default": "Имейл" },
+        { "type": "text", "id": "email", "label": "Имейл адрес", "info": "Показва се само ако е попълнен." }
+      ]
+    },
+    {
+      "type": "phone",
+      "name": "Телефон",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Етикет", "default": "Телефон" },
+        { "type": "text", "id": "phone", "label": "Телефонен номер", "info": "Показва се само ако е попълнен." }
+      ]
+    },
+    {
+      "type": "social",
+      "name": "Социални мрежи",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Етикет", "default": "Последвай ни" },
+        {
+          "type": "paragraph",
+          "content": "Връзките се въвеждат в Настройки на темата › Социални мрежи. Блокът се показва само ако има поне една връзка."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Текст",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Етикет", "default": "Работно време" },
+        { "type": "richtext", "id": "text", "label": "Текст", "info": "Показва се само ако е попълнен." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Контакти – форма",
+      "blocks": [{ "type": "email" }, { "type": "phone" }, { "type": "social" }]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,66 @@
+{% comment %}
+  Ron's Pijamas – "Кой е моят размер?" link that opens the size guide modal
+  (snippets/rons-size-guide-modal.liquid).
+
+  Rendered from two places, but only one of them ever outputs the link:
+  - placement 'option': inside the variant picker, beside the label of the
+    first option whose name matches the Size guide block's "Size option
+    names" (e.g. Размер, Size);
+  - placement 'block': at the Size guide block's own position, only when the
+    product has no matching size option.
+  Nothing is rendered when the product template has no Size guide block or
+  rons-size-guide-resolve finds no guide (hidden for the product, or no
+  product/default guide with sizes).
+
+  Accepts:
+  - product: {Object}
+  - placement: {String} 'option' or 'block'
+  - option: {Object} the product option (placement 'option' only)
+
+  Usage:
+  {% render 'rons-size-guide-opener', product: product, option: option, placement: 'option' %}
+{% endcomment %}
+
+{%- liquid
+  assign show_link = false
+  assign guide_block = section.blocks | where: 'type', 'size_guide' | first
+-%}
+{%- if guide_block != blank -%}
+  {%- capture guide_handle -%}{% render 'rons-size-guide-resolve', product: product %}{%- endcapture -%}
+  {%- capture size_option_name -%}
+    {%- render 'rons-size-option-name', product: product, names: guide_block.settings.size_option_names -%}
+  {%- endcapture -%}
+  {%- liquid
+    assign guide_handle = guide_handle | strip
+    assign size_option_name = size_option_name | strip
+    if guide_handle != blank
+      if placement == 'option' and option.name == size_option_name
+        assign show_link = true
+      elsif placement == 'block' and size_option_name == ''
+        assign show_link = true
+      endif
+    endif
+  -%}
+{%- endif -%}
+
+{%- if show_link -%}
+  <modal-opener
+    class="rons-size-guide__opener rons-size-guide__opener--{{ placement }} quick-add-hidden"
+    data-modal="#SizeGuideModal-{{ section.id }}"
+    {% if placement == 'block' %}
+      {{ guide_block.shopify_attributes }}
+    {% endif %}
+  >
+    <button
+      type="button"
+      class="rons-size-guide__button"
+      aria-haspopup="dialog"
+      data-rons-size-guide-open="{{ section.id }}"
+    >
+      <span class="svg-wrapper" aria-hidden="true">
+        {{- 'icon-ruler.svg' | inline_asset_content -}}
+      </span>
+      {{ guide_block.settings.label | escape }}
+    </button>
+  </modal-opener>
+{%- endif -%}
