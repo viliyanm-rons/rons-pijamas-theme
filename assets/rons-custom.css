@@ -1908,6 +1908,36 @@ body .rons-editorial--story .rons-editorial__text p + p {
   margin-top: 1.2em;
 }
 
+body .rons-editorial--story .rons-editorial__text ul {
+  margin: 1.2em 0;
+  padding: 0;
+  list-style: none;
+}
+
+body .rons-editorial--story .rons-editorial__text li {
+  position: relative;
+  margin: 0;
+  padding-left: 2.4rem;
+}
+
+body .rons-editorial--story .rons-editorial__text li + li {
+  margin-top: 0.8em;
+}
+
+body .rons-editorial--story .rons-editorial__text li::before {
+  content: '';
+  position: absolute;
+  top: 0.92em;
+  left: 0;
+  width: 1.2rem;
+  height: 0.1rem;
+  background: currentColor;
+}
+
+body .rons-editorial--story .rons-editorial__text ul + p {
+  margin-top: 1.2em;
+}
+
 body .rons-editorial--story .rons-editorial__content > * + * {
   margin-top: 2rem;
 }
