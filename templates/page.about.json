@@ -12,19 +12,19 @@
     "hero": {
       "type": "rons-editorial",
       "settings": {
+        "show_placeholder": true,
         "layout": "overlay",
         "image_position": "left",
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 40,
-        "show_placeholder": true,
         "style": "story",
         "reveal": false,
         "color_scheme": "scheme-1",
         "eyebrow": "НАШАТА ИСТОРИЯ",
         "heading": "Красотата започва у дома.",
         "heading_size": "h0",
-        "text": "<p>Вярваме, че красивите дрехи не са запазени само за специалните поводи. Понякога най-ценните моменти са онези, в които сме просто себе си — с чаша кафе сутрин, с любимата книга вечер или в тишината след дълъг ден.</p><p>Точно тогава заслужаваме да се чувстваме красиви, женствени и истински добре в кожата си.</p><p>Това е светът на Ron’s Pijamas.</p>",
+        "text": "<p>Вярваме, че красивите дрехи не са само за специалните поводи. Понякога най-ценните моменти са онези, в които сме просто себе си — с чаша кафе сутрин, с любимата книга вечер или в тишината след дълъг ден.</p><p>Точно тогава заслужаваме да се чувстваме красиви, женствени и истински добре в кожата си. Вкъщи. В нашето сигурност място.</p><p>Това е светът на Ron’s Pijamas.</p>",
         "button_label": "",
         "button_link": "",
         "button_style": "outline",
@@ -38,12 +38,12 @@
     "beginnings": {
       "type": "rons-editorial",
       "settings": {
+        "show_placeholder": true,
         "layout": "split",
         "image_position": "left",
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 30,
-        "show_placeholder": true,
         "style": "story",
         "reveal": true,
         "color_scheme": "scheme-1",
@@ -64,12 +64,12 @@
     "philosophy": {
       "type": "rons-editorial",
       "settings": {
+        "show_placeholder": true,
         "layout": "split",
         "image_position": "right",
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 30,
-        "show_placeholder": true,
         "style": "story",
         "reveal": true,
         "color_scheme": "scheme-2",
@@ -90,12 +90,12 @@
     "fabrics": {
       "type": "rons-editorial",
       "settings": {
+        "show_placeholder": true,
         "layout": "split",
         "image_position": "left",
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 30,
-        "show_placeholder": true,
         "style": "story",
         "reveal": true,
         "color_scheme": "scheme-1",
@@ -116,12 +116,12 @@
     "listening": {
       "type": "rons-editorial",
       "settings": {
+        "show_placeholder": true,
         "layout": "split",
         "image_position": "right",
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 30,
-        "show_placeholder": true,
         "style": "story",
         "reveal": true,
         "color_scheme": "scheme-2",
@@ -142,12 +142,12 @@
     "rebrand": {
       "type": "rons-editorial",
       "settings": {
+        "show_placeholder": true,
         "layout": "split",
         "image_position": "left",
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 30,
-        "show_placeholder": true,
         "style": "story",
         "reveal": true,
         "color_scheme": "scheme-1",
@@ -168,12 +168,12 @@
     "closing": {
       "type": "rons-editorial",
       "settings": {
+        "show_placeholder": true,
         "layout": "overlay",
         "image_position": "left",
         "image_ratio": "portrait",
         "full_width": true,
         "overlay_opacity": 40,
-        "show_placeholder": true,
         "style": "story",
         "reveal": true,
         "color_scheme": "scheme-1",
