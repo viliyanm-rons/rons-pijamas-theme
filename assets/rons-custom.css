@@ -3777,10 +3777,25 @@ body .rons-qa__panel-head {
 }
 
 body .rons-qa__panel-title {
+  min-width: 0;
+  overflow: hidden;
   font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 0.14em;
+  text-overflow: ellipsis;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 749px) {
+  body .rons-qa__panel-title {
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+  }
+
+  body .rons-qa__panel-head {
+    margin-right: -0.8rem;
+  }
 }
 
 body .rons-qa__close {
