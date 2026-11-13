@@ -1,0 +1,184 @@
+{% comment %}
+  Ron's Pijamas – quick add over the product card image.
+
+  Rendered by snippets/card-product.liquid inside .card__inner (the image
+  box), for every product card in the theme. Logic: <rons-quick-add> in
+  assets/rons-custom.js; styles: section "Quick add" in rons-custom.css.
+
+  - One purchasable variant: the button adds it with Dawn's <product-form>
+    (cart drawer, Shopify inventory and selling-policy checks).
+  - Several sizes (one option): the button opens a compact size panel with
+    the real sizes; sold-out sizes are disabled. Choosing a size adds exactly
+    that variant. Nothing is pre-selected.
+  - Several options or quantity rules: Dawn's quick-add window.
+
+  Desktop: the button appears over the photo on hover or keyboard focus.
+  Touch screens: a small bag icon in the corner opens the same controls; a
+  tap on the photo or the name still opens the product page.
+
+  Accepts:
+  - card_product: {Object} product
+  - section_id: {String} id of the section that renders the card
+
+  Usage:
+  {% render 'rons-card-quick-add', card_product: card_product, section_id: section_id %}
+{% endcomment %}
+
+{%- liquid
+  assign p = card_product
+  assign first_variant = p.selected_or_first_available_variant
+  assign uid = section_id | append: '-' | append: p.id
+  assign form_id = 'rons-qa-' | append: uid
+
+  assign qty_rules = false
+  if first_variant.quantity_rule.min > 1 or first_variant.quantity_rule.max != null or first_variant.quantity_rule.increment > 1
+    assign qty_rules = true
+  endif
+
+  assign mode = 'single'
+  if p.has_only_default_variant == false and p.variants_count > 1
+    if p.options.size == 1 and qty_rules == false
+      assign mode = 'size'
+    else
+      assign mode = 'modal'
+    endif
+  elsif qty_rules
+    assign mode = 'modal'
+  endif
+
+  assign title_label = p.title | escape
+  assign add_label = 'products.product.add_to_cart' | t
+-%}
+
+{%- if p.available -%}
+  <rons-quick-add class="rons-qa no-js-hidden" data-mode="{{ mode }}">
+    <span class="rons-qa__shade" aria-hidden="true"></span>
+
+    <button
+      type="button"
+      class="rons-qa__trigger"
+      aria-expanded="false"
+      {% if mode == 'size' %}
+        aria-controls="RonsQaPanel-{{ uid }}"
+      {% endif %}
+      aria-label="{{ 'products.product.rons_quick_add.open' | t }}: {{ title_label }}"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5.5 8.5h13l-1 11.5h-11z"/><path d="M9 8.5V7a3 3 0 016 0v1.5"/><path d="M12 12.2v4.6M9.7 14.5h4.6"/></svg>
+    </button>
+
+    {%- if mode == 'modal' -%}
+      <div class="rons-qa__bar">
+        <modal-opener data-modal="#QuickAdd-{{ uid }}">
+          <button
+            type="button"
+            class="rons-qa__btn"
+            aria-haspopup="dialog"
+            aria-label="{{ add_label }}: {{ title_label }}"
+            data-product-url="{{ p.url }}"
+          >
+            <span>{{ add_label }}</span>
+            {%- render 'loading-spinner' -%}
+          </button>
+        </modal-opener>
+      </div>
+      <quick-add-modal id="QuickAdd-{{ uid }}" class="quick-add-modal">
+        <div
+          role="dialog"
+          aria-label="{{ 'products.product.choose_product_options' | t: product_name: p.title | escape }}"
+          aria-modal="true"
+          class="quick-add-modal__content global-settings-popup"
+          tabindex="-1"
+        >
+          <button
+            id="ModalClose-{{ uid }}"
+            type="button"
+            class="quick-add-modal__toggle"
+            aria-label="{{ 'accessibility.close' | t }}"
+          >
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </button>
+          <div id="QuickAddInfo-{{ uid }}" class="quick-add-modal__content-info"></div>
+        </div>
+      </quick-add-modal>
+    {%- else -%}
+      <product-form class="rons-qa__product-form" data-section-id="{{ section.id }}" data-hide-errors="true">
+        {%- form 'product', p, id: form_id, class: 'form rons-qa__form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+          <input
+            type="hidden"
+            name="id"
+            class="product-variant-id"
+            {% if mode == 'single' %}
+              value="{{ first_variant.id }}"
+            {% else %}
+              value=""
+            {% endif %}
+          >
+
+          <div class="rons-qa__bar">
+            {%- if mode == 'single' -%}
+              <button
+                type="submit"
+                name="add"
+                class="rons-qa__btn rons-qa__submit"
+                aria-label="{{ add_label }}: {{ title_label }}"
+              >
+                <span>{{ add_label }}</span>
+                {%- render 'loading-spinner' -%}
+              </button>
+            {%- else -%}
+              <button
+                type="button"
+                class="rons-qa__btn rons-qa__open"
+                aria-expanded="false"
+                aria-controls="RonsQaPanel-{{ uid }}"
+                aria-label="{{ add_label }}: {{ title_label }}"
+              >
+                <span>{{ add_label }}</span>
+              </button>
+            {%- endif -%}
+          </div>
+
+          {%- if mode == 'size' -%}
+            <div
+              class="rons-qa__panel"
+              id="RonsQaPanel-{{ uid }}"
+              role="group"
+              aria-label="{{ 'products.product.rons_quick_add.choose_size' | t }}: {{ title_label }}"
+            >
+              <div class="rons-qa__panel-head">
+                <span class="rons-qa__panel-title">{{ 'products.product.rons_quick_add.choose_size' | t }}</span>
+                <button type="button" class="rons-qa__close" aria-label="{{ 'accessibility.close' | t }}">
+                  {{- 'icon-close.svg' | inline_asset_content -}}
+                </button>
+              </div>
+              <div class="rons-qa__sizes">
+                {%- for variant in p.variants -%}
+                  <button
+                    type="button"
+                    class="rons-qa__size"
+                    data-variant-id="{{ variant.id }}"
+                    {% if variant.available == false %}
+                      disabled
+                      aria-label="{{ 'products.product.value_unavailable' | t: option_value: variant.title | escape }}"
+                    {% else %}
+                      aria-label="{{ add_label }}: {{ title_label }}, {{ variant.title | escape }}"
+                    {% endif %}
+                  >
+                    {{- variant.title | escape -}}
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+            {%- comment -%} Submit target for <product-form>; sizes submit through it. {%- endcomment -%}
+            <button type="submit" name="add" class="rons-qa__submit visually-hidden" tabindex="-1" aria-hidden="true">
+              <span>{{ add_label }}</span>
+              {%- render 'loading-spinner' -%}
+            </button>
+          {%- endif -%}
+
+          <p class="rons-qa__error" role="alert" hidden>{{ 'products.product.rons_quick_add.error' | t }}</p>
+        {%- endform -%}
+      </product-form>
+    {%- endif -%}
+  </rons-quick-add>
+{%- endif -%}

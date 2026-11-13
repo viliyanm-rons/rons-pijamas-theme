@@ -298,6 +298,9 @@
       {% render 'rons-fonts' %}
     {%- endif -%}
 
+    {%- if settings.rons_card_quick_add -%}
+      {{ 'quick-add.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
     {{ 'rons-custom.css' | asset_url | stylesheet_tag }}
 
     {%- unless settings.rons_custom_fonts -%}
@@ -415,6 +418,11 @@
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
+    {%- if settings.rons_card_quick_add -%}
+      {%- comment -%} Quick add on every product card (snippets/rons-card-quick-add.liquid). Both scripts guard against double definition. {%- endcomment -%}
+      <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+    {%- endif -%}
     <script src="{{ 'rons-custom.js' | asset_url }}" defer="defer"></script>
   </body>
 </html>

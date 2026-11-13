@@ -3661,3 +3661,311 @@ body .header__heading-link .h2 {
     display: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * 30. Quick add over product card images (snippets/rons-card-quick-add.liquid)
+ * Desktop: the button rises over the photo on hover / keyboard focus.
+ * Touch: a 44px bag icon in the corner opens the same controls.
+ * The image box sits above Dawn's full-card link but lets clicks through,
+ * so a tap on the photo still opens the product; only the controls catch
+ * clicks.
+ * ------------------------------------------------------------------------- */
+body .card__inner.rons-card-qa {
+  z-index: 2;
+  pointer-events: none;
+}
+
+body .rons-qa {
+  --rons-qa-speed: 300ms;
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 3;
+  display: block;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+body .rons-qa__shade {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 9rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0));
+  opacity: 0;
+  transition: opacity var(--rons-qa-speed) ease;
+}
+
+body .rons-qa__trigger,
+body .rons-qa__bar button,
+body .rons-qa__panel,
+body .rons-qa__error {
+  pointer-events: auto;
+}
+
+body .rons-qa__form {
+  margin: 0;
+}
+
+/* Button over the photo */
+body .rons-qa__bar {
+  position: relative;
+  opacity: 0;
+  transform: translateY(0.8rem);
+  transition: opacity var(--rons-qa-speed) ease, transform var(--rons-qa-speed) ease;
+}
+
+body .rons-qa__btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 4.4rem;
+  margin: 0;
+  padding: 0.8rem 1.2rem;
+  border: 0;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.96);
+  color: #000;
+  font-family: var(--font-body-family);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+body .rons-qa__btn:hover {
+  background: #000;
+  color: #fff;
+}
+
+body .rons-qa__btn:focus-visible,
+body .rons-qa__size:focus-visible,
+body .rons-qa__close:focus-visible,
+body .rons-qa__trigger:focus-visible {
+  outline: 0.2rem solid #000;
+  outline-offset: 0.2rem;
+  box-shadow: 0 0 0 0.2rem #fff;
+}
+
+body .rons-qa__btn .loading__spinner,
+body .rons-qa__size .loading__spinner {
+  position: absolute;
+}
+
+body .rons-qa__btn.loading > span:first-child {
+  visibility: hidden;
+}
+
+/* Size panel */
+body .rons-qa__panel {
+  position: relative;
+  display: none;
+  padding: 1rem 1rem 1.2rem;
+  background: rgba(255, 255, 255, 0.97);
+  color: #000;
+}
+
+body .rons-qa__panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -0.6rem -0.6rem 0.4rem 0;
+}
+
+body .rons-qa__panel-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+body .rons-qa__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #000;
+  cursor: pointer;
+}
+
+body .rons-qa__close svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+body .rons-qa__sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+body .rons-qa__size {
+  position: relative;
+  flex: 1 0 4.4rem;
+  min-width: 4.4rem;
+  max-width: 7.2rem;
+  min-height: 4.4rem;
+  margin: 0;
+  padding: 0 0.6rem;
+  border: 0.1rem solid #000;
+  border-radius: 0;
+  background: #fff;
+  color: #000;
+  font-family: var(--font-body-family);
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+body .rons-qa__size:hover:not(:disabled),
+body .rons-qa__size.is-loading {
+  background: #000;
+  color: #fff;
+}
+
+body .rons-qa__size:disabled {
+  border-color: rgba(0, 0, 0, 0.18);
+  color: rgba(0, 0, 0, 0.35);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+body .rons-qa__size.is-loading {
+  color: transparent;
+}
+
+body .rons-qa__size .loading__spinner {
+  inset: 0;
+  margin: auto;
+}
+
+body .rons-qa__error {
+  margin: 0.6rem 0 0;
+  padding: 0.8rem 1rem;
+  background: #fff;
+  color: #000;
+  font-size: 1.2rem;
+  line-height: 1.4;
+  border-left: 0.2rem solid #000;
+}
+
+/* Touch trigger (devices without hover) */
+body .rons-qa__trigger {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.8rem;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: #000;
+  box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+body .rons-qa__trigger svg {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+/* Open state (size panel, or the add button on touch screens) */
+body .rons-qa[data-open] .rons-qa__shade {
+  opacity: 1;
+}
+
+body .rons-qa[data-mode='size'][data-open] .rons-qa__bar {
+  display: none;
+}
+
+body .rons-qa[data-mode='size'][data-open] .rons-qa__panel {
+  display: block;
+  animation: rons-qa-rise var(--rons-qa-speed) ease both;
+}
+
+body .rons-qa[data-mode='single'][data-open] .rons-qa__bar {
+  opacity: 1;
+  transform: none;
+}
+
+body .rons-qa[data-open] .rons-qa__trigger {
+  display: none !important;
+}
+
+@keyframes rons-qa-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.8rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Mouse: reveal on hover; keyboard: reveal on focus */
+@media (hover: hover) and (pointer: fine) {
+  body .card-wrapper:hover .rons-qa__shade,
+  body .rons-qa:focus-within .rons-qa__shade {
+    opacity: 1;
+  }
+
+  body .card-wrapper:hover .rons-qa__bar,
+  body .rons-qa:focus-within .rons-qa__bar {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Touch screens: no hover, so show the icon */
+@media (hover: none), (pointer: coarse) {
+  body .rons-qa__trigger {
+    display: inline-flex;
+  }
+
+  body .rons-qa:not([data-open]) .rons-qa__bar {
+    display: none;
+  }
+
+  body .rons-qa {
+    padding: 0.6rem;
+  }
+
+  body .rons-qa__panel {
+    padding: 0.8rem 0.8rem 1rem;
+  }
+
+  body .rons-qa__sizes {
+    gap: 0.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .rons-qa {
+    --rons-qa-speed: 0ms;
+  }
+
+  body .rons-qa__bar {
+    transform: none;
+  }
+
+  body .rons-qa[data-mode='size'][data-open] .rons-qa__panel {
+    animation: none;
+  }
+}
