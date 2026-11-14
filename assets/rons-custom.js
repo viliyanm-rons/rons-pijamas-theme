@@ -475,3 +475,169 @@ document.addEventListener(
   },
   true,
 );
+
+/* ---------------------------------------------------------------------------
+ * Quick add over product card images (snippets/rons-card-quick-add.liquid)
+ * Adding to the cart is Dawn's <product-form> (cart drawer, inventory and
+ * selling-policy checks); this only opens/closes the controls, puts the
+ * chosen size into the form and reports the result.
+ * ------------------------------------------------------------------------- */
+class RonsQuickAdd extends HTMLElement {
+  connectedCallback() {
+    if (this.ready) return;
+    this.ready = true;
+    this.mode = this.dataset.mode;
+    this.card = this.closest('.card-wrapper') || this.parentElement;
+    this.trigger = this.querySelector('.rons-qa__trigger');
+    this.openButton = this.querySelector('.rons-qa__open');
+    this.form = this.querySelector('form');
+    this.idInput = this.form ? this.form.querySelector('[name="id"]') : null;
+    this.submitButton = this.querySelector('.rons-qa__submit');
+    this.errorBox = this.querySelector('.rons-qa__error');
+    this.sizes = Array.from(this.querySelectorAll('.rons-qa__size'));
+
+    this.trigger?.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (this.mode === 'modal') {
+        this.querySelector('modal-opener button')?.click();
+        return;
+      }
+      this.hasAttribute('data-open') ? this.close(true) : this.open();
+    });
+    this.openButton?.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      this.open();
+    });
+    this.querySelector('.rons-qa__close')?.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      this.close(true);
+    });
+    this.sizes.forEach((button) =>
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!button.disabled) this.add(button.dataset.variantId, button);
+      })
+    );
+    // Single variant: the button is the form's own submit button.
+    if (this.mode === 'single') this.form?.addEventListener('submit', () => this.watch(null), true);
+
+    this.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && this.hasAttribute('data-open')) {
+        event.stopPropagation();
+        this.close(true);
+      }
+    });
+    this.onLeave = () => {
+      if (!this.busy && window.matchMedia('(hover: hover) and (pointer: fine)').matches) this.close(false);
+    };
+    this.card.addEventListener('mouseleave', this.onLeave);
+    this.onOutside = (event) => {
+      if (this.hasAttribute('data-open') && !this.contains(event.target) && !this.busy) this.close(false);
+    };
+    document.addEventListener('click', this.onOutside);
+
+    if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+      this.unsubscribers = [
+        subscribe(PUB_SUB_EVENTS.cartUpdate, (data) => {
+          if (this.pending && data?.source === 'product-form' && String(data.productVariantId) === this.pending) this.result = 'ok';
+        }),
+        subscribe(PUB_SUB_EVENTS.cartError, (data) => {
+          if (this.pending && String(data?.productVariantId) === this.pending) this.result = 'error';
+        }),
+      ];
+    }
+  }
+
+  disconnectedCallback() {
+    this.card?.removeEventListener('mouseleave', this.onLeave);
+    document.removeEventListener('click', this.onOutside);
+    (this.unsubscribers || []).forEach((unsubscribe) => unsubscribe());
+    this.ready = false;
+  }
+
+  open() {
+    this.showError(false);
+    this.setAttribute('data-open', '');
+    this.trigger?.setAttribute('aria-expanded', 'true');
+    this.openButton?.setAttribute('aria-expanded', 'true');
+    const first = this.mode === 'size' ? this.sizes.find((button) => !button.disabled) : this.submitButton;
+    if (first) requestAnimationFrame(() => first.focus({ preventScroll: true }));
+  }
+
+  close(returnFocus) {
+    if (!this.hasAttribute('data-open')) return;
+    const hadFocus = this.contains(document.activeElement);
+    this.removeAttribute('data-open');
+    this.trigger?.setAttribute('aria-expanded', 'false');
+    this.openButton?.setAttribute('aria-expanded', 'false');
+    if (returnFocus || hadFocus) {
+      const target = this.trigger && getComputedStyle(this.trigger).display !== 'none' ? this.trigger : this.openButton;
+      target?.focus({ preventScroll: true });
+    }
+  }
+
+  add(variantId, button) {
+    if (!this.form || !this.idInput || this.busy) return;
+    this.idInput.disabled = false;
+    this.idInput.value = variantId;
+    this.loadingButton = button;
+    button.classList.add('is-loading');
+    button.setAttribute('aria-busy', 'true');
+    if (!button.querySelector('.loading__spinner') && this.submitButton) {
+      const spinner = this.submitButton.querySelector('.loading__spinner');
+      if (spinner) button.appendChild(spinner.cloneNode(true)).classList.remove('hidden');
+    }
+    this.watch(String(variantId));
+    if (this.form.requestSubmit) this.form.requestSubmit(this.submitButton || undefined);
+    else this.submitButton?.click();
+  }
+
+  // Follows Dawn's submit until its loading state ends, then reports.
+  watch(variantId) {
+    this.showError(false);
+    this.busy = true;
+    this.pending = variantId || String(this.idInput?.value || '');
+    this.result = null;
+    const button = this.submitButton;
+    if (!button) return;
+    let started = false;
+    const finish = () => {
+      observer.disconnect();
+      clearTimeout(this.watchTimer);
+      setTimeout(() => {
+        this.busy = false;
+        if (this.loadingButton) {
+          this.loadingButton.classList.remove('is-loading');
+          this.loadingButton.removeAttribute('aria-busy');
+          this.loadingButton.querySelector('.loading__spinner')?.remove();
+          this.loadingButton = null;
+        }
+        if (this.result === 'ok') {
+          this.close(false);
+        } else {
+          this.showError(true);
+        }
+        this.pending = null;
+      }, 50);
+    };
+    const observer = new MutationObserver(() => {
+      const loading = button.classList.contains('loading');
+      if (loading) started = true;
+      else if (started) finish();
+    });
+    observer.observe(button, { attributes: true, attributeFilter: ['class'] });
+    this.watchTimer = setTimeout(finish, 20000);
+  }
+
+  showError(show) {
+    if (!this.errorBox) return;
+    this.errorBox.hidden = !show;
+    if (show) this.setAttribute('data-open', '');
+  }
+}
+
+if (!customElements.get('rons-quick-add')) customElements.define('rons-quick-add', RonsQuickAdd);
