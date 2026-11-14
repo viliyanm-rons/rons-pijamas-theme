@@ -4191,7 +4191,9 @@ body .rons-footer-acc .footer-block__details-content .list-menu__item--link {
 }
 
 @media screen and (max-width: 749px) {
+  /* Dawn spaces every footer block 4rem apart on phones; accordions sit flush. */
   body .footer .footer-block--menu {
+    margin-top: 0;
     margin-bottom: 0;
   }
 
