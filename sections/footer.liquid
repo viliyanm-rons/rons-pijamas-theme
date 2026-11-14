@@ -115,13 +115,13 @@
                           {%- endfor -%}
                         </ul>
                       {%- endcapture -%}
-                      <div class="rons-footer-menu small-hide">
+                      <div class="rons-footer-menu">
                         {%- if block.settings.heading != blank -%}
                           <h2 class="footer-block__heading inline-richtext">{{- block.settings.heading -}}</h2>
                         {%- endif -%}
                         {{ footer_links }}
                       </div>
-                      <details class="rons-footer-acc medium-up-hide">
+                      <details class="rons-footer-acc">
                         <summary class="rons-footer-acc__summary">
                           <h2 class="footer-block__heading inline-richtext">
                             {{- block.settings.heading | default: block.settings.menu.title -}}

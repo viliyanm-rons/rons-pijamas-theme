@@ -4112,6 +4112,19 @@ body .rons-cookie-prefs[hidden] {
   display: none;
 }
 
+/* Columns on tablet/desktop, accordions on phones (only one is displayed) */
+@media screen and (max-width: 749px) {
+  body .rons-footer-menu {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-footer-acc {
+    display: none;
+  }
+}
+
 /* Phone accordions */
 body .rons-footer-acc {
   border-top: 0.1rem solid rgba(var(--color-foreground), 0.16);

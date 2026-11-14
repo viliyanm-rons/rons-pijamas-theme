@@ -18,10 +18,17 @@
       {%- endunless -%}
     {%- endunless -%}
 
+    {%- liquid
+      # Ron's Pijamas: Bulgarian name for the automatic "Products" collection.
+      assign rons_page_title = page_title
+      if collection.handle == 'all' and page_title == 'Products'
+        assign rons_page_title = 'products.facets.labels.all_products' | t
+      endif
+    -%}
     <title>
-      {{ page_title }}
-      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
-      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {{ rons_page_title }}
+      {%- if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: number: current_page }}{% endif -%}
       {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
     </title>
 
