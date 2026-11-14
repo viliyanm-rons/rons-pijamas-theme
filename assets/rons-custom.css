@@ -4060,6 +4060,10 @@ body .footer .footer-block__details-content .list-menu__item--link:focus-visible
 }
 
 /* Brand column: wordmark, tagline, Instagram */
+body .footer-block__brand-info .footer-block__heading {
+  margin-top: 0;
+}
+
 body .footer-block__brand-info .rte {
   margin-top: 1.2rem;
   font-family: var(--font-heading-family);
