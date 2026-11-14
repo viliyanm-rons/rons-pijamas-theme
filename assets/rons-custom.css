@@ -4160,9 +4160,17 @@ body .rons-footer-acc__icon {
   transition: transform var(--duration-short) ease;
 }
 
-body .rons-footer-acc__icon svg {
-  width: 100%;
+body .rons-footer-acc__summary {
+  position: relative;
+}
+
+/* Dawn positions any caret inside <summary> absolutely; keep ours inline. */
+body .rons-footer-acc__summary .rons-footer-acc__icon svg {
+  position: static;
+  display: block;
+  width: 1.2rem;
   height: auto;
+  max-height: 0.8rem;
 }
 
 body .rons-footer-acc[open] .rons-footer-acc__icon {
