@@ -14,36 +14,58 @@
         "shop": {
           "type": "link_list",
           "settings": {
-            "heading": "Пазаруване",
-            "menu": "main-menu"
+            "heading": "Пазарувай",
+            "menu": "footer-pazaruvay"
           }
         },
-        "care": {
+        "help": {
           "type": "link_list",
           "settings": {
-            "heading": "Обслужване на клиенти",
-            "menu": "footer"
+            "heading": "Помощ",
+            "menu": "footer-pomosht"
+          }
+        },
+        "brand_links": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Ron’s Pijamas",
+            "menu": "footer-rons-pijamas"
+          }
+        },
+        "info": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Информация",
+            "menu": "footer-informatsiya"
           }
         }
       },
       "block_order": [
         "brand",
         "shop",
-        "care"
+        "help",
+        "brand_links",
+        "info"
       ],
       "settings": {
         "color_scheme": "scheme-3",
         "newsletter_enable": true,
-        "newsletter_heading": "Новини от Ron's Pijamas",
+        "newsletter_heading": "Новини от Ron’s Pijamas",
         "enable_follow_on_shop": false,
-        "show_social": true,
-        "enable_country_selector": true,
-        "enable_language_selector": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
         "payment_enable": true,
-        "show_policy": true,
+        "show_policy": false,
         "margin_top": 0,
         "padding_top": 56,
-        "padding_bottom": 24
+        "padding_bottom": 24,
+        "newsletter_consent": "С абонирането се съгласяваш да получаваш имейли от Ron’s Pijamas. Можеш да се отпишеш по всяко време.",
+        "newsletter_privacy_label": "Политика за поверителност",
+        "copyright_text": "Ron’s Pijamas. Всички права запазени.",
+        "show_powered_by": false,
+        "show_cookie_preferences": true,
+        "cookie_preferences_label": "Настройки на бисквитките"
       }
     }
   },

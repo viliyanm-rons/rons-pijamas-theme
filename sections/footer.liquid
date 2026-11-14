@@ -1,4 +1,9 @@
 {% comment %}theme-check-disable UndefinedObject{% endcomment %}
+{% comment %}
+  Ron's Pijamas: menu columns become accordions on phones; editable
+  copyright text; optional "Powered by Shopify"; "Настройки на бисквитките"
+  opens Shopify's own cookie preferences; consent note under the newsletter.
+{% endcomment %}
 {{ 'section-footer.css' | asset_url | stylesheet_tag }}
 {{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
 {{ 'component-list-menu.css' | asset_url | stylesheet_tag }}
@@ -75,7 +80,7 @@
                   style="--animation-order: {{ forloop.index }};"
                 {% endif %}
               >
-                {%- if block.settings.heading != blank -%}
+                {%- if block.settings.heading != blank and block.type != 'link_list' -%}
                   <h2 class="footer-block__heading inline-richtext">{{- block.settings.heading -}}</h2>
                 {%- endif -%}
 
@@ -87,19 +92,46 @@
                       {{ block.settings.subtext }}
                     </div>
                   {%- when 'link_list' -%}
+                    {%- comment -%}
+                      Ron's Pijamas: desktop/tablet show the heading and links; phones
+                      get a native <details> accordion (keyboard and screen readers
+                      supported, no JavaScript). Only one of the two is displayed.
+                    {%- endcomment -%}
                     {%- if block.settings.menu != blank -%}
-                      <ul class="footer-block__details-content list-unstyled">
-                        {%- for link in block.settings.menu.links -%}
-                          <li>
-                            <a
-                              href="{{ link.url }}"
-                              class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %}"
-                            >
-                              {{ link.title | escape }}
-                            </a>
-                          </li>
-                        {%- endfor -%}
-                      </ul>
+                      {%- capture footer_links -%}
+                        <ul class="footer-block__details-content list-unstyled">
+                          {%- for link in block.settings.menu.links -%}
+                            <li>
+                              <a
+                                href="{{ link.url }}"
+                                class="link link--text list-menu__item list-menu__item--link{% if link.active %} list-menu__item--active{% endif %}"
+                                {% if link.type == 'http_link' and link.url contains '://' %}
+                                  target="_blank" rel="noopener"
+                                {% endif %}
+                              >
+                                {{ link.title | escape }}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endcapture -%}
+                      <div class="rons-footer-menu small-hide">
+                        {%- if block.settings.heading != blank -%}
+                          <h2 class="footer-block__heading inline-richtext">{{- block.settings.heading -}}</h2>
+                        {%- endif -%}
+                        {{ footer_links }}
+                      </div>
+                      <details class="rons-footer-acc medium-up-hide">
+                        <summary class="rons-footer-acc__summary">
+                          <h2 class="footer-block__heading inline-richtext">
+                            {{- block.settings.heading | default: block.settings.menu.title -}}
+                          </h2>
+                          <span class="rons-footer-acc__icon" aria-hidden="true">
+                            {{- 'icon-caret.svg' | inline_asset_content -}}
+                          </span>
+                        </summary>
+                        {{ footer_links }}
+                      </details>
                     {%- endif -%}
                   {%- when 'brand_information' -%}
                     <div class="footer-block__brand-info">
@@ -219,6 +251,16 @@
                     </small>
                   {%- endif -%}
                 </div>
+                {%- if section.settings.newsletter_consent != blank -%}
+                  <p class="rons-newsletter-consent">
+                    {{ section.settings.newsletter_consent }}
+                    {%- if shop.privacy_policy and section.settings.newsletter_privacy_label != blank %}
+                      <a href="{{ shop.privacy_policy.url }}" class="link underlined-link">
+                        {{- section.settings.newsletter_privacy_label | escape -}}
+                      </a>
+                    {%- endif -%}
+                  </p>
+                {%- endif -%}
                 {%- if form.posted_successfully? -%}
                   <h3
                     class="newsletter-form__message newsletter-form__message--success form__message"
@@ -299,10 +341,27 @@
     </div>
     <div class="footer__content-bottom-wrapper page-width{% if section.settings.enable_country_selector == false and section.settings.enable_language_selector == false %} footer__content-bottom-wrapper--center{% endif %}">
       <div class="footer__copyright caption">
-        <small class="copyright__content"
-          >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
-        </small>
-        <small class="copyright__content">{{ powered_by_link }}</small>
+        {%- if section.settings.copyright_text != blank -%}
+          <small class="copyright__content">&copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_text | escape }}</small>
+        {%- else -%}
+          <small class="copyright__content"
+            >&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url -}}
+          </small>
+        {%- endif -%}
+        {%- if section.settings.show_powered_by -%}
+          <small class="copyright__content">{{ powered_by_link }}</small>
+        {%- endif -%}
+        {%- if section.settings.show_cookie_preferences and section.settings.cookie_preferences_label != blank -%}
+          {%- comment -%}
+            Opens Shopify's own cookie preferences (Settings › Customer privacy).
+            Hidden until assets/rons-custom.js confirms the banner API exists.
+          {%- endcomment -%}
+          <small class="copyright__content">
+            <button type="button" class="rons-cookie-prefs link underlined-link" data-rons-cookie-prefs hidden>
+              {{- section.settings.cookie_preferences_label | escape -}}
+            </button>
+          </small>
+        {%- endif -%}
         {%- if section.settings.show_policy -%}
           <ul class="policies list-unstyled">
             {%- for policy in shop.policies -%}
@@ -448,6 +507,18 @@
       "label": "t:sections.footer.settings.newsletter_heading.label"
     },
     {
+      "type": "inline_richtext",
+      "id": "newsletter_consent",
+      "label": "Бележка за съгласие под абонамента",
+      "default": "С абонирането се съгласяваш да получаваш имейли от Ron’s Pijamas. Можеш да се отпишеш по всяко време."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_privacy_label",
+      "label": "Текст на връзката към политиката за поверителност",
+      "default": "Политика за поверителност"
+    },
+    {
       "type": "header",
       "content": "t:sections.footer.settings.header__9.content"
     },
@@ -491,6 +562,32 @@
       "default": true,
       "label": "t:sections.footer.settings.show_policy.label",
       "info": "t:sections.footer.settings.show_policy.info"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Текст след © и годината",
+      "info": "Годината се обновява автоматично.",
+      "default": "Ron’s Pijamas. Всички права запазени."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_powered_by",
+      "label": "Показвай „Powered by Shopify“",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cookie_preferences",
+      "label": "Показвай връзка към настройките на бисквитките",
+      "info": "Отваря банера на Shopify (Настройки › Поверителност на клиентите). Показва се само когато банерът е включен.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cookie_preferences_label",
+      "label": "Текст на връзката за бисквитките",
+      "default": "Настройки на бисквитките"
     },
     {
       "type": "header",

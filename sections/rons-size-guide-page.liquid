@@ -1,0 +1,193 @@
+{% comment %}
+  Ron's Pijamas – size guide page ("Таблица с размери").
+
+  Shows the store's default Size Guide (Content › Metaobjects › Size Guides,
+  entry with "Основна таблица" ticked), the same data as the product-page
+  guide: same rules (only sizes with bust, waist and hips filled in; units
+  trimmed). Nothing is hardcoded. Without a usable guide the page shows only
+  its title and the page content from Shopify Admin.
+
+  Used by templates/page.size-guide.json.
+{% endcomment %}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- capture guide_handle -%}{% render 'rons-size-guide-resolve' %}{%- endcapture -%}
+{%- assign guide_handle = guide_handle | strip -%}
+
+<div class="rons-sg-page color-{{ section.settings.color_scheme }} gradient">
+  <div class="page-width page-width--narrow section-{{ section.id }}-padding">
+    <header class="rons-sg-page__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1 class="rons-sg-page__title h1">{{ page.title | escape }}</h1>
+      {%- if page.content != blank -%}
+        <div class="rte rons-sg-page__intro">{{ page.content }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- if guide_handle != blank -%}
+      {%- liquid
+        assign guide = shop.metaobjects.size_guide[guide_handle]
+        assign unit = guide.unit.value | default: 'см' | strip
+        assign raw_bust = guide.bust.value
+        assign raw_waist = guide.waist.value
+        assign raw_hips = guide.hips.value
+        assign raw_garment = guide.garment.value
+        assign has_garment = false
+        if guide.garment_label.value != blank and raw_garment.size > 0
+          assign has_garment = true
+        endif
+      -%}
+
+      {%- if guide.description.value != blank -%}
+        <p class="rons-sg-page__description">{{ guide.description.value | escape | newline_to_br }}</p>
+      {%- endif -%}
+
+      <div class="rons-sg__table-wrapper rons-sg-page__table">
+        <table class="rons-sg__table">
+          <caption class="visually-hidden">{{ guide.title.value | escape }} ({{ unit | escape }})</caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ section.settings.label_size | escape }}</th>
+              <th scope="col">{{ section.settings.label_bust | escape }}</th>
+              <th scope="col">{{ section.settings.label_waist | escape }}</th>
+              <th scope="col">{{ section.settings.label_hips | escape }}</th>
+              {%- if has_garment -%}
+                <th scope="col">{{ guide.garment_label.value | escape }}</th>
+              {%- endif -%}
+            </tr>
+          </thead>
+          <tbody>
+            {%- for raw_size in guide.sizes.value -%}
+              {%- liquid
+                assign i = forloop.index0
+                assign clean_size = raw_size | strip
+                assign clean_bust = raw_bust[i] | remove: unit | strip
+                assign clean_waist = raw_waist[i] | remove: unit | strip
+                assign clean_hips = raw_hips[i] | remove: unit | strip
+                assign clean_garment = raw_garment[i] | remove: unit | strip | default: '—'
+              -%}
+              {%- if clean_size != blank and clean_bust != blank and clean_waist != blank and clean_hips != blank -%}
+                <tr>
+                  <th scope="row">{{ clean_size | escape }}</th>
+                  <td>{{ clean_bust | escape }}</td>
+                  <td>{{ clean_waist | escape }}</td>
+                  <td>{{ clean_hips | escape }}</td>
+                  {%- if has_garment -%}
+                    <td>{{ clean_garment | escape }}</td>
+                  {%- endif -%}
+                </tr>
+              {%- endif -%}
+            {%- endfor -%}
+          </tbody>
+        </table>
+        <p class="rons-sg__unit">{{ section.settings.unit_note | replace: '[unit]', unit | escape }}</p>
+      </div>
+
+      {%- if guide.fit_advice.value != blank -%}
+        <div class="rons-sg-page__block">
+          <h2 class="rons-sg-page__subheading h4">{{ section.settings.advice_heading | escape }}</h2>
+          <p>{{ guide.fit_advice.value | escape | newline_to_br }}</p>
+        </div>
+      {%- endif -%}
+
+      {%- if guide.how_to_measure.value != blank or guide.illustration.value != blank -%}
+        <div class="rons-sg-page__block">
+          <h2 class="rons-sg-page__subheading h4">{{ section.settings.how_to_heading | escape }}</h2>
+          {%- if guide.illustration.value != blank -%}
+            <div class="rons-sg-page__illustration">
+              {{
+                guide.illustration.value
+                | image_url: width: 900
+                | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 750px) 360px, 80vw', alt: section.settings.how_to_heading
+              }}
+            </div>
+          {%- endif -%}
+          {%- if guide.how_to_measure.value != blank -%}
+            <p>{{ guide.how_to_measure.value | escape | newline_to_br }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- elsif request.design_mode -%}
+      <p class="rons-editor-hint">
+        Няма основна таблица с размери. Добави я в Съдържание › Метаобекти › Size Guides и отметни „Основна таблица“.
+      </p>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+      <div class="rons-sg-page__actions">
+        <a href="{{ section.settings.button_link }}" class="button button--secondary">
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Таблица с размери",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Мерките идват от Съдържание › Метаобекти › Size Guides (основната таблица) – същите като в продуктовите страници."
+    },
+    { "type": "text", "id": "eyebrow", "label": "Надзаглавие", "default": "Помощ" },
+    { "type": "text", "id": "label_size", "label": "Колона: размер", "default": "Размер" },
+    { "type": "text", "id": "label_bust", "label": "Колона: бюст", "default": "Бюст" },
+    { "type": "text", "id": "label_waist", "label": "Колона: талия", "default": "Талия" },
+    { "type": "text", "id": "label_hips", "label": "Колона: ханш", "default": "Ханш" },
+    {
+      "type": "text",
+      "id": "unit_note",
+      "label": "Бележка за мерната единица",
+      "info": "[unit] се заменя с мерната единица от таблицата.",
+      "default": "Всички мерки са в [unit]."
+    },
+    { "type": "text", "id": "advice_heading", "label": "Заглавие: съвет", "default": "Съвет за размера" },
+    { "type": "text", "id": "how_to_heading", "label": "Заглавие: как да се измериш", "default": "Как да се измериш" },
+    { "type": "text", "id": "button_label", "label": "Бутон", "default": "Към продуктите" },
+    { "type": "url", "id": "button_link", "label": "Връзка на бутона", "default": "/collections/all" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Цветова схема", "default": "scheme-1" },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Отстъп отгоре",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Отстъп отдолу",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ]
+}
+{% endschema %}

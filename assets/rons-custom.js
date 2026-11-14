@@ -641,3 +641,32 @@ class RonsQuickAdd extends HTMLElement {
 }
 
 if (!customElements.get('rons-quick-add')) customElements.define('rons-quick-add', RonsQuickAdd);
+
+/* ---------------------------------------------------------------------------
+ * Footer "Настройки на бисквитките" (sections/footer.liquid)
+ * Opens Shopify's own cookie preferences (window.privacyBanner, loaded by
+ * Shopify when the cookie banner is enabled in Settings › Customer privacy).
+ * The link stays hidden unless that API is really available.
+ * ------------------------------------------------------------------------- */
+(function () {
+  const buttons = () => document.querySelectorAll('[data-rons-cookie-prefs]');
+  if (!buttons().length) return;
+  const ready = () => window.privacyBanner && typeof window.privacyBanner.showPreferences === 'function';
+  const reveal = () => buttons().forEach((button) => (button.hidden = false));
+  let tries = 0;
+  const check = () => {
+    if (ready()) return reveal();
+    if (++tries < 40) setTimeout(check, 250);
+  };
+  check();
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest?.('[data-rons-cookie-prefs]');
+    if (!button || !ready()) return;
+    event.preventDefault();
+    try {
+      window.privacyBanner.showPreferences();
+    } catch (error) {
+      console.error(error);
+    }
+  });
+})();

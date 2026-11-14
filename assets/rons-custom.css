@@ -4014,3 +4014,208 @@ body .rons-qa[data-open] .rons-qa__trigger {
     animation: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * 31. Footer: four menu columns, phone accordions, legal row
+ * (sections/footer.liquid). Desktop: brand column + four columns.
+ * Phones: each menu is a native <details> accordion.
+ * ------------------------------------------------------------------------- */
+body .footer .footer-block__heading {
+  margin: 0 0 1.6rem;
+  font-family: var(--font-body-family);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+body .footer .footer-block__details-content {
+  margin: 0;
+}
+
+body .footer .footer-block__details-content li {
+  margin: 0;
+}
+
+body .footer .footer-block__details-content .list-menu__item--link {
+  display: inline-block;
+  padding: 0.55rem 0;
+  font-size: 1.45rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 0.1rem;
+  text-underline-offset: 0.45rem;
+  opacity: 0.78;
+  transition: opacity var(--duration-short) ease, text-decoration-color var(--duration-short) ease;
+}
+
+body .footer .footer-block__details-content .list-menu__item--link:hover,
+body .footer .footer-block__details-content .list-menu__item--link:focus-visible {
+  opacity: 1;
+  text-decoration-color: currentColor;
+}
+
+/* Brand column: wordmark, tagline, Instagram */
+body .footer-block__brand-info .rte {
+  margin-top: 1.2rem;
+  font-family: var(--font-heading-family);
+  font-size: calc(var(--font-heading-scale) * 1.9rem);
+  line-height: 1.35;
+  opacity: 0.9;
+}
+
+body .footer-block__brand-info .footer__list-social {
+  justify-content: flex-start;
+  margin-top: 1.6rem;
+  margin-left: -1rem;
+}
+
+/* Newsletter consent note */
+body .rons-newsletter-consent {
+  max-width: 44rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  opacity: 0.72;
+}
+
+body .rons-newsletter-consent a {
+  color: inherit;
+}
+
+/* Bottom row: copyright, cookie settings */
+body .footer__copyright {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 2.4rem;
+}
+
+body .rons-cookie-prefs {
+  margin: 0;
+  padding: 0.8rem 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-underline-offset: 0.3rem;
+  cursor: pointer;
+}
+
+body .rons-cookie-prefs[hidden] {
+  display: none;
+}
+
+/* Phone accordions */
+body .rons-footer-acc {
+  border-top: 0.1rem solid rgba(var(--color-foreground), 0.16);
+}
+
+body .rons-footer-acc__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  min-height: 5.2rem;
+  padding: 0.4rem 0;
+  list-style: none;
+  cursor: pointer;
+}
+
+body .rons-footer-acc__summary::-webkit-details-marker {
+  display: none;
+}
+
+body .rons-footer-acc__summary .footer-block__heading {
+  margin: 0;
+}
+
+body .rons-footer-acc__summary:focus-visible {
+  outline: 0.2rem solid rgba(var(--color-foreground), 0.6);
+  outline-offset: 0.2rem;
+}
+
+body .rons-footer-acc__icon {
+  display: inline-flex;
+  width: 1.2rem;
+  transition: transform var(--duration-short) ease;
+}
+
+body .rons-footer-acc__icon svg {
+  width: 100%;
+  height: auto;
+}
+
+body .rons-footer-acc[open] .rons-footer-acc__icon {
+  transform: rotate(180deg);
+}
+
+body .rons-footer-acc .footer-block__details-content {
+  padding: 0 0 1.6rem;
+}
+
+body .rons-footer-acc .footer-block__details-content .list-menu__item--link {
+  padding: 1rem 0;
+  min-height: 4.4rem;
+}
+
+@media screen and (max-width: 749px) {
+  body .footer .footer-block--menu {
+    margin-bottom: 0;
+  }
+
+  body .footer .footer-block--menu:last-of-type .rons-footer-acc {
+    border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.16);
+  }
+
+  body .footer .footer-block--menu + .footer-block:not(.footer-block--menu) {
+    margin-top: 3.2rem;
+  }
+
+  body .footer-block--newsletter {
+    margin-top: 3.2rem;
+  }
+}
+
+/* Tablet: brand on its own row, then four columns */
+@media screen and (min-width: 750px) {
+  body .footer .footer__blocks-wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4rem 3.2rem;
+    margin: 0;
+  }
+
+  body .footer .footer__blocks-wrapper > .footer-block {
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  body .footer .footer__blocks-wrapper > .footer-block:not(.footer-block--menu) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Desktop: brand column + four columns in one row */
+@media screen and (min-width: 990px) {
+  body .footer .footer__blocks-wrapper {
+    grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr));
+    column-gap: 4.8rem;
+  }
+
+  body .footer .footer__blocks-wrapper > .footer-block:not(.footer-block--menu) {
+    grid-column: auto;
+  }
+
+  body .footer__copyright {
+    justify-content: flex-start;
+  }
+}
