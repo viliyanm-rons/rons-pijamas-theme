@@ -17,7 +17,7 @@ This repository (`viliyanm-rons/rons-pijamas-theme`) is used **only** for the Ro
   (`blocks/` if ever used). No nested themes, duplicate project folders or copies of a component.
 - Custom code lives in `assets/rons-custom.css`, `assets/rons-custom.js` and the `rons-*` sections and snippets.
   Reuse existing Dawn sections, snippets and assets wherever practical.
-- Root docs: `README.md`, `SIZE-GUIDE-SETUP.md`, `NAVIGATION-PAGES-SETUP.md`, this file.
+- Root docs: `README.md`, `SIZE-GUIDE-SETUP.md`, `NAVIGATION-PAGES-SETUP.md`, `LAUNCH-CHECKLIST.md`, this file.
 
 ## Branches and themes
 - `main` is approved production code. It changes only through a reviewed PR from `development`.
