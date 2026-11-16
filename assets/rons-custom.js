@@ -117,11 +117,19 @@ if (!customElements.get('rons-sticky-atc')) {
  * from that server-rendered HTML, so it always reflects real inventory.
  * While a new option is loading (or the combination doesn't exist) the
  * message is cleared so a stale count is never shown.
+ *
+ * Like Dawn's own price update, the source is looked up by the original
+ * section id and the destination inside the product-info that changed. In
+ * the quick-add window Dawn renames ids to "quickadd-…", so a lookup by the
+ * original id alone would miss it.
  */
 if (typeof subscribe === 'function') {
+  let ronsStockProductInfo = null;
+
   subscribe(PUB_SUB_EVENTS.optionValueSelectionChange, (event) => {
     const productInfo = event.data?.target?.closest('product-info');
-    const stock = productInfo && document.getElementById(`RonsStock-${productInfo.dataset.section}`);
+    ronsStockProductInfo = productInfo || null;
+    const stock = productInfo?.querySelector(`#RonsStock-${productInfo.dataset.section}`);
     if (!stock) return;
     stock.innerHTML = '';
     stock.className = 'rons-stock rons-stock--none';
@@ -129,7 +137,12 @@ if (typeof subscribe === 'function') {
 
   subscribe(PUB_SUB_EVENTS.variantChange, (event) => {
     const { sectionId, html } = event.data;
-    const destination = document.getElementById(`RonsStock-${sectionId}`);
+    const productInfo = ronsStockProductInfo?.isConnected
+      ? ronsStockProductInfo
+      : document.querySelector(`product-info[data-section="${sectionId}"]`);
+    if (!productInfo) return;
+    if ((productInfo.dataset.originalSection || productInfo.dataset.section) !== sectionId) return;
+    const destination = productInfo.querySelector(`#RonsStock-${productInfo.dataset.section}`);
     const source = html?.getElementById(`RonsStock-${sectionId}`);
     if (!destination || !source) return;
     destination.innerHTML = source.innerHTML;
