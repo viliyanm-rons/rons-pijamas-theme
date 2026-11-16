@@ -10,42 +10,63 @@
 {
   "sections": {
     "main": {
-      "type": "main-article",
+      "type": "rons-main-article",
+      "settings": {
+        "show_date": true,
+        "show_author": false,
+        "quote_after": 3,
+        "show_share": true,
+        "share_label": "Сподели",
+        "products_heading": "Открий от историята",
+        "collection_link_label": "Виж всички",
+        "show_related": true,
+        "related_heading": "Прочети още",
+        "blog_link_label": "Всички статии",
+        "read_more_label": "Прочети статията",
+        "brand_name": "Ron’s Pijamas",
+        "home_label": "Начало",
+        "breadcrumb_label": "Навигация",
+        "color_scheme": "scheme-1",
+        "padding_top": 40,
+        "padding_bottom": 56
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
       "blocks": {
-        "featured_image": {
-          "type": "featured_image",
+        "heading": {
+          "type": "heading",
           "settings": {
-            "image_height": "adapt"
+            "heading": "Писма от Ron’s Pijamas",
+            "heading_size": "h2"
           }
         },
-        "title": {
-          "type": "title",
+        "paragraph": {
+          "type": "paragraph",
           "settings": {
-            "blog_show_date": true,
-            "blog_show_author": false
+            "text": "<p>Нови истории, колекции и идеи за красиви вечери у дома – директно в пощата ти.</p>"
           }
         },
-        "share": {
-          "type": "share",
-          "settings": {
-            "share_label": "Сподели"
-          }
-        },
-        "content": {
-          "type": "content",
+        "email_form": {
+          "type": "email_form",
           "settings": {}
         }
       },
       "block_order": [
-        "featured_image",
-        "title",
-        "share",
-        "content"
+        "heading",
+        "paragraph",
+        "email_form"
       ],
-      "settings": {}
+      "settings": {
+        "color_scheme": "scheme-2",
+        "full_width": true,
+        "padding_top": 56,
+        "padding_bottom": 64
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "newsletter"
   ]
 }

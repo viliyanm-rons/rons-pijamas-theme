@@ -1,23 +1,31 @@
 {% comment %}
-  Ron's Pijamas – editorial blog listing.
+  Ron's Pijamas – editorial blog listing ("The Journal").
 
   Works with any Shopify blog (Online Store › Blog posts). Articles, images,
-  excerpts and dates come from Shopify; nothing is hardcoded. The heading is
-  a setting (default "Блог"); when it is left empty the blog's own title is
-  used. Without published articles an empty state is shown instead of
-  sample content.
+  tags, excerpts and dates come from Shopify; nothing is hardcoded.
+
+  Layout: editorial hero (eyebrow, H1, subtitle, optional wide photo), tag
+  filter built from the blog's real tags (hidden with fewer than two), one
+  featured article (newest, first page, no tag filter), a 3/2/1 column grid
+  and crawlable pagination. Structured data: BreadcrumbList.
+
+  The H1 is the hero heading; when it is empty the blog's title is used.
 {% endcomment %}
 
 {%- liquid
   assign heading = section.settings.heading | default: blog.title
   case section.settings.image_ratio
-    when 'landscape'
-      assign ratio = '3 / 2'
+    when 'portrait'
+      assign ratio = '4 / 5'
     when 'square'
       assign ratio = '1 / 1'
     else
-      assign ratio = '4 / 5'
+      assign ratio = '3 / 2'
   endcase
+  assign show_tags = false
+  if section.settings.show_tags and blog.all_tags.size > 1
+    assign show_tags = true
+  endif
 -%}
 
 {%- style -%}
@@ -36,15 +44,63 @@
 
 <div class="rons-blog color-{{ section.settings.color_scheme }} gradient">
   <div class="page-width section-{{ section.id }}-padding">
-    <header class="rons-blog__header">
+    <header class="rons-blog__hero">
       {%- if section.settings.eyebrow != blank -%}
-        <p class="rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <p class="rons-eyebrow rons-blog__eyebrow">{{ section.settings.eyebrow | escape }}</p>
       {%- endif -%}
-      <h1 class="rons-blog__title h0">{{ heading | escape }}</h1>
+      <h1 class="rons-blog__title">{{ heading | escape }}</h1>
       {%- if section.settings.intro != blank -%}
         <div class="rons-blog__intro rte">{{ section.settings.intro }}</div>
       {%- endif -%}
     </header>
+
+    {%- if section.settings.hero_image != blank and current_tags == blank -%}
+      <div class="rons-blog__hero-media">
+        {{
+          section.settings.hero_image
+          | image_url: width: 2400
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            widths: '750, 1100, 1500, 1920, 2400',
+            sizes: '(min-width: 1200px) 1200px, calc(100vw - 3rem)',
+            alt: section.settings.hero_image.alt
+        }}
+      </div>
+    {%- endif -%}
+
+    {%- if show_tags -%}
+      <nav class="rons-blog__tags" aria-label="{{ section.settings.tags_label | escape }}">
+        <ul role="list">
+          <li>
+            <a
+              href="{{ blog.url }}"
+              class="rons-blog__tag{% if current_tags == blank %} is-active{% endif %}"
+              {% if current_tags == blank %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{- section.settings.all_label | escape -}}
+            </a>
+          </li>
+          {%- for tag in blog.all_tags -%}
+            {%- assign tag_active = false -%}
+            {%- if current_tags contains tag -%}{%- assign tag_active = true -%}{%- endif -%}
+            <li>
+              <a
+                href="{{ blog.url }}/tagged/{{ tag | handle }}"
+                class="rons-blog__tag{% if tag_active %} is-active{% endif %}"
+                {% if tag_active %}
+                  aria-current="page"
+                {% endif %}
+              >
+                {{- tag | escape -}}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
 
     {%- paginate blog.articles by section.settings.per_page -%}
       {%- if blog.articles.size > 0 -%}
@@ -52,53 +108,33 @@
           {%- for article in blog.articles -%}
             {%- liquid
               assign featured = false
-              if section.settings.feature_first and forloop.first and paginate.current_page == 1
+              if section.settings.feature_first and forloop.first and paginate.current_page == 1 and current_tags == blank
                 assign featured = true
               endif
+              assign eager = false
+              if forloop.first and paginate.current_page == 1 and section.settings.hero_image == blank
+                assign eager = true
+              endif
               if article.excerpt != blank
-                assign excerpt = article.excerpt | strip_html | truncatewords: 30
+                assign excerpt = article.excerpt | strip_html | truncatewords: 28
               else
-                assign excerpt = article.content | strip_html | truncatewords: 30
+                assign excerpt = article.content | strip_html | truncatewords: 28
               endif
             -%}
             <li class="rons-blog__item{% if featured %} rons-blog__item--featured{% endif %}">
-              <article class="rons-article-card{% if section.settings.show_image and article.image %} rons-article-card--image{% endif %}">
-                {%- if section.settings.show_image and article.image -%}
-                  <a href="{{ article.url }}" class="rons-article-card__media" tabindex="-1" aria-hidden="true">
-                    {%- if featured -%}
-                      {%- assign sizes = '(min-width: 990px) 60vw, (min-width: 750px) 50vw, 100vw' -%}
-                    {%- else -%}
-                      {%- assign sizes = '(min-width: 990px) 30vw, (min-width: 750px) 50vw, 100vw' -%}
-                    {%- endif -%}
-                    {{
-                      article.image
-                      | image_url: width: 1600
-                      | image_tag:
-                        loading: 'lazy',
-                        widths: '400, 600, 800, 1000, 1200, 1600',
-                        sizes: sizes,
-                        alt: article.image.alt
-                    }}
-                  </a>
-                {%- endif -%}
-                <div class="rons-article-card__body">
-                  {%- if section.settings.show_date -%}
-                    <p class="rons-article-card__date">{{ article.published_at | time_tag: format: 'date' }}</p>
-                  {%- endif -%}
-                  <h2 class="rons-article-card__title{% if featured %} h1{% else %} h3{% endif %}">
-                    <a href="{{ article.url }}" class="full-unstyled-link">{{ article.title | escape }}</a>
-                  </h2>
-                  {%- if section.settings.show_excerpt and excerpt != blank -%}
-                    <p class="rons-article-card__excerpt">{{ excerpt }}</p>
-                  {%- endif -%}
-                  {%- if section.settings.read_more_label != blank -%}
-                    <a href="{{ article.url }}" class="rons-article-card__more link underlined-link">
-                      {{- section.settings.read_more_label | escape -}}
-                      <span class="visually-hidden">: {{ article.title | escape }}</span>
-                    </a>
-                  {%- endif -%}
-                </div>
-              </article>
+              {% render 'rons-article-card',
+                article: article,
+                featured: featured,
+                eager: eager,
+                excerpt: excerpt,
+                show_image: section.settings.show_image,
+                show_tag: section.settings.show_tag,
+                show_date: section.settings.show_date,
+                show_excerpt: section.settings.show_excerpt,
+                read_more_label: section.settings.read_more_label,
+                heading_tag: 'h2',
+                blog_url: blog.url
+              %}
             </li>
           {%- endfor -%}
         </ul>
@@ -122,6 +158,27 @@
   </div>
 </div>
 
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ section.settings.home_label | json }},
+        "item": {{ request.origin | append: routes.root_url | json }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ blog.title | json }},
+        "item": {{ request.origin | append: blog.url | json }}
+      }
+    ]
+  }
+</script>
+
 {% schema %}
 {
   "name": "Блог – списък със статии",
@@ -132,40 +189,76 @@
   },
   "settings": [
     {
+      "type": "header",
+      "content": "Начало на страницата"
+    },
+    {
       "type": "text",
       "id": "eyebrow",
-      "label": "Надзаглавие"
+      "label": "Надзаглавие",
+      "default": "The Journal"
     },
     {
       "type": "text",
       "id": "heading",
-      "label": "Заглавие",
-      "default": "Блог",
+      "label": "Заглавие (H1)",
+      "default": "Красотата започва у дома",
       "info": "Ако е празно, се използва името на блога."
     },
     {
       "type": "richtext",
       "id": "intro",
-      "label": "Въведение"
+      "label": "Подзаглавие",
+      "default": "<p>Истории за женствеността, домашния стил, красивите ритуали и комфорта.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Широка снимка (по избор)",
+      "info": "Поне 2400 px широка. Без снимка се показва само текстът."
+    },
+    {
+      "type": "header",
+      "content": "Теми"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Показвай филтър по теми",
+      "default": true,
+      "info": "Темите са таговете на статиите. Филтърът се показва, когато има поне две теми."
+    },
+    {
+      "type": "text",
+      "id": "all_label",
+      "label": "Бутон „всички“",
+      "default": "Всички"
+    },
+    {
+      "type": "text",
+      "id": "tags_label",
+      "label": "Име на филтъра за екранни четци",
+      "default": "Теми"
+    },
+    {
+      "type": "header",
+      "content": "Статии"
     },
     {
       "type": "range",
       "id": "per_page",
       "label": "Статии на страница",
-      "min": 3,
-      "max": 24,
+      "min": 4,
+      "max": 25,
       "step": 3,
-      "default": 9
+      "default": 13,
+      "info": "13 = една открояваща се статия и четири реда по три."
     },
     {
       "type": "checkbox",
       "id": "feature_first",
       "label": "Открои най-новата статия",
       "default": true
-    },
-    {
-      "type": "header",
-      "content": "Карти на статиите"
     },
     {
       "type": "checkbox",
@@ -178,11 +271,17 @@
       "id": "image_ratio",
       "label": "Пропорция на изображението",
       "options": [
-        { "value": "portrait", "label": "Портрет (4:5)" },
         { "value": "landscape", "label": "Пейзаж (3:2)" },
+        { "value": "portrait", "label": "Портрет (4:5)" },
         { "value": "square", "label": "Квадрат" }
       ],
       "default": "landscape"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tag",
+      "label": "Показвай темата",
+      "default": true
     },
     {
       "type": "checkbox",
@@ -221,6 +320,12 @@
     {
       "type": "header",
       "content": "Оформление"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "„Начало“ в структурираните данни",
+      "default": "Начало"
     },
     {
       "type": "color_scheme",

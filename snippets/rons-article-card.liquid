@@ -1,0 +1,97 @@
+{% comment %}
+  Ron's Pijamas – editorial article card (blog listing and related articles).
+
+  Accepts:
+  - article: {Object} the article
+  - featured: {Boolean} large horizontal card (blog listing, first article)
+  - eager: {Boolean} load the image eagerly (the first visible card only)
+  - excerpt: {String} plain-text excerpt (optional)
+  - show_image, show_tag, show_date, show_excerpt: {Boolean}
+  - read_more_label: {String}
+  - heading_tag: {String} 'h2' or 'h3'
+  - blog_url: {String} the blog's URL (for the topic link)
+
+  The topic label is the article's first tag (a real Shopify tag, linked to
+  the blog filtered by that tag). Nothing is invented: without a tag, date,
+  image or excerpt that line is simply left out.
+{% endcomment %}
+
+{%- liquid
+  assign heading_tag = heading_tag | default: 'h3'
+  assign has_image = false
+  if show_image and article.image
+    assign has_image = true
+  endif
+  if featured
+    assign sizes = '(min-width: 990px) 58vw, (min-width: 750px) 55vw, calc(100vw - 3rem)'
+    assign title_class = 'h1'
+  else
+    assign sizes = '(min-width: 990px) 33vw, (min-width: 750px) 50vw, calc(100vw - 3rem)'
+    assign title_class = 'h3'
+  endif
+  assign topic = article.tags.first
+  assign show_topic = false
+  if show_tag and topic != blank and blog_url != blank
+    assign show_topic = true
+  endif
+  assign show_meta = show_date
+  if show_topic
+    assign show_meta = true
+  endif
+-%}
+
+<article class="rons-article-card{% if has_image %} rons-article-card--image{% endif %}{% if featured %} rons-article-card--featured{% endif %}">
+  {%- if has_image -%}
+    <a href="{{ article.url }}" class="rons-article-card__media" tabindex="-1" aria-hidden="true">
+      {%- if eager -%}
+        {{
+          article.image
+          | image_url: width: 1600
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            widths: '400, 600, 800, 1000, 1200, 1600',
+            sizes: sizes,
+            alt: article.image.alt
+        }}
+      {%- else -%}
+        {{
+          article.image
+          | image_url: width: 1600
+          | image_tag:
+            loading: 'lazy',
+            widths: '400, 600, 800, 1000, 1200, 1600',
+            sizes: sizes,
+            alt: article.image.alt
+        }}
+      {%- endif -%}
+    </a>
+  {%- endif -%}
+
+  <div class="rons-article-card__body">
+    {%- if show_meta -%}
+      <p class="rons-article-card__meta">
+        {%- if show_topic -%}
+          <a href="{{ blog_url }}/tagged/{{ topic | handle }}" class="rons-article-card__topic">
+            {{- topic | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if show_date -%}
+          <span class="rons-article-card__date">{{ article.published_at | time_tag: format: 'date' }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+    <{{ heading_tag }} class="rons-article-card__title {{ title_class }}">
+      <a href="{{ article.url }}" class="full-unstyled-link">{{ article.title | escape }}</a>
+    </{{ heading_tag }}>
+    {%- if show_excerpt and excerpt != blank -%}
+      <p class="rons-article-card__excerpt">{{ excerpt }}</p>
+    {%- endif -%}
+    {%- if read_more_label != blank -%}
+      <a href="{{ article.url }}" class="rons-article-card__more">
+        {{- read_more_label | escape -}}
+        <span class="visually-hidden">: {{ article.title | escape }}</span>
+      </a>
+    {%- endif -%}
+  </div>
+</article>

@@ -1,0 +1,17 @@
+{% comment %}
+  Ron's Pijamas – centred editorial quote inside an article.
+
+  Accepts:
+  - quote: {String} the article's custom.pull_quote metafield (plain text)
+
+  Usage:
+  {% render 'rons-pull-quote', quote: quote %}
+{% endcomment %}
+
+{%- if quote != blank -%}
+  <figure class="rons-pull-quote">
+    <blockquote>
+      <p>{{ quote | escape | newline_to_br }}</p>
+    </blockquote>
+  </figure>
+{%- endif -%}

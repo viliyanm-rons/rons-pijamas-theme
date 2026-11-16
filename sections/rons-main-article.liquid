@@ -1,0 +1,440 @@
+{% comment %}
+  Ron's Pijamas – editorial article page.
+
+  Everything comes from the Shopify article (Online Store › Blog posts):
+  title (the only H1), first tag (topic label), real publication date,
+  featured image, content (H2/H3, lists, quotes and images from the editor).
+  The author is hidden by default because the old articles have no known
+  author.
+
+  Optional, per article, through article metafields (Settings › Custom data ›
+  Blog posts). Without them nothing is shown:
+  - custom.pull_quote (single line text): a centred quote. Use only a real
+    sentence from the article or an approved brand message. It is placed
+    after paragraph N (section setting).
+  - custom.related_products (list of products): "Shop the story".
+  - custom.related_collection (collection): used when no products are set.
+
+  Related articles: up to three from the same blog that share a tag,
+  otherwise the newest ones. Structured data: BlogPosting and BreadcrumbList
+  (replaces Dawn's article structured data, so there is no duplicate).
+{% endcomment %}
+
+{%- liquid
+  assign topic = article.tags.first
+  assign quote = article.metafields.custom.pull_quote.value | strip
+  assign quote_after = section.settings.quote_after
+  assign paragraph_end = '</' | append: 'p>'
+  assign content_tail = article.content | strip | slice: -4, 4
+
+  assign related_products = article.metafields.custom.related_products.value
+  assign related_collection = article.metafields.custom.related_collection.value
+  assign products_heading = section.settings.products_heading
+  assign product_source = blank
+  if related_products != blank and related_products.size > 0
+    assign product_source = related_products
+  elsif related_collection != blank and related_collection.products_count > 0
+    assign product_source = related_collection.products
+  endif
+
+  assign related_handles = ''
+  assign related_count = 0
+  if section.settings.show_related and topic != blank
+    for candidate in blog.articles limit: 50
+      if candidate.id != article.id and related_count < 3
+        for tag in article.tags
+          if candidate.tags contains tag
+            assign related_handles = related_handles | append: candidate.handle | append: ','
+            assign related_count = related_count | plus: 1
+            break
+          endif
+        endfor
+      endif
+    endfor
+  endif
+  if section.settings.show_related and related_count < 3
+    for candidate in blog.articles limit: 50
+      if candidate.id != article.id and related_count < 3
+        assign needle = candidate.handle | append: ','
+        unless related_handles contains needle
+          assign related_handles = related_handles | append: candidate.handle | append: ','
+          assign related_count = related_count | plus: 1
+        endunless
+      endif
+    endfor
+  endif
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<article class="rons-article color-{{ section.settings.color_scheme }} gradient">
+  <div class="section-{{ section.id }}-padding">
+    <header class="rons-article__header page-width">
+      <nav class="rons-article__crumbs" aria-label="{{ section.settings.breadcrumb_label | escape }}">
+        <ol role="list">
+          <li><a href="{{ routes.root_url }}">{{ section.settings.home_label | escape }}</a></li>
+          <li><a href="{{ blog.url }}">{{ blog.title | escape }}</a></li>
+        </ol>
+      </nav>
+      {%- if topic != blank -%}
+        <p class="rons-eyebrow rons-article__topic">
+          <a href="{{ blog.url }}/tagged/{{ topic | handle }}">{{ topic | escape }}</a>
+        </p>
+      {%- endif -%}
+      <h1 class="rons-article__title">{{ article.title | escape }}</h1>
+      <p class="rons-article__meta">
+        {%- if section.settings.show_date -%}
+          {{ article.published_at | time_tag: format: 'date' }}
+        {%- endif -%}
+        {%- if section.settings.show_author and article.author != blank -%}
+          <span class="rons-article__author">{{ article.author | escape }}</span>
+        {%- endif -%}
+      </p>
+    </header>
+
+    {%- if article.image -%}
+      <figure class="rons-article__hero page-width">
+        {{
+          article.image
+          | image_url: width: 2200
+          | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            widths: '500, 750, 1100, 1500, 2200',
+            sizes: '(min-width: 1200px) 1100px, calc(100vw - 3rem)',
+            alt: article.image.alt
+        }}
+      </figure>
+    {%- endif -%}
+
+    <div class="rons-article__content rte">
+      {%- if quote != blank -%}
+        {%- assign paragraphs = article.content | split: paragraph_end -%}
+        {%- assign quote_done = false -%}
+        {%- for part in paragraphs -%}
+          {{- part -}}
+          {%- unless forloop.last and content_tail != paragraph_end -%}{{ paragraph_end }}{%- endunless -%}
+          {%- if forloop.index == quote_after -%}
+            {%- render 'rons-pull-quote', quote: quote -%}
+            {%- assign quote_done = true -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- unless quote_done -%}
+          {%- render 'rons-pull-quote', quote: quote -%}
+        {%- endunless -%}
+      {%- else -%}
+        {{ article.content }}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_share -%}
+      <div class="rons-article__share">
+        {%- assign share_url = request.origin | append: article.url -%}
+        {% render 'share-button', block: section, share_link: share_url %}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if product_source != blank -%}
+    {{ 'component-card.css' | asset_url | stylesheet_tag }}
+    {{ 'component-price.css' | asset_url | stylesheet_tag }}
+    <section class="rons-article__shop page-width" aria-labelledby="RonsArticleShop-{{ section.id }}">
+      <div class="rons-article__section-head">
+        <h2 id="RonsArticleShop-{{ section.id }}" class="rons-article__section-title h2">
+          {{- products_heading | escape -}}
+        </h2>
+        {%- if related_products == blank and related_collection != blank -%}
+          <a href="{{ related_collection.url }}" class="rons-article__section-link">
+            {{- section.settings.collection_link_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+      <ul class="rons-article__products grid product-grid grid--2-col-tablet-down grid--4-col-desktop" role="list">
+        {%- for product in product_source limit: 4 -%}
+          <li class="grid__item">
+            {% render 'card-product',
+              card_product: product,
+              media_aspect_ratio: 'portrait',
+              image_shape: 'default',
+              show_secondary_image: true,
+              show_vendor: false,
+              show_rating: false,
+              lazy_load: true,
+              section_id: section.id,
+              quick_add: 'standard',
+              product_view_context: 'collection'
+            %}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </section>
+  {%- endif -%}
+
+  {%- if related_count > 0 -%}
+    <section class="rons-article__related page-width" aria-labelledby="RonsArticleRelated-{{ section.id }}">
+      <div class="rons-article__section-head">
+        <h2 id="RonsArticleRelated-{{ section.id }}" class="rons-article__section-title h2">
+          {{- section.settings.related_heading | escape -}}
+        </h2>
+        <a href="{{ blog.url }}" class="rons-article__section-link">{{ section.settings.blog_link_label | escape }}</a>
+      </div>
+      <ul class="rons-blog__grid rons-blog__grid--related" role="list">
+        {%- for candidate in blog.articles limit: 50 -%}
+          {%- assign needle = candidate.handle | append: ',' -%}
+          {%- if related_handles contains needle -%}
+            {%- if candidate.excerpt != blank -%}
+              {%- assign excerpt = candidate.excerpt | strip_html | truncatewords: 22 -%}
+            {%- else -%}
+              {%- assign excerpt = candidate.content | strip_html | truncatewords: 22 -%}
+            {%- endif -%}
+            <li class="rons-blog__item">
+              {% render 'rons-article-card',
+                article: candidate,
+                featured: false,
+                eager: false,
+                excerpt: excerpt,
+                show_image: true,
+                show_tag: true,
+                show_date: false,
+                show_excerpt: true,
+                read_more_label: section.settings.read_more_label,
+                heading_tag: 'h3',
+                blog_url: blog.url
+              %}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </section>
+  {%- endif -%}
+</article>
+
+{%- liquid
+  assign ld_description = page_description | default: article.excerpt | strip_html | strip_newlines | strip | truncate: 300
+  assign ld_words = article.content | strip_html | split: ' ' | size
+-%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ canonical_url | json }}
+    },
+    "headline": {{ article.title | truncate: 110 | json }},
+    {%- if ld_description != blank %}
+      "description": {{ ld_description | json }},
+    {%- endif %}
+    {%- if article.image %}
+      "image": [{{ article.image | image_url: width: 1200 | prepend: 'https:' | json }}],
+    {%- endif %}
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%:z' | json }},
+    "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%:z' | json }},
+    "inLanguage": {{ request.locale.iso_code | json }},
+    {%- if article.tags.size > 0 %}
+      "keywords": {{ article.tags | join: ', ' | json }},
+    {%- endif %}
+    "wordCount": {{ ld_words }},
+    "author": {
+      "@type": "Organization",
+      "name": {{ section.settings.brand_name | default: shop.name | json }},
+      "url": {{ request.origin | append: routes.root_url | json }}
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": {{ section.settings.brand_name | default: shop.name | json }}
+      {%- if settings.logo -%}
+        ,
+        "logo": {
+          "@type": "ImageObject",
+          "url": {{ settings.logo | image_url: width: 600 | prepend: 'https:' | json }}
+        }
+      {%- endif %}
+    }
+  }
+</script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ section.settings.home_label | json }},
+        "item": {{ request.origin | append: routes.root_url | json }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ blog.title | json }},
+        "item": {{ request.origin | append: blog.url | json }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ article.title | json }},
+        "item": {{ canonical_url | json }}
+      }
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Статия",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "templates": ["article"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Заглавието, датата, снимката и текстът идват от статията в Online Store › Blog posts. Цитатът и свързаните продукти са по избор – чрез полетата на статията (Custom data)."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Показвай датата",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Показвай автора",
+      "default": false,
+      "info": "Включи само ако авторът на статиите е реален човек."
+    },
+    {
+      "type": "range",
+      "id": "quote_after",
+      "label": "Цитатът след абзац №",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Показвай „Сподели“",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "share_label",
+      "label": "Текст на „Сподели“",
+      "default": "Сподели"
+    },
+    {
+      "type": "header",
+      "content": "Свързани продукти"
+    },
+    {
+      "type": "text",
+      "id": "products_heading",
+      "label": "Заглавие",
+      "default": "Открий от историята"
+    },
+    {
+      "type": "text",
+      "id": "collection_link_label",
+      "label": "Връзка към колекцията",
+      "default": "Виж всички"
+    },
+    {
+      "type": "header",
+      "content": "Свързани статии"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_related",
+      "label": "Показвай свързани статии",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "related_heading",
+      "label": "Заглавие",
+      "default": "Прочети още"
+    },
+    {
+      "type": "text",
+      "id": "blog_link_label",
+      "label": "Връзка към блога",
+      "default": "Всички статии"
+    },
+    {
+      "type": "text",
+      "id": "read_more_label",
+      "label": "Текст на връзката в картите",
+      "default": "Прочети статията"
+    },
+    {
+      "type": "header",
+      "content": "Структурирани данни и навигация"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Име на марката (автор и издател)",
+      "default": "Ron’s Pijamas"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "„Начало“",
+      "default": "Начало"
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_label",
+      "label": "Име на навигацията за екранни четци",
+      "default": "Навигация"
+    },
+    {
+      "type": "header",
+      "content": "Оформление"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Цветова схема",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Отстъп отгоре",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Отстъп отдолу",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    }
+  ]
+}
+{% endschema %}

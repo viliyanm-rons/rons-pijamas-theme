@@ -12,10 +12,10 @@
     "main": {
       "type": "rons-main-blog",
       "settings": {
-        "eyebrow": "Ron's Pijamas",
-        "heading": "Блог",
-        "intro": "",
-        "per_page": 9,
+        "eyebrow": "The Journal",
+        "heading": "Красотата започва у дома",
+        "intro": "<p>Истории за женствеността, домашния стил, красивите ритуали и комфорта.</p>",
+        "per_page": 13,
         "feature_first": true,
         "show_image": true,
         "image_ratio": "landscape",
@@ -26,11 +26,50 @@
         "empty_button_label": "Разгледай продуктите",
         "color_scheme": "scheme-1",
         "padding_top": 48,
+        "padding_bottom": 64,
+        "show_tags": true,
+        "all_label": "Всички",
+        "tags_label": "Теми",
+        "show_tag": true,
+        "home_label": "Начало"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Писма от Ron’s Pijamas",
+            "heading_size": "h2"
+          }
+        },
+        "paragraph": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Нови истории, колекции и идеи за красиви вечери у дома – директно в пощата ти.</p>"
+          }
+        },
+        "email_form": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "paragraph",
+        "email_form"
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "full_width": true,
+        "padding_top": 56,
         "padding_bottom": 64
       }
     }
   },
   "order": [
-    "main"
+    "main",
+    "newsletter"
   ]
 }
