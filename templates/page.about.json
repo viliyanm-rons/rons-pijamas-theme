@@ -38,6 +38,7 @@
     "beginnings": {
       "type": "rons-editorial",
       "settings": {
+        "image": "shopify://shop_images/1291_1.jpg",
         "show_placeholder": true,
         "layout": "split",
         "image_position": "left",
@@ -64,6 +65,7 @@
     "philosophy": {
       "type": "rons-editorial",
       "settings": {
+        "image": "shopify://shop_images/1216.png",
         "show_placeholder": true,
         "layout": "split",
         "image_position": "right",
@@ -90,6 +92,7 @@
     "fabrics": {
       "type": "rons-editorial",
       "settings": {
+        "image": "shopify://shop_images/IMG_7691.jpg",
         "show_placeholder": true,
         "layout": "split",
         "image_position": "left",
@@ -116,6 +119,7 @@
     "listening": {
       "type": "rons-editorial",
       "settings": {
+        "image": "shopify://shop_images/IMG_7199.jpg",
         "show_placeholder": true,
         "layout": "split",
         "image_position": "right",
@@ -142,6 +146,7 @@
     "rebrand": {
       "type": "rons-editorial",
       "settings": {
+        "image": "shopify://shop_images/rons-pijamas-logo-black.png",
         "show_placeholder": true,
         "layout": "split",
         "image_position": "left",
