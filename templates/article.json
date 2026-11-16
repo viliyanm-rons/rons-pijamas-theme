@@ -30,43 +30,9 @@
         "padding_top": 40,
         "padding_bottom": 56
       }
-    },
-    "newsletter": {
-      "type": "newsletter",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Писма от Ron’s Pijamas",
-            "heading_size": "h2"
-          }
-        },
-        "paragraph": {
-          "type": "paragraph",
-          "settings": {
-            "text": "<p>Нови истории, колекции и идеи за красиви вечери у дома – директно в пощата ти.</p>"
-          }
-        },
-        "email_form": {
-          "type": "email_form",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "heading",
-        "paragraph",
-        "email_form"
-      ],
-      "settings": {
-        "color_scheme": "scheme-2",
-        "full_width": true,
-        "padding_top": 56,
-        "padding_bottom": 64
-      }
     }
   },
   "order": [
-    "main",
-    "newsletter"
+    "main"
   ]
 }
