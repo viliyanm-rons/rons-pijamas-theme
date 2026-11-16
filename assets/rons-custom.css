@@ -4246,3 +4246,36 @@ body .rons-footer-acc .footer-block__details-content .list-menu__item--link {
     justify-content: flex-start;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * 32. Logo image (Theme settings › Logo). Desktop width comes from the
+ * logo width setting; smaller screens cap it so the centred logo clears the
+ * menu button and icons.
+ * ------------------------------------------------------------------------- */
+body .header__heading-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media screen and (min-width: 750px) and (max-width: 1279px) {
+  body .header__heading-logo-wrapper {
+    width: min(100%, 16rem);
+  }
+}
+
+@media screen and (max-width: 749px) {
+  body .header__heading-logo-wrapper {
+    width: min(100%, 13.6rem);
+  }
+}
+
+@media screen and (max-width: 374px) {
+  body .header__heading-logo-wrapper {
+    width: min(100%, 11.6rem);
+  }
+}
+
+body .footer-block__brand-info .footer-block__image-wrapper {
+  margin-bottom: 0.4rem;
+}
