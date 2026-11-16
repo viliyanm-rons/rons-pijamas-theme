@@ -299,11 +299,11 @@
     "gifts": {
       "type": "rons-editorial",
       "settings": {
-        "image": "shopify://shop_images/1086.jpg",
+        "image": "shopify://shop_images/1088.jpg",
         "show_placeholder": false,
         "layout": "overlay",
         "image_position": "left",
-        "image_ratio": "portrait",
+        "image_ratio": "landscape",
         "full_width": true,
         "overlay_opacity": 30,
         "style": "default",
