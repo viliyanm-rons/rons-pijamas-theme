@@ -329,9 +329,21 @@ body .badge {
   padding: 0.6rem 1.1rem;
 }
 
-/* Sale / sold-out badges: same top-left spot on every product card. */
+/* Sale / sold-out badges: same top-left spot on every product card, a
+   little smaller on two-column mobile cards. */
 body .product-card-wrapper .card__inner .card__badge {
   margin: 1.2rem;
+}
+
+@media screen and (max-width: 749px) {
+  body .product-card-wrapper .card__inner .card__badge {
+    margin: 0.6rem;
+  }
+
+  body .product-card-wrapper .badge {
+    font-size: 0.95rem;
+    padding: 0.45rem 0.8rem;
+  }
 }
 
 /* "View all" link under featured collections: one discreet, uppercase link. */
