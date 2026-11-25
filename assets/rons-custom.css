@@ -211,7 +211,10 @@ body .card-information .price {
 }
 
 /* Product names are the first thing shoppers scan in a grid: bold, larger,
-   tighter tracking for legibility; price sits just below at a lighter weight. */
+   tighter tracking for legibility. The price is the second thing they look
+   for, so it gets near-equal size and a medium weight (one step lighter than
+   the name), full contrast and tabular figures; an old price is smaller,
+   muted and struck through so the current price always wins. */
 body .product-card-wrapper .card__heading {
   font-weight: var(--font-body-weight-bold);
   font-size: 1.55rem;
@@ -220,8 +223,15 @@ body .product-card-wrapper .card__heading {
 }
 
 body .product-card-wrapper .card-information .price {
-  font-size: 1.5rem;
-  letter-spacing: 0.02em;
+  font-size: 1.55rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  color: rgb(var(--color-foreground));
+}
+
+body .product-card-wrapper .card-information > .price {
+  margin-top: 0.6rem;
 }
 
 @media screen and (min-width: 750px) {
@@ -230,7 +240,7 @@ body .product-card-wrapper .card-information .price {
   }
 
   body .product-card-wrapper .card-information .price {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
   }
 }
 
@@ -320,9 +330,26 @@ body .product__title h2.h1 {
   }
 }
 
+/* Product page price: the decision point next to "Add to cart". */
 body .product .price--large {
-  font-size: 1.8rem;
-  letter-spacing: 0.04em;
+  font-size: 2.2rem;
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  color: rgb(var(--color-foreground));
+}
+
+@media screen and (min-width: 750px) {
+  body .product .price--large {
+    font-size: 2.6rem;
+  }
+}
+
+/* Old (compare-at) prices everywhere: secondary, muted, struck through. */
+body .price--on-sale .price-item--regular {
+  font-size: 0.8em;
+  font-weight: var(--font-body-weight);
+  color: var(--rons-muted);
 }
 
 body .product__tax {
@@ -745,8 +772,9 @@ body .rons-sticky-atc__meta {
 }
 
 body .rons-sticky-atc__price .price {
-  font-size: 1.3rem;
-  letter-spacing: 0.04em;
+  font-size: 1.5rem;
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.01em;
   color: rgb(var(--color-foreground));
 }
 
@@ -1191,6 +1219,25 @@ body .cart-drawer .totals__total-value {
   font-size: 1.5rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+body .cart-drawer .totals__total-value {
+  font-size: 1.8rem;
+  font-weight: var(--font-body-weight-bold);
+  letter-spacing: 0.01em;
+}
+
+/* Cart line prices (drawer and cart page): current price medium weight,
+   old price stays muted via the compare-at rule. */
+body .cart-item__price-wrapper .price:not(s),
+body .cart-item__final-price {
+  font-weight: 500;
+  color: rgb(var(--color-foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+body .cart-item__old-price {
+  color: var(--rons-muted);
 }
 
 body .cart-drawer .cart__checkout-button {
@@ -2764,7 +2811,8 @@ body .rons-upsell__title {
 
 body .rons-upsell__price {
   margin-top: 0.3rem;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
+  font-weight: 500;
 }
 
 body .rons-upsell__compare {
