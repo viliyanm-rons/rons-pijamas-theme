@@ -12,6 +12,7 @@
     "hero": {
       "type": "rons-editorial",
       "settings": {
+        "heading_tag": "h1",
         "show_placeholder": true,
         "layout": "overlay",
         "image_position": "left",

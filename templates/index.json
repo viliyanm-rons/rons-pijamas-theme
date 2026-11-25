@@ -12,6 +12,7 @@
     "hero": {
       "type": "rons-hero",
       "settings": {
+        "heading_tag": "h1",
         "image_desktop": "shopify://shop_images/TJ78642.jpg",
         "image_mobile": "shopify://shop_images/DSC6398.jpg",
         "layout": "editorial",

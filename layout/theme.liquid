@@ -29,7 +29,14 @@
       {{ rons_page_title }}
       {%- if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif -%}
       {%- if current_page != 1 %} &ndash; {{ 'general.pagination.page' | t: number: current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+      {%- liquid
+        # Ron's: no brand suffix when the title already names the brand (any spelling).
+        assign rons_title_has_brand = false
+        if page_title contains shop.name or page_title contains 'Ron’s Pijamas' or page_title contains "Ron's Pijamas"
+          assign rons_title_has_brand = true
+        endif
+      -%}
+      {%- unless rons_title_has_brand %} &ndash; {{ shop.name }}{% endunless -%}
     </title>
 
     {% if page_description %}

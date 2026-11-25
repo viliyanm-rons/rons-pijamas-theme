@@ -181,7 +181,7 @@
     -%}
 
     {%- if section.settings.logo_position != 'middle-center' -%}
-      {%- if request.page_type == 'index' -%}
+      {%- if request.page_type == 'index' and section.settings.logo_h1_on_home -%}
         <h1 class="header__heading">
       {%- endif -%}
       <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
@@ -208,7 +208,7 @@
           <span class="h2">{{ shop.name }}</span>
         {%- endif -%}
       </a>
-      {%- if request.page_type == 'index' -%}
+      {%- if request.page_type == 'index' and section.settings.logo_h1_on_home -%}
         </h1>
       {%- endif -%}
     {%- endif -%}
@@ -224,7 +224,7 @@
     %}
 
     {%- if section.settings.logo_position == 'middle-center' -%}
-      {%- if request.page_type == 'index' -%}
+      {%- if request.page_type == 'index' and section.settings.logo_h1_on_home -%}
         <h1 class="header__heading">
       {%- endif -%}
       <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
@@ -251,7 +251,7 @@
           <span class="h2">{{ shop.name }}</span>
         {%- endif -%}
       </a>
-      {%- if request.page_type == 'index' -%}
+      {%- if request.page_type == 'index' and section.settings.logo_h1_on_home -%}
         </h1>
       {%- endif -%}
     {%- endif -%}
@@ -504,6 +504,13 @@
   "class": "section-header",
   "max_blocks": 3,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "logo_h1_on_home",
+      "label": "Use the logo as the homepage H1",
+      "info": "Turn off when a homepage section (e.g. the hero) provides the H1.",
+      "default": true
+    },
     {
       "type": "select",
       "id": "logo_position",

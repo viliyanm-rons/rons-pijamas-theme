@@ -101,7 +101,10 @@
             <p class="rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
           {%- endif -%}
           {%- if section.settings.heading != blank -%}
-            <h2 class="rons-editorial__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</h2>
+            {%- liquid
+              assign rons_heading_tag = section.settings.heading_tag | default: 'h2'
+            -%}
+            <{{ rons_heading_tag }} class="rons-editorial__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</{{ rons_heading_tag }}>
           {%- endif -%}
           {%- if section.settings.badge_position == 'below_heading' %}{{ badge }}{% endif -%}
           {%- if section.settings.text != blank -%}
@@ -227,6 +230,17 @@
       "type": "inline_richtext",
       "id": "heading",
       "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag (SEO)",
+      "info": "Use H1 only for the main heading of the page, e.g. the first section.",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h1", "label": "H1" }
+      ],
+      "default": "h2"
     },
     {
       "type": "select",
