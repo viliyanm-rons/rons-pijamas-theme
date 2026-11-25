@@ -226,11 +226,14 @@ body .product-card-wrapper .card__heading {
   font-style: normal;
   font-weight: 500;
   font-size: 1.4rem;
-  line-height: 1.35;
+  line-height: 1.4;
   letter-spacing: 0.01em;
 }
 
+/* Two lines are always reserved, so prices line up across a row whether a
+   name takes one line or two. */
 body .product-card-wrapper .card__heading a {
+  min-height: 2.8em;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -263,6 +266,19 @@ body .product-card-wrapper .card-information .price .price-item {
   font-weight: inherit;
 }
 
+/* Sale: the new price keeps the regular price style; the old price sits
+   right next to it, lighter, smaller and struck through. */
+body .product-card-wrapper .card-information .price--on-sale .price__sale {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.8rem;
+}
+
+body .product-card-wrapper .card-information .price--on-sale .price-item {
+  margin: 0;
+}
+
 body .product-card-wrapper .card-information .price--on-sale .price-item--regular {
   font-weight: var(--font-body-weight);
 }
@@ -280,7 +296,6 @@ body .product-grid {
 
   body .product-card-wrapper .card__heading {
     font-size: 1.6rem;
-    line-height: 1.4;
   }
 
   body .product-card-wrapper .card-information {
@@ -307,10 +322,35 @@ body .card .card__inner .card__media img {
 }
 
 body .badge {
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
   letter-spacing: var(--rons-tracking-label);
   text-transform: uppercase;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.1rem;
+}
+
+/* Sale / sold-out badges: same top-left spot on every product card. */
+body .product-card-wrapper .card__inner .card__badge {
+  margin: 1.2rem;
+}
+
+/* "View all" link under featured collections: one discreet, uppercase link. */
+body .collection__view-all {
+  margin-top: 3.2rem;
+}
+
+body .collection__view-all .link {
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: var(--rons-tracking-label);
+  text-transform: uppercase;
+  text-underline-offset: 0.5rem;
+}
+
+@media screen and (min-width: 990px) {
+  body .collection__view-all {
+    margin-top: 4.8rem;
+  }
 }
 
 /* ---------------------------------------------------------------------------

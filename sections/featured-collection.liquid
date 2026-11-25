@@ -207,14 +207,30 @@
       {%- endif -%}
     </slider-component>
 
-    {%- if section.settings.show_view_all and more_in_collection -%}
+    {%- liquid
+      # Ron's: an optional custom "view all" URL (e.g. all products) shows the link
+      # even when every product of the collection is already on screen.
+      assign show_view_all_link = false
+      if section.settings.show_view_all
+        if more_in_collection or section.settings.view_all_url != blank
+          assign show_view_all_link = true
+        endif
+      endif
+    -%}
+    {%- if show_view_all_link -%}
       <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         <a
-          href="{{ section.settings.collection.url }}"
+          href="{{ section.settings.view_all_url | default: section.settings.collection.url }}"
           class="{% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
-          aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title | escape }}"
+          {% if section.settings.view_all_label == blank %}
+            aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title | escape }}"
+          {% endif %}
         >
-          {{ 'sections.featured_collection.view_all' | t }}
+          {%- if section.settings.view_all_label != blank -%}
+            {{ section.settings.view_all_label | escape }}
+          {%- else -%}
+            {{ 'sections.featured_collection.view_all' | t }}
+          {%- endif -%}
         </a>
       </div>
     {%- endif -%}
@@ -368,7 +384,19 @@
         }
       ],
       "default": "solid"
-    }, 
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "\"View all\" link URL",
+      "info": "Optional. When set, the link always shows and opens this page (e.g. All products)."
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "\"View all\" link text",
+      "info": "Optional. Leave empty for the default text."
+    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
