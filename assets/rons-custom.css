@@ -3133,6 +3133,10 @@ body .rons-reviews__item {
     grid-template-columns: repeat(var(--rons-columns, 3), minmax(0, 1fr));
     gap: 3.2rem 2.4rem;
     overflow: visible;
+    /* Cards stay at most ~53rem wide and the row is centred: with 2 columns
+       the content is ~1084px; 3-4 columns still fill the page width. */
+    max-width: calc(var(--rons-columns, 3) * 53rem + (var(--rons-columns, 3) - 1) * 2.4rem);
+    margin-inline: auto;
   }
 }
 
