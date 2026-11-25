@@ -38,7 +38,6 @@
     "header": {
       "type": "header",
       "settings": {
-        "logo_h1_on_home": false,
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
         "menu": "glavno-menyu",
