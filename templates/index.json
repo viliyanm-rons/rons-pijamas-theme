@@ -477,13 +477,13 @@
     "hero",
     "benefits",
     "bestsellers",
-    "customer_reviews",
     "categories",
     "brand_story",
     "new_arrivals",
     "gifts",
     "faq",
     "newsletter",
+    "customer_reviews",
     "instagram"
   ]
 }
