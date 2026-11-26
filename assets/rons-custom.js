@@ -722,6 +722,38 @@ if (!customElements.get('rons-reviews-carousel')) {
 
       this.slides.forEach((slide, i) => slide.setAttribute('aria-label', `${i + 1} от ${this.slides.length}`));
 
+      // Element-level listeners are bound once, even if the element is moved
+      // or re-attached (e.g. in the Theme Editor); global ones are re-added below.
+      if (!this.listenersBound) this.bindListeners();
+
+      this.onVisibility = () => this.updateAutoplay();
+      document.addEventListener('visibilitychange', this.onVisibility);
+      window.addEventListener('resize', this.onResize);
+
+      if ('IntersectionObserver' in window) {
+        this.observer = new IntersectionObserver((entries) => this.setState({ visible: entries[0].isIntersecting }), {
+          threshold: 0.35,
+        });
+        this.observer.observe(this);
+      }
+
+      if (window.Shopify && Shopify.designMode) {
+        this.onBlockSelect = (event) => {
+          const i = this.slides.findIndex((slide) => slide.contains(event.target));
+          if (i < 0) return;
+          this.stop();
+          this.track.scrollTo({ left: this.slides[i].offsetLeft - this.slides[0].offsetLeft, behavior: 'auto' });
+        };
+        document.addEventListener('shopify:block:select', this.onBlockSelect);
+      }
+
+      this.measure();
+      this.setupReadMore();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.setupReadMore());
+    }
+
+    bindListeners() {
+      this.listenersBound = true;
       this.onScroll = this.onScroll.bind(this);
       this.onResize = this.debounceFrame(() => {
         this.measure();
@@ -742,34 +774,10 @@ if (!customElements.get('rons-reviews-carousel')) {
       this.addEventListener('focusout', (event) => {
         if (!this.contains(event.relatedTarget)) this.setState({ focus: false });
       });
-      this.onVisibility = () => this.updateAutoplay();
-      document.addEventListener('visibilitychange', this.onVisibility);
-      window.addEventListener('resize', this.onResize);
-
-      if ('IntersectionObserver' in window) {
-        this.observer = new IntersectionObserver((entries) => this.setState({ visible: entries[0].isIntersecting }), {
-          threshold: 0.35,
-        });
-        this.observer.observe(this);
-      }
-
-      this.querySelectorAll('[data-review-more]').forEach((button) =>
-        button.addEventListener('click', () => this.toggleReview(button))
-      );
-
-      if (window.Shopify && Shopify.designMode) {
-        this.onBlockSelect = (event) => {
-          const i = this.slides.findIndex((slide) => slide.contains(event.target));
-          if (i < 0) return;
-          this.stop();
-          this.track.scrollTo({ left: this.slides[i].offsetLeft - this.slides[0].offsetLeft, behavior: 'auto' });
-        };
-        document.addEventListener('shopify:block:select', this.onBlockSelect);
-      }
-
-      this.measure();
-      this.setupReadMore();
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.setupReadMore());
+      this.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-review-more]');
+        if (button && this.contains(button)) this.toggleReview(button);
+      });
     }
 
     disconnectedCallback() {
