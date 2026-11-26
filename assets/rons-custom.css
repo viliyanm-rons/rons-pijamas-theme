@@ -3071,11 +3071,14 @@ body .rons-editorial--overlay .rons-editorial__badge {
 }
 
 /* ---------------------------------------------------------------------------
- * 25. Customer reviews with photos (sections/rons-customer-reviews.liquid)
- * Mobile: swipeable cards (85% width, next card peeks). Desktop: grid.
+ * 25. Customer reviews – testimonial carousel (sections/rons-customer-reviews.liquid)
+ * Native scroll-snap track (touch swipe without JS); <rons-reviews-carousel>
+ * in rons-custom.js adds arrows, dots, autoplay and "read more".
+ * Visible cards: mobile 1 (next card peeks), tablet 2, desktop from the
+ * "Visible cards on desktop" setting (--rons-reviews-per-view).
  * ------------------------------------------------------------------------- */
 body .rons-reviews__header {
-  margin-bottom: 3.6rem;
+  margin-bottom: 3.2rem;
 }
 
 body .rons-reviews__header--center {
@@ -3087,7 +3090,7 @@ body .rons-reviews__heading {
 }
 
 body .rons-reviews__subheading {
-  margin: 1.2rem 0 0;
+  margin: 1rem 0 0;
   color: var(--rons-muted);
   font-size: 1.5rem;
   line-height: 1.6;
@@ -3099,140 +3102,301 @@ body .rons-reviews__header--center .rons-reviews__subheading {
   margin-right: auto;
 }
 
-body .rons-reviews__list {
+body .rons-reviews__carousel {
+  --rons-reviews-gap: 1.6rem;
+  --rons-reviews-visible: 1.12;
+  display: block;
+}
+
+body .rons-reviews__track {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 82%;
-  gap: 1.6rem;
+  grid-auto-columns: calc(
+    (100% - (var(--rons-reviews-visible) - 1) * var(--rons-reviews-gap)) / var(--rons-reviews-visible)
+  );
+  gap: var(--rons-reviews-gap);
   margin: 0;
-  padding: 0 0 0.4rem;
+  padding: 0.2rem 0 0.4rem;
   list-style: none;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
 
-body .rons-reviews__list::-webkit-scrollbar {
+body .rons-reviews__track::-webkit-scrollbar {
   display: none;
 }
 
-body .rons-reviews__item {
+body .rons-reviews__track:focus-visible {
+  outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+  outline-offset: 0.3rem;
+}
+
+/* Fewer cards than fit: centre them instead of leaving a gap on the right */
+body .rons-reviews__carousel--static .rons-reviews__track {
+  justify-content: center;
+}
+
+body .rons-reviews__slide {
+  display: flex;
+  min-width: 0;
   scroll-snap-align: start;
 }
 
 @media screen and (min-width: 750px) {
-  body .rons-reviews__list {
-    grid-auto-columns: calc((100% - 1.6rem) / 2.15);
+  body .rons-reviews__carousel {
+    --rons-reviews-gap: 2rem;
+    --rons-reviews-visible: 2;
   }
 }
 
 @media screen and (min-width: 990px) {
-  body .rons-reviews__list {
-    grid-auto-flow: row;
-    grid-template-columns: repeat(var(--rons-columns, 3), minmax(0, 1fr));
-    gap: 3.2rem 2.4rem;
-    overflow: visible;
-    /* Cards stay at most ~53rem wide and the row is centred: with 2 columns
-       the content is ~1084px; 3-4 columns still fill the page width. */
-    max-width: calc(var(--rons-columns, 3) * 53rem + (var(--rons-columns, 3) - 1) * 2.4rem);
-    margin-inline: auto;
+  body .rons-reviews__carousel {
+    --rons-reviews-gap: 2.4rem;
+    --rons-reviews-visible: var(--rons-reviews-per-view, 3);
   }
 }
 
 body .rons-review-card {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  margin: 0;
-}
-
-body .rons-review-card__photo {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: var(--rons-photo-ratio, 4 / 5);
-  background: rgba(var(--color-foreground), 0.04);
-}
-
-body .rons-review-card__photo img,
-body .rons-review-card__photo .placeholder-svg {
-  position: absolute;
-  inset: 0;
+  align-items: flex-start;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  margin: 0;
+  padding: 2.8rem 2.4rem 2.4rem;
+  text-align: left;
+  background: rgb(var(--color-background));
+  border: 0.1rem solid var(--rons-hairline);
+  border-radius: 0.4rem;
 }
 
-body .rons-reviews--grayscale .rons-review-card__photo img {
-  filter: grayscale(1);
-}
-
-body .rons-review-card__body {
-  display: flex;
-  flex-direction: column;
-  gap: 1.4rem;
-  flex: 1 1 auto;
-  padding: 2rem 0 0;
+@media screen and (min-width: 750px) {
+  body .rons-review-card {
+    padding: 3.2rem 2.8rem 2.6rem;
+  }
 }
 
 body .rons-review-card__stars {
-  color: rgb(var(--color-foreground));
+  margin-bottom: 1.6rem;
+}
+
+body .rons-review-card__stars svg {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 body .rons-review-card__text {
   margin: 0;
   padding: 0;
   border: 0;
-  font-family: var(--font-heading-family);
-  font-size: calc(var(--font-heading-scale) * 1.9rem);
+  font-family: var(--font-body-family);
+  font-size: 1.5rem;
   font-style: normal;
-  line-height: 1.45;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
   color: rgb(var(--color-foreground));
+  overflow-wrap: anywhere;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-review-card__text {
+    font-size: 1.6rem;
+  }
+}
+
+body .rons-review-card__text p {
+  margin: 0;
+}
+
+/* Long reviews: clamped to 7 lines until "Прочети целия отзив" is pressed */
+body .rons-review-card__text.is-clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  line-clamp: 7;
+  overflow: hidden;
+}
+
+body .rons-review-card__text.is-clamped p {
+  display: inline;
+}
+
+body .rons-review-card__more {
+  margin: 1rem 0 0;
+  padding: 0;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  text-underline-offset: 0.3rem;
+  cursor: pointer;
+}
+
+body .rons-review-card__more[hidden] {
+  display: none;
 }
 
 body .rons-review-card__author {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.2rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  width: 100%;
   margin-top: auto;
-  padding-top: 1.2rem;
+  padding-top: 2rem;
+}
+
+body .rons-review-card__who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  padding-top: 1.4rem;
   border-top: 0.1rem solid var(--rons-hairline);
+  flex: 1 1 auto;
+  align-self: flex-end;
 }
 
 body .rons-review-card__name {
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   font-weight: 500;
-  letter-spacing: var(--rons-tracking-label);
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 body .rons-review-card__location {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   color: var(--rons-muted);
 }
 
+/* Small thumbnail that keeps the photo's own proportions (max 72px) */
+body .rons-review-card__photo {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 7.2rem;
+  height: 7.2rem;
+}
+
+body .rons-review-card__photo img {
+  display: block;
+  max-width: 7.2rem;
+  max-height: 7.2rem;
+  width: auto;
+  height: auto;
+  border-radius: 0.3rem;
+  background: rgba(var(--color-foreground), 0.04);
+}
+
+body .rons-reviews--grayscale .rons-review-card__photo img {
+  filter: grayscale(1);
+}
+
 /* Theme Editor only: incomplete cards are visibly placeholders */
-body .rons-reviews__item--placeholder .rons-review-card {
+body .rons-reviews__slide--placeholder .rons-review-card {
   opacity: 0.55;
+  border-style: dashed;
+}
+
+/* Arrows and dots */
+body .rons-reviews__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+  margin-top: 2.4rem;
+}
+
+body .rons-reviews__controls[hidden] {
+  display: none;
+}
+
+body .rons-reviews__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  padding: 0;
+  color: rgb(var(--color-foreground));
+  background: transparent;
+  border: 0.1rem solid var(--rons-hairline);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+}
+
+body .rons-reviews__arrow:hover {
+  border-color: rgba(var(--color-foreground), 0.5);
+}
+
+body .rons-reviews__arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+body .rons-reviews__arrow .svg-wrapper {
+  display: inline-flex;
+  width: 1.2rem;
+  height: 1.2rem;
+  transform: rotate(90deg);
+}
+
+body .rons-reviews__arrow--next .svg-wrapper {
+  transform: rotate(-90deg);
+}
+
+body .rons-reviews__arrow svg {
+  width: 100%;
+  height: 100%;
+}
+
+body .rons-reviews__dots {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+body .rons-reviews__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+body .rons-reviews__dot::before {
+  content: '';
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: rgba(var(--color-foreground), 0.25);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+body .rons-reviews__dot[aria-current='true']::before {
+  background: rgb(var(--color-foreground));
+  transform: scale(1.25);
 }
 
 body .rons-reviews__app {
   margin-top: 4rem;
 }
 
-/* Review without a photo: framed quote card that fills the row height */
-body .rons-review-card--no-photo {
-  border: 0.1rem solid var(--rons-hairline);
-  padding: 3.2rem 2.8rem 2.4rem;
-}
+@media (prefers-reduced-motion: reduce) {
+  body .rons-reviews__track {
+    scroll-behavior: auto;
+  }
 
-body .rons-review-card--no-photo .rons-review-card__body {
-  padding-top: 0;
-}
-
-body .rons-review-card--no-photo .rons-review-card__text {
-  font-size: calc(var(--font-heading-scale) * 2.2rem);
+  body .rons-reviews__arrow,
+  body .rons-reviews__dot::before {
+    transition: none;
+  }
 }
 
 /* Theme Editor diagnostics (snippets/rons-collection-diagnostics.liquid) */

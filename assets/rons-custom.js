@@ -689,3 +689,228 @@ if (!customElements.get('rons-quick-add')) customElements.define('rons-quick-add
     }
   });
 })();
+
+/*
+ * Customer reviews carousel (sections/rons-customer-reviews.liquid)
+ *
+ * The track is a native scroll-snap scroller, so touch swipe works without
+ * JavaScript. This adds previous/next arrows, one dot per stop, optional
+ * autoplay and "read more" for long reviews.
+ *
+ * Autoplay only runs while the carousel is on screen and the tab is visible;
+ * it pauses on hover and keyboard focus and stops for good once the visitor
+ * swipes, scrolls or uses the arrows/dots. It never runs for visitors who
+ * prefer reduced motion. With fewer cards than fit, controls stay hidden.
+ */
+if (!customElements.get('rons-reviews-carousel')) {
+  class RonsReviewsCarousel extends HTMLElement {
+    connectedCallback() {
+      this.track = this.querySelector('[data-track]');
+      this.slides = Array.from(this.querySelectorAll('[data-slide]'));
+      this.controls = this.querySelector('[data-controls]');
+      this.prevButton = this.querySelector('[data-prev]');
+      this.nextButton = this.querySelector('[data-next]');
+      this.dotsWrapper = this.querySelector('[data-dots]');
+      if (!this.track || this.slides.length === 0) return;
+
+      this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      this.interval = Math.max(parseInt(this.dataset.interval, 10) || 6000, 3000);
+      this.autoplayWanted = this.dataset.autoplay === 'true';
+      this.index = 0;
+      this.positions = [0];
+      this.state = { hover: false, focus: false, visible: false, stopped: false };
+
+      this.slides.forEach((slide, i) => slide.setAttribute('aria-label', `${i + 1} от ${this.slides.length}`));
+
+      this.onScroll = this.onScroll.bind(this);
+      this.onResize = this.debounceFrame(() => {
+        this.measure();
+        this.setupReadMore();
+      });
+      this.stopByUser = () => this.stop();
+
+      this.track.addEventListener('scroll', this.onScroll, { passive: true });
+      ['pointerdown', 'touchstart', 'wheel'].forEach((type) =>
+        this.track.addEventListener(type, this.stopByUser, { passive: true })
+      );
+      this.track.addEventListener('keydown', this.onKeydown.bind(this));
+      this.prevButton.addEventListener('click', () => this.userGo(this.index - 1));
+      this.nextButton.addEventListener('click', () => this.userGo(this.index + 1));
+      this.addEventListener('mouseenter', () => this.setState({ hover: true }));
+      this.addEventListener('mouseleave', () => this.setState({ hover: false }));
+      this.addEventListener('focusin', () => this.setState({ focus: true }));
+      this.addEventListener('focusout', (event) => {
+        if (!this.contains(event.relatedTarget)) this.setState({ focus: false });
+      });
+      this.onVisibility = () => this.updateAutoplay();
+      document.addEventListener('visibilitychange', this.onVisibility);
+      window.addEventListener('resize', this.onResize);
+
+      if ('IntersectionObserver' in window) {
+        this.observer = new IntersectionObserver((entries) => this.setState({ visible: entries[0].isIntersecting }), {
+          threshold: 0.35,
+        });
+        this.observer.observe(this);
+      }
+
+      this.querySelectorAll('[data-review-more]').forEach((button) =>
+        button.addEventListener('click', () => this.toggleReview(button))
+      );
+
+      if (window.Shopify && Shopify.designMode) {
+        this.onBlockSelect = (event) => {
+          const i = this.slides.findIndex((slide) => slide.contains(event.target));
+          if (i < 0) return;
+          this.stop();
+          this.track.scrollTo({ left: this.slides[i].offsetLeft - this.slides[0].offsetLeft, behavior: 'auto' });
+        };
+        document.addEventListener('shopify:block:select', this.onBlockSelect);
+      }
+
+      this.measure();
+      this.setupReadMore();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.setupReadMore());
+    }
+
+    disconnectedCallback() {
+      this.clearTimer();
+      if (this.observer) this.observer.disconnect();
+      document.removeEventListener('visibilitychange', this.onVisibility);
+      window.removeEventListener('resize', this.onResize);
+      if (this.onBlockSelect) document.removeEventListener('shopify:block:select', this.onBlockSelect);
+    }
+
+    debounceFrame(fn) {
+      let frame;
+      return () => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(fn);
+      };
+    }
+
+    /* Scroll stops: each slide's start, capped at the furthest scroll position. */
+    measure() {
+      const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+      const origin = this.slides[0].offsetLeft;
+      const stops = [];
+      this.slides.forEach((slide) => {
+        const left = Math.min(slide.offsetLeft - origin, maxScroll);
+        if (stops.length === 0 || left - stops[stops.length - 1] > 2) stops.push(left);
+      });
+      this.positions = stops.length ? stops : [0];
+
+      const scrollable = maxScroll > 2 && this.positions.length > 1;
+      this.classList.toggle('rons-reviews__carousel--static', !scrollable);
+      this.controls.hidden = !scrollable;
+      this.track.setAttribute('tabindex', scrollable ? '0' : '-1');
+      this.renderDots();
+      this.onScroll();
+      this.updateAutoplay();
+    }
+
+    renderDots() {
+      if (this.dotsWrapper.childElementCount === this.positions.length) return;
+      this.dotsWrapper.innerHTML = '';
+      this.positions.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'rons-reviews__dot';
+        dot.setAttribute('aria-label', `Отзив ${i + 1} от ${this.positions.length}`);
+        dot.addEventListener('click', () => this.userGo(i));
+        this.dotsWrapper.appendChild(dot);
+      });
+    }
+
+    onScroll() {
+      const left = this.track.scrollLeft;
+      let closest = 0;
+      this.positions.forEach((position, i) => {
+        if (Math.abs(position - left) < Math.abs(this.positions[closest] - left)) closest = i;
+      });
+      this.index = closest;
+      Array.from(this.dotsWrapper.children).forEach((dot, i) => dot.setAttribute('aria-current', String(i === closest)));
+      this.prevButton.disabled = closest === 0;
+      this.nextButton.disabled = closest === this.positions.length - 1;
+    }
+
+    goTo(i) {
+      const last = this.positions.length - 1;
+      const target = i > last ? 0 : Math.max(0, Math.min(i, last));
+      this.track.scrollTo({
+        left: this.positions[target],
+        behavior: this.reducedMotion.matches ? 'auto' : 'smooth',
+      });
+    }
+
+    userGo(i) {
+      this.stop();
+      this.goTo(i);
+    }
+
+    onKeydown(event) {
+      if (event.target !== this.track) return;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        event.preventDefault();
+        this.userGo(this.index + (event.key === 'ArrowRight' ? 1 : -1));
+      }
+    }
+
+    setState(change) {
+      Object.assign(this.state, change);
+      this.updateAutoplay();
+    }
+
+    stop() {
+      this.state.stopped = true;
+      this.updateAutoplay();
+    }
+
+    updateAutoplay() {
+      const s = this.state;
+      const run =
+        this.autoplayWanted &&
+        !this.reducedMotion.matches &&
+        !this.controls.hidden &&
+        s.visible &&
+        !s.hover &&
+        !s.focus &&
+        !s.stopped &&
+        !document.hidden &&
+        !(window.Shopify && Shopify.designMode);
+      if (run && !this.timer) {
+        this.timer = setInterval(() => this.goTo(this.index + 1), this.interval);
+      } else if (!run) {
+        this.clearTimer();
+      }
+    }
+
+    clearTimer() {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+
+    /* Long reviews are clamped to a few lines; the button shows the full text. */
+    setupReadMore() {
+      this.querySelectorAll('[data-review-more]').forEach((button) => {
+        if (button.getAttribute('aria-expanded') === 'true') return;
+        const text = document.getElementById(button.getAttribute('aria-controls'));
+        if (!text) return;
+        text.classList.add('is-clamped');
+        const overflowing = text.scrollHeight - text.clientHeight > 2;
+        if (!overflowing) text.classList.remove('is-clamped');
+        button.hidden = !overflowing;
+      });
+    }
+
+    toggleReview(button) {
+      const text = document.getElementById(button.getAttribute('aria-controls'));
+      const expand = button.getAttribute('aria-expanded') !== 'true';
+      this.stop();
+      text.classList.toggle('is-clamped', !expand);
+      button.setAttribute('aria-expanded', String(expand));
+      button.textContent = expand ? button.dataset.labelLess : button.dataset.labelMore;
+    }
+  }
+
+  customElements.define('rons-reviews-carousel', RonsReviewsCarousel);
+}

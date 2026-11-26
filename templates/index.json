@@ -424,12 +424,13 @@
         "review-3"
       ],
       "settings": {
-        "heading": "Мнения от нашите клиентки",
+        "heading": "Думи от нашите клиентки",
         "heading_size": "h1",
-        "subheading": "Истински отзиви от жени, които вече избраха Ron’s Pijamas.",
+        "subheading": "Истински впечатления, споделени с нас.",
         "heading_alignment": "center",
-        "columns_desktop": 2,
-        "photo_ratio": "portrait",
+        "columns_desktop": 3,
+        "autoplay": true,
+        "autoplay_speed": 6,
         "grayscale_photos": false,
         "color_scheme": "scheme-1",
         "padding_top": 72,

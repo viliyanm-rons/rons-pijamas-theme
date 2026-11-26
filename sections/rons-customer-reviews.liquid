@@ -1,12 +1,16 @@
 {% comment %}
-  Ron's Pijamas – customer reviews with photos.
+  Ron's Pijamas – customer reviews (testimonial carousel).
 
-  Each "Review" block is one card: customer photo, name, optional location,
-  review text and optional star rating. A card is shown to customers only
-  when it has both a name and review text, so empty or half-filled blocks
-  never reach the storefront. Without any complete review (and no reviews
-  app block) the section renders nothing for customers; the Theme Editor
-  shows placeholder cards and a hint instead.
+  Each "Review" block is one card: star rating (optional), review text,
+  customer name and an optional small photo. A card is shown to customers
+  only when it has both a name and review text, so empty or half-filled
+  blocks never reach the storefront. Without any complete review (and no
+  reviews app block) the section renders nothing for customers; the Theme
+  Editor shows placeholder cards and a hint instead.
+
+  The carousel is a native horizontal scroller with scroll snapping (touch
+  swipe works without JavaScript). <rons-reviews-carousel> in
+  assets/rons-custom.js adds arrows, dots, autoplay and "read more".
 
   Nothing here is pre-filled: names, texts, photos and ratings come only
   from the merchant (or a reviews app).
@@ -20,6 +24,7 @@
     endif
   endfor
   assign app_blocks = section.blocks | where: 'type', '@app'
+  assign autoplay_ms = section.settings.autoplay_speed | times: 1000
 -%}
 
 {%- if review_count > 0 or app_blocks.size > 0 or request.design_mode -%}
@@ -45,7 +50,7 @@
     <div class="page-width section-{{ section.id }}-padding">
       <div class="rons-reviews__header rons-reviews__header--{{ section.settings.heading_alignment }}">
         {%- if section.settings.heading != blank -%}
-          <h2 class="rons-reviews__heading inline-richtext {{ section.settings.heading_size }}">
+          <h2 class="rons-reviews__heading inline-richtext {{ section.settings.heading_size }}" id="RonsReviewsHeading-{{ section.id }}">
             {{ section.settings.heading }}
           </h2>
         {%- endif -%}
@@ -56,93 +61,123 @@
 
       {%- if review_count == 0 and request.design_mode -%}
         <p class="rons-editor-hint">
-          Добави 3–6 истински отзива (снимка, име, текст). Карта се показва на клиентите само когато има име и текст.
-          Дотогава разделът е скрит за клиентите.
+          Добави истински отзиви (име, текст, по желание оценка и снимка). Карта се показва на клиентите само когато
+          има име и текст. Дотогава разделът е скрит за клиентите.
         </p>
       {%- endif -%}
 
-      <ul
-        class="rons-reviews__list"
-        role="list"
-        style="--rons-columns: {{ section.settings.columns_desktop }}; --rons-photo-ratio: {% if section.settings.photo_ratio == 'square' %}1 / 1{% else %}4 / 5{% endif %};"
+      <rons-reviews-carousel
+        class="rons-reviews__carousel"
+        role="region"
+        aria-roledescription="карусел"
+        {% if section.settings.heading != blank %}
+          aria-labelledby="RonsReviewsHeading-{{ section.id }}"
+        {% else %}
+          aria-label="Отзиви от клиенти"
+        {% endif %}
+        data-autoplay="{{ section.settings.autoplay }}"
+        data-interval="{{ autoplay_ms }}"
+        style="--rons-reviews-per-view: {{ section.settings.columns_desktop }};"
       >
-        {%- for block in section.blocks -%}
-          {%- if block.type != 'review' -%}{%- continue -%}{%- endif -%}
-          {%- liquid
-            assign is_complete = false
-            if block.settings.name != blank and block.settings.text != blank
-              assign is_complete = true
-            endif
-            if is_complete == false and request.design_mode == false
-              continue
-            endif
-            assign rating = block.settings.rating | plus: 0
-          -%}
-          <li
-            class="rons-reviews__item{% if is_complete == false %} rons-reviews__item--placeholder{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-            {{ block.shopify_attributes }}
-            {% if settings.animations_reveal_on_scroll %}
-              data-cascade
-              style="--animation-order: {{ forloop.index }};"
-            {% endif %}
-          >
-            <figure class="rons-review-card{% if block.settings.photo == blank and request.design_mode == false %} rons-review-card--no-photo{% endif %}">
-              {%- if block.settings.photo != blank -%}
-                <div class="rons-review-card__photo">
-                  {{
-                    block.settings.photo
-                    | image_url: width: 900
-                    | image_tag:
-                      loading: 'lazy',
-                      widths: '300, 450, 600, 900',
-                      sizes: '(min-width: 990px) 30vw, (min-width: 750px) 45vw, 80vw',
-                      alt: block.settings.photo.alt
-                  }}
-                </div>
-              {%- elsif request.design_mode -%}
-                <div class="rons-review-card__photo">
-                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-                </div>
-              {%- endif -%}
-
-              <div class="rons-review-card__body">
+        <ul class="rons-reviews__track" role="list" tabindex="-1" data-track>
+          {%- assign slide_index = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type != 'review' -%}{%- continue -%}{%- endif -%}
+            {%- liquid
+              assign is_complete = false
+              if block.settings.name != blank and block.settings.text != blank
+                assign is_complete = true
+              endif
+              if is_complete == false and request.design_mode == false
+                continue
+              endif
+              assign slide_index = slide_index | plus: 1
+              assign rating = block.settings.rating | plus: 0
+            -%}
+            <li
+              class="rons-reviews__slide{% if is_complete == false %} rons-reviews__slide--placeholder{% endif %}"
+              role="group"
+              aria-roledescription="слайд"
+              data-slide
+              {{ block.shopify_attributes }}
+            >
+              <figure class="rons-review-card">
                 {%- if rating > 0 -%}
-                  <span
-                    class="rons-stars rons-review-card__stars"
-                    role="img"
-                    aria-label="{{ rating }} / 5"
-                  >
+                  <span class="rons-stars rons-review-card__stars" role="img" aria-label="Оценка {{ rating }} от 5">
                     {%- for i in (1..5) -%}
                       <span class="{% if i > rating %}rons-star--empty{% endif %}">{{ star_icon }}</span>
                     {%- endfor -%}
                   </span>
                 {%- endif -%}
 
-                <blockquote class="rons-review-card__text">
+                <blockquote class="rons-review-card__text" id="RonsReviewText-{{ block.id }}" data-review-text>
                   {%- if is_complete -%}
-                    {{ block.settings.text | escape | newline_to_br }}
+                    <p>{{ block.settings.text | escape | newline_to_br }}</p>
                   {%- else -%}
-                    Текст на отзива – видим за клиентите само след като добавиш име и текст.
+                    <p>Текст на отзива – видим за клиентите само след като добавиш име и текст.</p>
                   {%- endif -%}
                 </blockquote>
+                <button
+                  type="button"
+                  class="rons-review-card__more link"
+                  aria-controls="RonsReviewText-{{ block.id }}"
+                  aria-expanded="false"
+                  data-label-more="Прочети целия отзив"
+                  data-label-less="Скрий"
+                  data-review-more
+                  hidden
+                >
+                  Прочети целия отзив
+                </button>
 
                 <figcaption class="rons-review-card__author">
-                  <span class="rons-review-card__name">
-                    {%- if block.settings.name != blank -%}
-                      {{ block.settings.name | escape }}
-                    {%- else -%}
-                      Име на клиентката
+                  <span class="rons-review-card__who">
+                    <span class="rons-review-card__name">
+                      {%- if block.settings.name != blank -%}
+                        {{ block.settings.name | escape }}
+                      {%- else -%}
+                        Име на клиентката
+                      {%- endif -%}
+                    </span>
+                    {%- if block.settings.location != blank -%}
+                      <span class="rons-review-card__location">{{ block.settings.location | escape }}</span>
                     {%- endif -%}
                   </span>
-                  {%- if block.settings.location != blank -%}
-                    <span class="rons-review-card__location">{{ block.settings.location | escape }}</span>
+                  {%- if block.settings.photo != blank -%}
+                    {%- liquid
+                      assign photo_alt = block.settings.photo.alt
+                      if photo_alt == blank
+                        assign photo_alt = 'Снимка от ' | append: block.settings.name
+                      endif
+                    -%}
+                    <span class="rons-review-card__photo">
+                      {{
+                        block.settings.photo
+                        | image_url: width: 240
+                        | image_tag:
+                          loading: 'lazy',
+                          widths: '80, 160, 240',
+                          sizes: '80px',
+                          alt: photo_alt
+                      }}
+                    </span>
                   {%- endif -%}
                 </figcaption>
-              </div>
-            </figure>
-          </li>
-        {%- endfor -%}
-      </ul>
+              </figure>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <div class="rons-reviews__controls" data-controls hidden>
+          <button type="button" class="rons-reviews__arrow" data-prev aria-label="Предишен отзив">
+            <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+          </button>
+          <div class="rons-reviews__dots" data-dots></div>
+          <button type="button" class="rons-reviews__arrow rons-reviews__arrow--next" data-next aria-label="Следващ отзив">
+            <span class="svg-wrapper">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+          </button>
+        </div>
+      </rons-reviews-carousel>
 
       {%- for block in app_blocks -%}
         <div class="rons-reviews__app" {{ block.shopify_attributes }}>
@@ -161,17 +196,17 @@
   "disabled_on": {
     "groups": ["header", "footer"]
   },
-  "max_blocks": 7,
+  "max_blocks": 13,
   "settings": [
     {
       "type": "paragraph",
-      "content": "Add 3–6 genuine reviews. A card is only shown to customers when it has a name and review text; without any, the section stays hidden on the storefront."
+      "content": "Add genuine reviews only. A card is shown to customers only when it has a name and review text; empty review blocks are hidden automatically."
     },
     {
       "type": "inline_richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "Мнения от нашите клиентки"
+      "default": "Думи от нашите клиентки"
     },
     {
       "type": "select",
@@ -188,7 +223,7 @@
       "type": "inline_richtext",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Истински отзиви от жени, които вече избраха Ron’s Pijamas."
+      "default": "Истински впечатления, споделени с нас."
     },
     {
       "type": "select",
@@ -201,23 +236,39 @@
       "default": "center"
     },
     {
+      "type": "header",
+      "content": "Carousel"
+    },
+    {
       "type": "range",
       "id": "columns_desktop",
       "min": 2,
       "max": 4,
       "step": 1,
-      "label": "Cards per row on desktop",
+      "label": "Visible cards on desktop",
+      "info": "Tablet shows 2 cards, mobile shows 1.",
       "default": 3
     },
     {
-      "type": "select",
-      "id": "photo_ratio",
-      "label": "Photo shape",
-      "options": [
-        { "value": "portrait", "label": "Portrait 4:5" },
-        { "value": "square", "label": "Square" }
-      ],
-      "default": "portrait"
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "info": "Pauses on hover, focus and when the visitor uses the carousel. Off for visitors who prefer reduced motion.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay interval",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Style"
     },
     {
       "type": "checkbox",
@@ -263,24 +314,13 @@
     {
       "type": "review",
       "name": "Review",
-      "limit": 6,
+      "limit": 12,
       "settings": [
-        {
-          "type": "image_picker",
-          "id": "photo",
-          "label": "Customer photo",
-          "info": "Only use photos the customer has agreed to share."
-        },
         {
           "type": "text",
           "id": "name",
           "label": "Customer name",
           "info": "e.g. first name and initial."
-        },
-        {
-          "type": "text",
-          "id": "location",
-          "label": "Location (optional)"
         },
         {
           "type": "textarea",
@@ -291,7 +331,7 @@
         {
           "type": "select",
           "id": "rating",
-          "label": "Rating (optional)",
+          "label": "Star rating (optional)",
           "options": [
             { "value": "0", "label": "Don't show a rating" },
             { "value": "5", "label": "5 stars" },
@@ -301,6 +341,17 @@
             { "value": "1", "label": "1 star" }
           ],
           "default": "0"
+        },
+        {
+          "type": "image_picker",
+          "id": "photo",
+          "label": "Customer photo (optional)",
+          "info": "Shown as a small thumbnail. Only use photos the customer has agreed to share."
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location (optional)"
         }
       ]
     }
