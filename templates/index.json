@@ -12,7 +12,6 @@
     "hero": {
       "type": "rons-hero",
       "settings": {
-        "heading_tag": "h1",
         "image_desktop": "shopify://shop_images/TJ78642.jpg",
         "image_mobile": "shopify://shop_images/DSC6398.jpg",
         "layout": "editorial",
@@ -31,6 +30,7 @@
         "badge_link": "",
         "eyebrow": "",
         "heading": "Красотата започва с комфорта.",
+        "heading_tag": "h1",
         "heading_size": "h0",
         "text": "Открий пижами и домашно облекло, създадени за красивите моменти у дома.",
         "button_label_1": "Разгледай колекцията",
@@ -127,67 +127,6 @@
         "padding_bottom": 48
       }
     },
-    "customer_reviews": {
-      "type": "rons-customer-reviews",
-      "blocks": {
-        "review_hgT6pB": {
-          "type": "review",
-          "settings": {
-            "photo": "shopify://shop_images/40294F7E-7AFE-486D-A8D9-4BE925912703.jpg",
-            "name": "Ради",
-            "location": "",
-            "text": "Страхотни пижами винаги съм ги харесвала <3",
-            "rating": "0"
-          }
-        },
-        "review-1": {
-          "type": "review",
-          "settings": {
-            "photo": "shopify://shop_images/viber_image_2026-11-18_23-56-11-215.jpg",
-            "name": "Глория",
-            "location": "",
-            "text": "Здравейте, получих я вече. Току що я разопаковах и съм меко казано очарована! \nМатерията е изключително приятна на допир и определено си личи качеството. Размерът отговаря, благодаря отново за съдействието при изборът му. А цветовете са просто прекрасни, на живо е по-красива дори от снимките в сайта. Със сигурност в кварталния магазин ще имат честта да видят долнището и съм сигурна, че никой няма дори да заподозре, че съм по пижама 🤭",
-            "rating": "5"
-          }
-        },
-        "review-2": {
-          "type": "review",
-          "settings": {
-            "name": "",
-            "location": "",
-            "text": "",
-            "rating": "0"
-          }
-        },
-        "review-3": {
-          "type": "review",
-          "settings": {
-            "name": "",
-            "location": "",
-            "text": "",
-            "rating": "0"
-          }
-        }
-      },
-      "block_order": [
-        "review_hgT6pB",
-        "review-1",
-        "review-2",
-        "review-3"
-      ],
-      "settings": {
-        "heading": "Мнения от нашите клиентки",
-        "heading_size": "h1",
-        "subheading": "Истински отзиви от жени, които вече избраха Ron’s Pijamas.",
-        "heading_alignment": "center",
-        "columns_desktop": 2,
-        "photo_ratio": "portrait",
-        "grayscale_photos": false,
-        "color_scheme": "scheme-1",
-        "padding_top": 72,
-        "padding_bottom": 72
-      }
-    },
     "categories": {
       "type": "rons-category-grid",
       "blocks": {
@@ -248,7 +187,7 @@
     "brand_story": {
       "type": "rons-editorial",
       "settings": {
-        "image": "shopify://shop_images/Imagen_categorias.jpg",
+        "image": "shopify://shop_images/IMG_8804.jpg",
         "show_placeholder": false,
         "layout": "split",
         "image_position": "left",
@@ -259,9 +198,10 @@
         "reveal": false,
         "color_scheme": "scheme-1",
         "eyebrow": "Нашата история",
-        "heading": "Създадено за твоите моменти у дома",
+        "heading": "Ron’s Pijamas се промени! &nbsp;",
+        "heading_tag": "h2",
         "heading_size": "h1",
-        "text": "<p>Ron's Pijamas е за жените, които искат да се чувстват красиви и в най-спокойните си моменти. Вярваме, че бавната неделна сутрин, вечерният ритуал и спокойният сън заслужават дрехи, които са едновременно удобни и елегантни.</p>",
+        "text": "<p><strong>И започва нова още по-вълнуваща глава!</strong><br/><strong>Нова визия. Нови мечти. Същата любов към детайла.<br/></strong>Вече сме с ново лого, нова идентичност и изцяло обновен сайт, създаден за още по-приятно пазаруване.<br/><br/>Подготвили сме и нещо още по-вълнуващо – изцяло нови модели и кройки, създадени с внимание към всеки детайл и материя.<br/><br/>Не променяме това, което сме. Просто ставаме още по-добри в това, което обичаме да правим. А именно да сме красиви и вкъщи!<br/><br/>Същата любов към комфорта и женствеността. Ново начало.</p>",
         "button_label": "Научи повече за нас",
         "button_link": "shopify://pages/za-nas",
         "button_style": "outline",
@@ -287,6 +227,8 @@
         "full_width": false,
         "show_view_all": true,
         "view_all_style": "link",
+        "view_all_url": "",
+        "view_all_label": "",
         "color_scheme": "scheme-1",
         "image_ratio": "portrait",
         "image_shape": "default",
@@ -315,6 +257,7 @@
         "color_scheme": "scheme-5",
         "eyebrow": "Идеи за подарък",
         "heading": "Подари комфорт и красота",
+        "heading_tag": "h2",
         "heading_size": "h0",
         "text": "<p>Пижами и домашно облекло – подарък, който се усеща всеки ден.</p>",
         "button_label": "Виж подаръците",
@@ -429,6 +372,67 @@
         "color_scheme": "scheme-1",
         "full_width": true,
         "padding_top": 64,
+        "padding_bottom": 72
+      }
+    },
+    "customer_reviews": {
+      "type": "rons-customer-reviews",
+      "blocks": {
+        "review_hgT6pB": {
+          "type": "review",
+          "settings": {
+            "photo": "shopify://shop_images/40294F7E-7AFE-486D-A8D9-4BE925912703.jpg",
+            "name": "Ради",
+            "location": "",
+            "text": "Страхотни пижами винаги съм ги харесвала <3",
+            "rating": "0"
+          }
+        },
+        "review-1": {
+          "type": "review",
+          "settings": {
+            "photo": "shopify://shop_images/viber_image_2026-11-18_23-56-11-215.jpg",
+            "name": "Глория",
+            "location": "",
+            "text": "Здравейте, получих я вече. Току що я разопаковах и съм меко казано очарована! \nМатерията е изключително приятна на допир и определено си личи качеството. Размерът отговаря, благодаря отново за съдействието при изборът му. А цветовете са просто прекрасни, на живо е по-красива дори от снимките в сайта. Със сигурност в кварталния магазин ще имат честта да видят долнището и съм сигурна, че никой няма дори да заподозре, че съм по пижама 🤭",
+            "rating": "5"
+          }
+        },
+        "review-2": {
+          "type": "review",
+          "settings": {
+            "name": "",
+            "location": "",
+            "text": "",
+            "rating": "0"
+          }
+        },
+        "review-3": {
+          "type": "review",
+          "settings": {
+            "name": "",
+            "location": "",
+            "text": "",
+            "rating": "0"
+          }
+        }
+      },
+      "block_order": [
+        "review_hgT6pB",
+        "review-1",
+        "review-2",
+        "review-3"
+      ],
+      "settings": {
+        "heading": "Мнения от нашите клиентки",
+        "heading_size": "h1",
+        "subheading": "Истински отзиви от жени, които вече избраха Ron’s Pijamas.",
+        "heading_alignment": "center",
+        "columns_desktop": 2,
+        "photo_ratio": "portrait",
+        "grayscale_photos": false,
+        "color_scheme": "scheme-1",
+        "padding_top": 72,
         "padding_bottom": 72
       }
     },
