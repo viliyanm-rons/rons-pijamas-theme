@@ -17,7 +17,7 @@
         "announcement-1": {
           "type": "announcement",
           "settings": {
-            "text": "Безплатна доставка над 100  €",
+            "text": "BLACK FRIDAY до -50% на нашите пижами",
             "link": "shopify://collections/all"
           }
         }
@@ -38,6 +38,7 @@
     "header": {
       "type": "header",
       "settings": {
+        "logo_h1_on_home": false,
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
         "menu": "glavno-menyu",
