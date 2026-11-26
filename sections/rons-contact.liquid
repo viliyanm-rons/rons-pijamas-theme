@@ -180,6 +180,7 @@
               type="text"
               name="contact[{{ 'templates.contact.form.name' | t }}]"
               autocomplete="name"
+              placeholder="{{ section.settings.placeholder_name | escape }}"
               required
               aria-required="true"
               data-rons-error="{{ section.settings.error_name | escape }}"
@@ -201,6 +202,7 @@
               name="contact[{{ 'templates.contact.form.phone' | t }}]"
               autocomplete="tel"
               inputmode="tel"
+              placeholder="{{ section.settings.placeholder_phone | escape }}"
               data-rons-optional
               data-rons-error="{{ section.settings.error_phone | escape }}"
               aria-describedby="{{ form_id }}-phone-error"
@@ -221,6 +223,7 @@
               autocomplete="email"
               autocapitalize="off"
               spellcheck="false"
+              placeholder="{{ section.settings.placeholder_email | escape }}"
               required
               aria-required="true"
               data-rons-error="{{ section.settings.error_email | escape }}"
@@ -244,6 +247,7 @@
               class="rons-contact__input rons-contact__textarea"
               name="contact[body]"
               rows="6"
+              placeholder="{{ section.settings.placeholder_message | escape }}"
               required
               aria-required="true"
               data-rons-error="{{ section.settings.error_message | escape }}"
@@ -327,6 +331,30 @@
       "id": "label_message",
       "label": "Съобщение",
       "default": "Съобщение"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_name",
+      "label": "Подсказка в полето „Име“",
+      "default": "Как се казваш?"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_phone",
+      "label": "Подсказка в полето „Телефон“",
+      "default": "+359 888 123 456"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_email",
+      "label": "Подсказка в полето „Имейл“",
+      "default": "example@email.com"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_message",
+      "label": "Подсказка в полето „Съобщение“",
+      "default": "Напиши ни с какво можем да ти помогнем..."
     },
     {
       "type": "text",

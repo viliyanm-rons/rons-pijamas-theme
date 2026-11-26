@@ -4093,6 +4093,12 @@ body .rons-contact__input {
   appearance: none;
 }
 
+/* Placeholders: subtle light grey (the value text stays full black). */
+body .rons-contact__input::placeholder {
+  color: rgba(var(--color-foreground), 0.38);
+  opacity: 1;
+}
+
 body .rons-contact__textarea {
   min-height: 16rem;
   resize: vertical;
