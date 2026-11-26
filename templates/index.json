@@ -102,7 +102,7 @@
       "settings": {
         "collection": "frontpage",
         "products_to_show": 6,
-        "title": "Най-харесвани",
+        "title": "Новите модели",
         "heading_size": "h1",
         "description": "",
         "show_description": false,
@@ -381,39 +381,39 @@
         "review_hgT6pB": {
           "type": "review",
           "settings": {
-            "photo": "shopify://shop_images/40294F7E-7AFE-486D-A8D9-4BE925912703.jpg",
             "name": "Ради",
-            "location": "",
             "text": "Страхотни пижами винаги съм ги харесвала <3",
-            "rating": "0"
+            "rating": "0",
+            "photo": "shopify://shop_images/40294F7E-7AFE-486D-A8D9-4BE925912703.jpg",
+            "location": ""
           }
         },
         "review-1": {
           "type": "review",
           "settings": {
-            "photo": "shopify://shop_images/viber_image_2026-11-18_23-56-11-215.jpg",
             "name": "Глория",
-            "location": "",
             "text": "Здравейте, получих я вече. Току що я разопаковах и съм меко казано очарована! \nМатерията е изключително приятна на допир и определено си личи качеството. Размерът отговаря, благодаря отново за съдействието при изборът му. А цветовете са просто прекрасни, на живо е по-красива дори от снимките в сайта. Със сигурност в кварталния магазин ще имат честта да видят долнището и съм сигурна, че никой няма дори да заподозре, че съм по пижама 🤭",
-            "rating": "5"
+            "rating": "5",
+            "photo": "shopify://shop_images/viber_image_2026-11-18_23-56-11-215.jpg",
+            "location": ""
           }
         },
         "review-2": {
           "type": "review",
           "settings": {
             "name": "",
-            "location": "",
             "text": "",
-            "rating": "0"
+            "rating": "0",
+            "location": ""
           }
         },
         "review-3": {
           "type": "review",
           "settings": {
             "name": "",
-            "location": "",
             "text": "",
-            "rating": "0"
+            "rating": "0",
+            "location": ""
           }
         }
       },
