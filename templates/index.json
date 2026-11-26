@@ -100,14 +100,14 @@
     "bestsellers": {
       "type": "featured-collection",
       "settings": {
-        "collection": "frontpage",
-        "products_to_show": 6,
+        "collection": "pizhami",
+        "products_to_show": 8,
         "title": "Новите модели",
         "heading_size": "h1",
         "description": "",
         "show_description": false,
         "description_style": "body",
-        "columns_desktop": 3,
+        "columns_desktop": 4,
         "enable_desktop_slider": false,
         "full_width": false,
         "show_view_all": true,
