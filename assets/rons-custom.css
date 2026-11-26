@@ -3211,12 +3211,22 @@ body .rons-review-card__text p {
   margin: 0;
 }
 
-/* Long reviews: clamped to 7 lines until "Прочети целия отзив" is pressed */
+/* Minimum gap between the review and the name row (the row itself is pushed
+   to the bottom of the card with margin-top: auto) */
+body .rons-review-card__text {
+  margin-bottom: 2rem;
+}
+
+body .rons-review-card__text:has(+ .rons-review-card__more:not([hidden])) {
+  margin-bottom: 0;
+}
+
+/* Long reviews: clamped to 6 lines until "Прочети целия отзив" is pressed */
 body .rons-review-card__text.is-clamped {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 7;
-  line-clamp: 7;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
   overflow: hidden;
 }
 
@@ -3225,7 +3235,7 @@ body .rons-review-card__text.is-clamped p {
 }
 
 body .rons-review-card__more {
-  margin: 1rem 0 0;
+  margin: 1rem 0 2rem;
   padding: 0;
   font-size: 1.3rem;
   letter-spacing: 0.02em;
@@ -3244,7 +3254,8 @@ body .rons-review-card__author {
   gap: 1.6rem;
   width: 100%;
   margin-top: auto;
-  padding-top: 2rem;
+  padding-top: 1.6rem;
+  border-top: 0.1rem solid var(--rons-hairline);
 }
 
 body .rons-review-card__who {
@@ -3252,10 +3263,7 @@ body .rons-review-card__who {
   flex-direction: column;
   gap: 0.2rem;
   min-width: 0;
-  padding-top: 1.4rem;
-  border-top: 0.1rem solid var(--rons-hairline);
   flex: 1 1 auto;
-  align-self: flex-end;
 }
 
 body .rons-review-card__name {
@@ -3269,20 +3277,20 @@ body .rons-review-card__location {
   color: var(--rons-muted);
 }
 
-/* Small thumbnail that keeps the photo's own proportions (max 72px) */
+/* Small thumbnail that keeps the photo's own proportions (max 64px) */
 body .rons-review-card__photo {
   flex: 0 0 auto;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  width: 7.2rem;
-  height: 7.2rem;
+  width: 6.4rem;
+  height: 6.4rem;
 }
 
 body .rons-review-card__photo img {
   display: block;
-  max-width: 7.2rem;
-  max-height: 7.2rem;
+  max-width: 6.4rem;
+  max-height: 6.4rem;
   width: auto;
   height: auto;
   border-radius: 0.3rem;
