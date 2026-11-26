@@ -11,8 +11,8 @@
   Facebook / Instagram / TikTok fields, falling back to Theme settings ›
   Social media; empty links are not shown.
 
-  Extra fields (phone, topic, order number) are standard Shopify contact
-  form fields (contact[...]); they appear in the notification email.
+  The optional phone is a standard Shopify contact form field
+  (contact[...]); it appears in the notification email.
 
   Validation: the browser's own messages follow the visitor's browser
   language, so the form uses novalidate and assets/rons-custom.js shows the
@@ -56,7 +56,6 @@
   if social_facebook != blank or social_instagram != blank or social_tiktok != blank
     assign has_social = true
   endif
-  assign order_topics = section.settings.order_topics | split: ','
 -%}
 
 <div class="rons-contact color-{{ section.settings.color_scheme }} gradient">
@@ -191,6 +190,26 @@
           </div>
 
           <div class="rons-contact__field" data-rons-field>
+            <label for="{{ form_id }}-phone" class="rons-contact__field-label">
+              {{- section.settings.label_phone | escape }}
+              <span class="rons-contact__optional">{{ section.settings.optional_label | escape }}</span>
+            </label>
+            <input
+              id="{{ form_id }}-phone"
+              class="rons-contact__input"
+              type="tel"
+              name="contact[{{ 'templates.contact.form.phone' | t }}]"
+              autocomplete="tel"
+              inputmode="tel"
+              data-rons-optional
+              data-rons-error="{{ section.settings.error_phone | escape }}"
+              aria-describedby="{{ form_id }}-phone-error"
+              value="{{ form.phone }}"
+            >
+            <p id="{{ form_id }}-phone-error" class="rons-contact__error" hidden></p>
+          </div>
+
+          <div class="rons-contact__field" data-rons-field>
             <label for="{{ form_id }}-email" class="rons-contact__field-label">
               {{- section.settings.label_email | escape }} <span aria-hidden="true">*</span>
             </label>
@@ -214,76 +233,6 @@
             <p id="{{ form_id }}-email-error" class="rons-contact__error"{% unless error_email %} hidden{% endunless %}>
               {%- if error_email %}{{ section.settings.error_email | escape }}{% endif -%}
             </p>
-          </div>
-
-          <div class="rons-contact__field" data-rons-field>
-            <label for="{{ form_id }}-phone" class="rons-contact__field-label">
-              {{- section.settings.label_phone | escape }}
-              <span class="rons-contact__optional">{{ section.settings.optional_label | escape }}</span>
-            </label>
-            <input
-              id="{{ form_id }}-phone"
-              class="rons-contact__input"
-              type="tel"
-              name="contact[{{ 'templates.contact.form.phone' | t }}]"
-              autocomplete="tel"
-              inputmode="tel"
-              data-rons-optional
-              data-rons-error="{{ section.settings.error_phone | escape }}"
-              aria-describedby="{{ form_id }}-phone-error"
-              value="{{ form.phone }}"
-            >
-            <p id="{{ form_id }}-phone-error" class="rons-contact__error" hidden></p>
-          </div>
-
-          <div class="rons-contact__field" data-rons-field>
-            <label for="{{ form_id }}-topic" class="rons-contact__field-label">
-              {{- section.settings.label_topic | escape }} <span aria-hidden="true">*</span>
-            </label>
-            <div class="rons-contact__select">
-              <select
-                id="{{ form_id }}-topic"
-                class="rons-contact__input"
-                name="contact[{{ section.settings.label_topic | escape }}]"
-                required
-                aria-required="true"
-                data-rons-topic
-                data-rons-error="{{ section.settings.error_topic | escape }}"
-                aria-describedby="{{ form_id }}-topic-error"
-              >
-                <option value="">{{ section.settings.topic_placeholder | escape }}</option>
-                {%- assign topics = section.settings.topics | newline_to_br | split: '<br />' -%}
-                {%- for topic in topics -%}
-                  {%- assign topic_label = topic | strip -%}
-                  {%- if topic_label != blank -%}
-                    {%- assign is_order_topic = false -%}
-                    {%- for order_topic in order_topics -%}
-                      {%- assign order_topic_label = order_topic | strip -%}
-                      {%- if order_topic_label == topic_label %}{% assign is_order_topic = true %}{% endif -%}
-                    {%- endfor -%}
-                    <option value="{{ topic_label | escape }}"{% if is_order_topic %} data-rons-order-topic{% endif %}>
-                      {{- topic_label | escape -}}
-                    </option>
-                  {%- endif -%}
-                {%- endfor -%}
-              </select>
-            </div>
-            <p id="{{ form_id }}-topic-error" class="rons-contact__error" hidden></p>
-          </div>
-
-          <div class="rons-contact__field" data-rons-order-field hidden>
-            <label for="{{ form_id }}-order" class="rons-contact__field-label">
-              {{- section.settings.label_order | escape }}
-              <span class="rons-contact__optional">{{ section.settings.optional_label | escape }}</span>
-            </label>
-            <input
-              id="{{ form_id }}-order"
-              class="rons-contact__input"
-              type="text"
-              name="contact[{{ section.settings.label_order | escape }}]"
-              autocomplete="off"
-              placeholder="{{ section.settings.order_placeholder | escape }}"
-            >
           </div>
 
           <div class="rons-contact__field" data-rons-field>
@@ -375,44 +324,6 @@
     },
     {
       "type": "text",
-      "id": "label_topic",
-      "label": "Тема",
-      "info": "Етикетът е и името на полето в имейла, който получаваш.",
-      "default": "Тема на запитването"
-    },
-    {
-      "type": "text",
-      "id": "topic_placeholder",
-      "label": "Тема – първа опция",
-      "default": "Избери тема"
-    },
-    {
-      "type": "textarea",
-      "id": "topics",
-      "label": "Теми (по една на ред)",
-      "default": "Въпрос за продукт\nРазмери и наличности\nДоставка\nВръщане или замяна\nСъществуваща поръчка\nДруго"
-    },
-    {
-      "type": "text",
-      "id": "order_topics",
-      "label": "Теми, при които се показва „Номер на поръчка“",
-      "info": "Точните имена на темите, разделени със запетая.",
-      "default": "Съществуваща поръчка, Връщане или замяна"
-    },
-    {
-      "type": "text",
-      "id": "label_order",
-      "label": "Номер на поръчка",
-      "default": "Номер на поръчка"
-    },
-    {
-      "type": "text",
-      "id": "order_placeholder",
-      "label": "Номер на поръчка – пример",
-      "default": "напр. #1001"
-    },
-    {
-      "type": "text",
       "id": "label_message",
       "label": "Съобщение",
       "default": "Съобщение"
@@ -450,12 +361,6 @@
       "id": "error_phone",
       "label": "Невалиден телефон",
       "default": "Моля, въведи валиден телефонен номер или остави полето празно."
-    },
-    {
-      "type": "text",
-      "id": "error_topic",
-      "label": "Липсваща тема",
-      "default": "Моля, избери тема на запитването."
     },
     {
       "type": "text",

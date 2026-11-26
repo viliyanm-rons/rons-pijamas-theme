@@ -447,32 +447,6 @@ function ronsContactFieldValid(input) {
   return true;
 }
 
-// Order number: shown only for order-related topics (data-rons-order-topic);
-// it is cleared and not submitted while hidden.
-function ronsContactToggleOrder(select) {
-  const form = select.closest('.rons-contact__form');
-  const field = form?.querySelector('[data-rons-order-field]');
-  if (!field) return;
-  const show = !!select.selectedOptions[0]?.hasAttribute('data-rons-order-topic');
-  field.hidden = !show;
-  const input = field.querySelector('input');
-  if (input) {
-    input.disabled = !show;
-    if (!show) input.value = '';
-  }
-}
-
-document.addEventListener('change', (event) => {
-  const select = event.target.closest?.('.rons-contact__form [data-rons-topic]');
-  if (!select) return;
-  ronsContactToggleOrder(select);
-  if (select.getAttribute('aria-invalid') === 'true' && ronsContactFieldValid(select)) {
-    ronsContactShowError(select, false);
-  }
-});
-
-document.querySelectorAll('.rons-contact__form [data-rons-topic]').forEach(ronsContactToggleOrder);
-
 function ronsContactShowError(input, show) {
   const error = document.getElementById(input.getAttribute('aria-describedby'));
   if (show) {
