@@ -433,13 +433,45 @@ document.addEventListener(
  * validates the form on the server.
  * ------------------------------------------------------------------------- */
 const ronsEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+// Digits with optional +, spaces, dashes, dots, slashes and brackets; 6–15 digits.
+const ronsPhonePattern = /^\+?[\d\s\-./()]{6,22}$/;
 
 function ronsContactFieldValid(input) {
   const value = input.value.trim();
-  if (!value) return false;
+  if (!value) return input.hasAttribute('data-rons-optional');
   if (input.type === 'email') return ronsEmailPattern.test(value);
+  if (input.type === 'tel') {
+    const digits = value.replace(/\D/g, '').length;
+    return ronsPhonePattern.test(value) && digits >= 6 && digits <= 15;
+  }
   return true;
 }
+
+// Order number: shown only for order-related topics (data-rons-order-topic);
+// it is cleared and not submitted while hidden.
+function ronsContactToggleOrder(select) {
+  const form = select.closest('.rons-contact__form');
+  const field = form?.querySelector('[data-rons-order-field]');
+  if (!field) return;
+  const show = !!select.selectedOptions[0]?.hasAttribute('data-rons-order-topic');
+  field.hidden = !show;
+  const input = field.querySelector('input');
+  if (input) {
+    input.disabled = !show;
+    if (!show) input.value = '';
+  }
+}
+
+document.addEventListener('change', (event) => {
+  const select = event.target.closest?.('.rons-contact__form [data-rons-topic]');
+  if (!select) return;
+  ronsContactToggleOrder(select);
+  if (select.getAttribute('aria-invalid') === 'true' && ronsContactFieldValid(select)) {
+    ronsContactShowError(select, false);
+  }
+});
+
+document.querySelectorAll('.rons-contact__form [data-rons-topic]').forEach(ronsContactToggleOrder);
 
 function ronsContactShowError(input, show) {
   const error = document.getElementById(input.getAttribute('aria-describedby'));

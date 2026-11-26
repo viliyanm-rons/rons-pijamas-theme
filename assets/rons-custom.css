@@ -4139,6 +4139,41 @@ body .rons-contact__status:focus {
   outline: none;
 }
 
+body .rons-contact__optional {
+  margin-left: 0.4rem;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--rons-muted);
+}
+
+/* Topic dropdown: same field style with a thin chevron. */
+body .rons-contact__select {
+  position: relative;
+}
+
+body .rons-contact__select select {
+  padding-right: 4.4rem;
+  cursor: pointer;
+}
+
+body .rons-contact__select::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1.8rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-right: 0.15rem solid currentColor;
+  border-bottom: 0.15rem solid currentColor;
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+
+body .rons-contact__social-list {
+  display: flex;
+  gap: 0.4rem;
+}
+
 @media screen and (min-width: 990px) {
   body .rons-contact__grid {
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);

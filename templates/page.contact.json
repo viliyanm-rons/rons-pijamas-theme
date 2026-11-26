@@ -16,26 +16,37 @@
           "type": "email",
           "settings": {
             "label": "Имейл",
-            "email": ""
+            "email": "shop@ronspijamas.com"
           }
         },
         "phone": {
           "type": "phone",
           "settings": {
             "label": "Телефон",
-            "phone": ""
+            "phone": "+359 878 400 075"
+          }
+        },
+        "working_days": {
+          "type": "text",
+          "settings": {
+            "label": "Работни дни",
+            "text": "<p>Всеки ден<br/>Без почивен ден</p>"
           }
         },
         "social": {
           "type": "social",
           "settings": {
-            "label": "Последвай ни"
+            "label": "Последвай ни",
+            "facebook_url": "https://www.facebook.com/Rons_pijamas-106820860708036/",
+            "instagram_url": "https://www.instagram.com/rons_pijamas",
+            "tiktok_url": ""
           }
         }
       },
       "block_order": [
         "email",
         "phone",
+        "working_days",
         "social"
       ],
       "settings": {
@@ -44,7 +55,8 @@
         "text": "<p>Имаш въпрос за продукт, размер или поръчка? Напиши ни чрез формата и ще ти отговорим.</p>",
         "color_scheme": "scheme-1",
         "padding_top": 48,
-        "padding_bottom": 64
+        "padding_bottom": 64,
+        "submit_label": "Изпрати съобщение"
       }
     }
   },

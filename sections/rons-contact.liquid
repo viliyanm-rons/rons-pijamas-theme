@@ -7,8 +7,12 @@
 
   Contact details are blocks (email, phone, text, social links). Nothing is
   prefilled: a block only shows once it has content, so no contact
-  information is ever invented. Social links come from Theme settings ›
-  Social media.
+  information is ever invented. Social links: the social block's own
+  Facebook / Instagram / TikTok fields, falling back to Theme settings ›
+  Social media; empty links are not shown.
+
+  Extra fields (phone, topic, order number) are standard Shopify contact
+  form fields (contact[...]); they appear in the notification email.
 
   Validation: the browser's own messages follow the visitor's browser
   language, so the form uses novalidate and assets/rons-custom.js shows the
@@ -32,10 +36,27 @@
 
 {%- liquid
   assign form_id = 'RonsContactForm-' | append: section.id
+  assign social_facebook = settings.social_facebook_link
+  assign social_instagram = settings.social_instagram_link
+  assign social_tiktok = settings.social_tiktok_link
+  for block in section.blocks
+    if block.type == 'social'
+      if block.settings.facebook_url != blank
+        assign social_facebook = block.settings.facebook_url
+      endif
+      if block.settings.instagram_url != blank
+        assign social_instagram = block.settings.instagram_url
+      endif
+      if block.settings.tiktok_url != blank
+        assign social_tiktok = block.settings.tiktok_url
+      endif
+    endif
+  endfor
   assign has_social = false
-  if settings.social_instagram_link != blank or settings.social_facebook_link != blank or settings.social_tiktok_link != blank or settings.social_pinterest_link != blank or settings.social_youtube_link != blank or settings.social_twitter_link != blank or settings.social_snapchat_link != blank or settings.social_tumblr_link != blank or settings.social_vimeo_link != blank
+  if social_facebook != blank or social_instagram != blank or social_tiktok != blank
     assign has_social = true
   endif
+  assign order_topics = section.settings.order_topics | split: ','
 -%}
 
 <div class="rons-contact color-{{ section.settings.color_scheme }} gradient">
@@ -85,7 +106,32 @@
                     {%- if block.settings.label != blank -%}
                       <p class="rons-contact__label">{{ block.settings.label | escape }}</p>
                     {%- endif -%}
-                    {%- render 'social-icons' -%}
+                    <ul class="list-unstyled list-social rons-contact__social-list" role="list">
+                      {%- if social_facebook != blank -%}
+                        <li class="list-social__item">
+                          <a href="{{ social_facebook }}" class="link list-social__link" target="_blank" rel="noopener noreferrer">
+                            <span class="svg-wrapper">{{- 'icon-facebook.svg' | inline_asset_content -}}</span>
+                            <span class="visually-hidden">Facebook ({{ 'accessibility.link_messages.new_window' | t }})</span>
+                          </a>
+                        </li>
+                      {%- endif -%}
+                      {%- if social_instagram != blank -%}
+                        <li class="list-social__item">
+                          <a href="{{ social_instagram }}" class="link list-social__link" target="_blank" rel="noopener noreferrer">
+                            <span class="svg-wrapper">{{- 'icon-instagram.svg' | inline_asset_content -}}</span>
+                            <span class="visually-hidden">Instagram ({{ 'accessibility.link_messages.new_window' | t }})</span>
+                          </a>
+                        </li>
+                      {%- endif -%}
+                      {%- if social_tiktok != blank -%}
+                        <li class="list-social__item">
+                          <a href="{{ social_tiktok }}" class="link list-social__link" target="_blank" rel="noopener noreferrer">
+                            <span class="svg-wrapper">{{- 'icon-tiktok.svg' | inline_asset_content -}}</span>
+                            <span class="visually-hidden">TikTok ({{ 'accessibility.link_messages.new_window' | t }})</span>
+                          </a>
+                        </li>
+                      {%- endif -%}
+                    </ul>
                   </div>
                 {%- endif -%}
             {%- endcase -%}
@@ -171,6 +217,76 @@
           </div>
 
           <div class="rons-contact__field" data-rons-field>
+            <label for="{{ form_id }}-phone" class="rons-contact__field-label">
+              {{- section.settings.label_phone | escape }}
+              <span class="rons-contact__optional">{{ section.settings.optional_label | escape }}</span>
+            </label>
+            <input
+              id="{{ form_id }}-phone"
+              class="rons-contact__input"
+              type="tel"
+              name="contact[{{ 'templates.contact.form.phone' | t }}]"
+              autocomplete="tel"
+              inputmode="tel"
+              data-rons-optional
+              data-rons-error="{{ section.settings.error_phone | escape }}"
+              aria-describedby="{{ form_id }}-phone-error"
+              value="{{ form.phone }}"
+            >
+            <p id="{{ form_id }}-phone-error" class="rons-contact__error" hidden></p>
+          </div>
+
+          <div class="rons-contact__field" data-rons-field>
+            <label for="{{ form_id }}-topic" class="rons-contact__field-label">
+              {{- section.settings.label_topic | escape }} <span aria-hidden="true">*</span>
+            </label>
+            <div class="rons-contact__select">
+              <select
+                id="{{ form_id }}-topic"
+                class="rons-contact__input"
+                name="contact[{{ section.settings.label_topic | escape }}]"
+                required
+                aria-required="true"
+                data-rons-topic
+                data-rons-error="{{ section.settings.error_topic | escape }}"
+                aria-describedby="{{ form_id }}-topic-error"
+              >
+                <option value="">{{ section.settings.topic_placeholder | escape }}</option>
+                {%- assign topics = section.settings.topics | newline_to_br | split: '<br />' -%}
+                {%- for topic in topics -%}
+                  {%- assign topic_label = topic | strip -%}
+                  {%- if topic_label != blank -%}
+                    {%- assign is_order_topic = false -%}
+                    {%- for order_topic in order_topics -%}
+                      {%- assign order_topic_label = order_topic | strip -%}
+                      {%- if order_topic_label == topic_label %}{% assign is_order_topic = true %}{% endif -%}
+                    {%- endfor -%}
+                    <option value="{{ topic_label | escape }}"{% if is_order_topic %} data-rons-order-topic{% endif %}>
+                      {{- topic_label | escape -}}
+                    </option>
+                  {%- endif -%}
+                {%- endfor -%}
+              </select>
+            </div>
+            <p id="{{ form_id }}-topic-error" class="rons-contact__error" hidden></p>
+          </div>
+
+          <div class="rons-contact__field" data-rons-order-field hidden>
+            <label for="{{ form_id }}-order" class="rons-contact__field-label">
+              {{- section.settings.label_order | escape }}
+              <span class="rons-contact__optional">{{ section.settings.optional_label | escape }}</span>
+            </label>
+            <input
+              id="{{ form_id }}-order"
+              class="rons-contact__input"
+              type="text"
+              name="contact[{{ section.settings.label_order | escape }}]"
+              autocomplete="off"
+              placeholder="{{ section.settings.order_placeholder | escape }}"
+            >
+          </div>
+
+          <div class="rons-contact__field" data-rons-field>
             <label for="{{ form_id }}-body" class="rons-contact__field-label">
               {{- section.settings.label_message | escape }} <span aria-hidden="true">*</span>
             </label>
@@ -247,6 +363,56 @@
     },
     {
       "type": "text",
+      "id": "label_phone",
+      "label": "Телефон",
+      "default": "Телефон"
+    },
+    {
+      "type": "text",
+      "id": "optional_label",
+      "label": "Отбелязване на незадължително поле",
+      "default": "(по желание)"
+    },
+    {
+      "type": "text",
+      "id": "label_topic",
+      "label": "Тема",
+      "info": "Етикетът е и името на полето в имейла, който получаваш.",
+      "default": "Тема на запитването"
+    },
+    {
+      "type": "text",
+      "id": "topic_placeholder",
+      "label": "Тема – първа опция",
+      "default": "Избери тема"
+    },
+    {
+      "type": "textarea",
+      "id": "topics",
+      "label": "Теми (по една на ред)",
+      "default": "Въпрос за продукт\nРазмери и наличности\nДоставка\nВръщане или замяна\nСъществуваща поръчка\nДруго"
+    },
+    {
+      "type": "text",
+      "id": "order_topics",
+      "label": "Теми, при които се показва „Номер на поръчка“",
+      "info": "Точните имена на темите, разделени със запетая.",
+      "default": "Съществуваща поръчка, Връщане или замяна"
+    },
+    {
+      "type": "text",
+      "id": "label_order",
+      "label": "Номер на поръчка",
+      "default": "Номер на поръчка"
+    },
+    {
+      "type": "text",
+      "id": "order_placeholder",
+      "label": "Номер на поръчка – пример",
+      "default": "напр. #1001"
+    },
+    {
+      "type": "text",
       "id": "label_message",
       "label": "Съобщение",
       "default": "Съобщение"
@@ -261,7 +427,7 @@
       "type": "text",
       "id": "submit_label",
       "label": "Бутон",
-      "default": "Изпрати съобщението"
+      "default": "Изпрати съобщение"
     },
     {
       "type": "header",
@@ -278,6 +444,18 @@
       "id": "error_email",
       "label": "Невалиден имейл",
       "default": "Моля, въведи валиден имейл адрес, напр. ime@primer.bg."
+    },
+    {
+      "type": "text",
+      "id": "error_phone",
+      "label": "Невалиден телефон",
+      "default": "Моля, въведи валиден телефонен номер или остави полето празно."
+    },
+    {
+      "type": "text",
+      "id": "error_topic",
+      "label": "Липсваща тема",
+      "default": "Моля, избери тема на запитването."
     },
     {
       "type": "text",
@@ -353,9 +531,12 @@
       "limit": 1,
       "settings": [
         { "type": "text", "id": "label", "label": "Етикет", "default": "Последвай ни" },
+        { "type": "url", "id": "facebook_url", "label": "Facebook" },
+        { "type": "url", "id": "instagram_url", "label": "Instagram" },
+        { "type": "url", "id": "tiktok_url", "label": "TikTok" },
         {
           "type": "paragraph",
-          "content": "Връзките се въвеждат в Настройки на темата › Социални мрежи. Блокът се показва само ако има поне една връзка."
+          "content": "Празно поле = връзката от Настройки на темата › Социални мрежи. Иконите без връзка не се показват. Връзките се отварят в нов раздел."
         }
       ]
     },
