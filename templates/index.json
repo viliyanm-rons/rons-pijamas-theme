@@ -11,44 +11,10 @@
   "sections": {
     "hero": {
       "type": "rons-hero",
-      "blocks": {
-        "slide_black_friday": {
-          "type": "slide",
-          "settings": {
-            "enabled": true,
-            "slide_type": "image",
-            "image_desktop": "shopify://shop_images/Black_Friday_Bedroom_Glow_09d30866-b230-422d-9d2a-8d77ecf50689.png",
-            "image_alt": "Black Pijama Friday – до -50% на пижами",
-            "link": "shopify://collections/all",
-            "image_fit": "cover",
-            "banner_background": "#000000"
-          }
-        },
-        "slide_editorial": {
-          "type": "slide",
-          "settings": {
-            "enabled": true,
-            "slide_type": "editorial",
-            "image_desktop": "shopify://shop_images/TJ78642.jpg",
-            "image_mobile": "shopify://shop_images/DSC6398.jpg",
-            "image_alt": "",
-            "link": "shopify://collections/all",
-            "image_fit": "contain",
-            "banner_background": "#000000",
-            "eyebrow": "",
-            "heading": "Красотата започва с комфорта.",
-            "text": "Открий пижами и домашно облекло, създадени за красивите моменти у дома.",
-            "button_label": "Разгледай колекцията"
-          }
-        }
-      },
-      "block_order": [
-        "slide_black_friday",
-        "slide_editorial"
-      ],
       "settings": {
-        "autoplay": true,
-        "autoplay_speed": 6,
+        "image_desktop": "shopify://shop_images/TJ78642.jpg",
+        "image_mobile": "shopify://shop_images/DSC6398.jpg",
+        "layout": "editorial",
         "image_side": "right",
         "desktop_height": "large",
         "mobile_height": "large",
@@ -62,8 +28,15 @@
         "show_badge": true,
         "badge_position": "above_heading",
         "badge_link": "",
+        "eyebrow": "",
+        "heading": "Красотата започва с комфорта.",
         "heading_tag": "h1",
-        "heading_size": "h0"
+        "heading_size": "h0",
+        "text": "Открий пижами и домашно облекло, създадени за красивите моменти у дома.",
+        "button_label_1": "Разгледай колекцията",
+        "button_link_1": "shopify://collections/all",
+        "button_label_2": "",
+        "button_link_2": ""
       }
     },
     "benefits": {
