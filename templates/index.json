@@ -11,43 +11,10 @@
   "sections": {
     "hero": {
       "type": "rons-hero",
-      "blocks": {
-        "slide_editorial": {
-          "type": "slide",
-          "settings": {
-            "enabled": true,
-            "slide_type": "editorial",
-            "image_desktop": "shopify://shop_images/TJ78642.jpg",
-            "image_mobile": "shopify://shop_images/DSC6398.jpg",
-            "image_alt": "",
-            "link": "shopify://collections/all",
-            "image_fit": "contain",
-            "banner_background": "#000000",
-            "eyebrow": "",
-            "heading": "Красотата започва с комфорта.",
-            "text": "Открий пижами и домашно облекло, създадени за красивите моменти у дома.",
-            "button_label": "Разгледай колекцията"
-          }
-        },
-        "slide_black_friday": {
-          "type": "slide",
-          "settings": {
-            "enabled": true,
-            "slide_type": "image",
-            "image_alt": "Black Pijama Friday – до -50%",
-            "link": "",
-            "image_fit": "contain",
-            "banner_background": "#000000"
-          }
-        }
-      },
-      "block_order": [
-        "slide_editorial",
-        "slide_black_friday"
-      ],
       "settings": {
-        "autoplay": true,
-        "autoplay_speed": 6,
+        "image_desktop": "shopify://shop_images/TJ78642.jpg",
+        "image_mobile": "shopify://shop_images/DSC6398.jpg",
+        "layout": "editorial",
         "image_side": "right",
         "desktop_height": "large",
         "mobile_height": "large",
@@ -61,8 +28,15 @@
         "show_badge": true,
         "badge_position": "above_heading",
         "badge_link": "",
+        "eyebrow": "",
+        "heading": "Красотата започва с комфорта.",
         "heading_tag": "h1",
-        "heading_size": "h0"
+        "heading_size": "h0",
+        "text": "Открий пижами и домашно облекло, създадени за красивите моменти у дома.",
+        "button_label_1": "Разгледай колекцията",
+        "button_link_1": "shopify://collections/all",
+        "button_label_2": "",
+        "button_link_2": ""
       }
     },
     "benefits": {
