@@ -1,0 +1,61 @@
+{% comment %}
+  Ron's Pijamas – discount badge text, calculated from Price and Compare-at price.
+  Nothing is hardcoded: the percentage always comes from the prices.
+
+  Accepts:
+  - product: {Object} use the variants in stock (product cards). Same discount
+    on every such variant → "−30%"; different discounts, or some not on sale
+    → "До −40%" (the largest discount), so the badge is never misleading.
+  - variant: {Object} one variant (product page price, updates with the size).
+
+  Outputs nothing when there is no valid sale price (Compare-at must be higher
+  than Price). Falls back to the theme's "Намаление" text when the reduction
+  rounds to 0 %.
+
+  Usage:
+  {% render 'rons-discount-label', product: card_product %}
+  {% render 'rons-discount-label', variant: product.selected_or_first_available_variant %}
+{% endcomment %}
+
+{%- liquid
+  assign pct_min = 1000
+  assign pct_max = 0
+  assign on_sale_count = 0
+  assign total = 0
+
+  if variant
+    assign total = 1
+    if variant.compare_at_price > variant.price
+      assign on_sale_count = 1
+      assign pct_max = variant.compare_at_price | minus: variant.price | times: 100.0 | divided_by: variant.compare_at_price | round
+      assign pct_min = pct_max
+    endif
+  elsif product
+    for v in product.variants
+      if v.available == false and product.available
+        continue
+      endif
+      assign total = total | plus: 1
+      if v.compare_at_price > v.price
+        assign on_sale_count = on_sale_count | plus: 1
+        assign pct = v.compare_at_price | minus: v.price | times: 100.0 | divided_by: v.compare_at_price | round
+        if pct < pct_min
+          assign pct_min = pct
+        endif
+        if pct > pct_max
+          assign pct_max = pct
+        endif
+      endif
+    endfor
+  endif
+-%}
+
+{%- if on_sale_count > 0 -%}
+  {%- if pct_max < 1 -%}
+    {{- 'products.product.on_sale' | t -}}
+  {%- elsif pct_min == pct_max and on_sale_count == total -%}
+    −{{ pct_max }}%
+  {%- else -%}
+    До −{{ pct_max }}%
+  {%- endif -%}
+{%- endif -%}

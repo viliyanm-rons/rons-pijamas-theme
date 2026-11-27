@@ -114,7 +114,11 @@
     </div>
     {%- if show_badges -%}
       <span class="badge price__badge-sale color-{{ settings.sale_badge_color_scheme }}">
-        {{ 'products.product.on_sale' | t }}
+        {%- if use_variant -%}
+          {%- render 'rons-discount-label', variant: target -%}
+        {%- else -%}
+          {%- render 'rons-discount-label', product: product -%}
+        {%- endif -%}
       </span>
 
       <span class="badge price__badge-sold-out color-{{ settings.sold_out_badge_color_scheme }}">
