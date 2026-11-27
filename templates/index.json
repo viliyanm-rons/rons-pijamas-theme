@@ -130,21 +130,21 @@
     "categories": {
       "type": "rons-category-grid",
       "blocks": {
-        "category_CURnjx": {
-          "type": "category",
-          "settings": {
-            "collection": "art-club",
-            "title": "",
-            "cta": "Разгледай",
-            "link": ""
-          }
-        },
         "category-1": {
           "type": "category",
           "settings": {
             "collection": "pizhami",
             "image": "shopify://shop_images/0-0-64099-0-000600.jpg",
             "title": "Пижами",
+            "cta": "Разгледай",
+            "link": ""
+          }
+        },
+        "category_CURnjx": {
+          "type": "category",
+          "settings": {
+            "collection": "art-club",
+            "title": "Лимитирана колекция Art Club",
             "cta": "Разгледай",
             "link": ""
           }
@@ -171,8 +171,8 @@
         }
       },
       "block_order": [
-        "category_CURnjx",
         "category-1",
+        "category_CURnjx",
         "category-2",
         "category-3"
       ],
