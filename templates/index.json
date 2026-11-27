@@ -177,18 +177,18 @@
         "category-3"
       ],
       "settings": {
-        "caption": "",
-        "heading": "Пазарувай по категория",
+        "caption": "Избери любима категория",
+        "heading": "Нашите категории",
         "heading_size": "h1",
         "heading_alignment": "center",
-        "layout": "editorial",
+        "layout": "campaign",
         "show_numbers": true,
         "image_ratio": "portrait",
         "label_position": "below",
         "overlay_opacity": 35,
         "columns_desktop": 3,
         "color_scheme": "scheme-1",
-        "columns_mobile": "2",
+        "columns_mobile": "1",
         "swipe_on_mobile": true,
         "padding_top": 48,
         "padding_bottom": 64
