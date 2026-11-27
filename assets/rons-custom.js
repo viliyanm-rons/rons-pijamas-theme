@@ -1000,3 +1000,172 @@ if (!customElements.get('rons-reviews-carousel')) {
     setBusy(false);
   });
 })();
+
+/*
+ * Homepage hero slider (sections/rons-hero.liquid)
+ *
+ * Slides are stacked and cross-fade (CSS); this switches the active slide,
+ * keeps hidden slides out of the tab order (inert + aria-hidden), and adds
+ * arrows, dots, swipe and the arrow keys. Autoplay runs only while the
+ * slider is on screen and the tab is visible; it pauses on hover and
+ * keyboard focus, stops for good once the visitor uses the slider, and
+ * never runs for visitors who prefer reduced motion or in the Theme Editor.
+ */
+if (!customElements.get('rons-hero-slider')) {
+  class RonsHeroSlider extends HTMLElement {
+    connectedCallback() {
+      this.slides = Array.from(this.querySelectorAll('[data-slide]'));
+      this.dots = Array.from(this.querySelectorAll('[data-dot]'));
+      this.track = this.querySelector('[data-track]');
+      if (this.slides.length < 2 || !this.track) return;
+
+      this.index = Math.max(0, this.slides.findIndex((slide) => slide.classList.contains('is-active')));
+      this.interval = Math.max(parseInt(this.dataset.interval, 10) || 6000, 3000);
+      this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      this.state = { hover: false, focus: false, visible: true, stopped: false };
+
+      if (!this.bound) {
+        this.bound = true;
+        const prev = this.querySelector('[data-prev]');
+        const next = this.querySelector('[data-next]');
+        if (prev) prev.addEventListener('click', () => this.userGo(this.index - 1));
+        if (next) next.addEventListener('click', () => this.userGo(this.index + 1));
+        this.dots.forEach((dot) => dot.addEventListener('click', () => this.userGo(Number(dot.dataset.dot))));
+        this.addEventListener('keydown', (event) => {
+          if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+          if (event.target.closest('input, textarea, select')) return;
+          event.preventDefault();
+          this.userGo(this.index + (event.key === 'ArrowRight' ? 1 : -1), true);
+        });
+        this.addEventListener('mouseenter', () => this.setState({ hover: true }));
+        this.addEventListener('mouseleave', () => this.setState({ hover: false }));
+        this.addEventListener('focusin', () => this.setState({ focus: true }));
+        this.addEventListener('focusout', (event) => {
+          if (!this.contains(event.relatedTarget)) this.setState({ focus: false });
+        });
+        this.bindSwipe();
+      }
+
+      this.onVisibility = () => this.updateAutoplay();
+      document.addEventListener('visibilitychange', this.onVisibility);
+      if ('IntersectionObserver' in window) {
+        this.observer = new IntersectionObserver((entries) => this.setState({ visible: entries[0].isIntersecting }), {
+          threshold: 0.3,
+        });
+        this.observer.observe(this);
+      }
+      if (window.Shopify && Shopify.designMode) {
+        this.onBlockSelect = (event) => {
+          const i = this.slides.findIndex((slide) => slide.contains(event.target));
+          if (i >= 0) this.goTo(i);
+        };
+        document.addEventListener('shopify:block:select', this.onBlockSelect);
+      }
+      this.updateAutoplay();
+    }
+
+    disconnectedCallback() {
+      this.clearTimer();
+      if (this.observer) this.observer.disconnect();
+      if (this.onVisibility) document.removeEventListener('visibilitychange', this.onVisibility);
+      if (this.onBlockSelect) document.removeEventListener('shopify:block:select', this.onBlockSelect);
+    }
+
+    bindSwipe() {
+      let startX = null;
+      let startY = 0;
+      this.track.addEventListener(
+        'pointerdown',
+        (event) => {
+          if (event.pointerType === 'mouse') return;
+          startX = event.clientX;
+          startY = event.clientY;
+        },
+        { passive: true }
+      );
+      const end = (event) => {
+        if (startX === null) return;
+        const dx = event.clientX - startX;
+        const dy = event.clientY - startY;
+        startX = null;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+          this.swiped = true;
+          setTimeout(() => (this.swiped = false), 400);
+          this.userGo(this.index + (dx < 0 ? 1 : -1));
+        }
+      };
+      this.track.addEventListener('pointerup', end, { passive: true });
+      this.track.addEventListener('pointercancel', () => (startX = null), { passive: true });
+      // A swipe over a linked banner must not also open the link.
+      this.track.addEventListener(
+        'click',
+        (event) => {
+          if (this.swiped) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        },
+        true
+      );
+    }
+
+    goTo(i, focusSlide) {
+      const count = this.slides.length;
+      const target = ((i % count) + count) % count;
+      if (target === this.index) return;
+      this.slides.forEach((slide, n) => {
+        const active = n === target;
+        slide.classList.toggle('is-active', active);
+        if (active) {
+          slide.removeAttribute('aria-hidden');
+          slide.inert = false;
+        } else {
+          slide.setAttribute('aria-hidden', 'true');
+          slide.inert = true;
+        }
+      });
+      this.dots.forEach((dot, n) => dot.setAttribute('aria-current', String(n === target)));
+      this.index = target;
+      if (focusSlide) {
+        const link = this.slides[target].querySelector('a[href]');
+        if (link && this.contains(document.activeElement) && document.activeElement.closest('[data-slide]')) link.focus();
+      }
+    }
+
+    userGo(i, fromKeyboard) {
+      this.state.stopped = true;
+      this.updateAutoplay();
+      this.goTo(i, fromKeyboard);
+    }
+
+    setState(change) {
+      Object.assign(this.state, change);
+      this.updateAutoplay();
+    }
+
+    updateAutoplay() {
+      const s = this.state;
+      const run =
+        this.dataset.autoplay === 'true' &&
+        !this.reducedMotion.matches &&
+        s.visible &&
+        !s.hover &&
+        !s.focus &&
+        !s.stopped &&
+        !document.hidden &&
+        !(window.Shopify && Shopify.designMode);
+      if (run && !this.timer) {
+        this.timer = setInterval(() => this.goTo(this.index + 1), this.interval);
+      } else if (!run) {
+        this.clearTimer();
+      }
+    }
+
+    clearTimer() {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+
+  customElements.define('rons-hero-slider', RonsHeroSlider);
+}

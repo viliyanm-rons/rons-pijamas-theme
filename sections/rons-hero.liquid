@@ -1,46 +1,48 @@
 {% comment %}
-  Ron's Pijamas – editorial hero.
+  Ron's Pijamas – editorial hero slider.
 
-  - Separate desktop and mobile images in one <picture>, so phones only
-    download the mobile image. Each falls back to the other when only one is
-    set; each uses its own focal point from Shopify's image editor.
-  - Text sits on the image (optional readability gradient or shade) or below
-    it, configurable separately for mobile.
-  - Heights: fit to image, medium, large or full screen, per device.
-  - Layout "Editorial split" (desktop): text column beside a dominant photo,
-    with an optional smaller detail image overlapping the photo's edge.
-    Phones always use the vertical mobile image with the text on it (or
-    below it) so the button is visible without scrolling.
-  - Buttons only render when they have both a label and a link.
-  - Without an image, customers see a compact text banner (no large empty
-    block); the Theme Editor shows a placeholder at the configured height.
+  Each "Slide" block is one slide (add, reorder, hide or remove them in the
+  Theme Editor). Slide types:
+  - Editorial split: text beside a dominant photo on desktop (the original
+    hero design), photo with text on phones.
+  - Full-width photo with text on it.
+  - Full-width image banner: a finished campaign image without HTML text;
+    the whole banner is one link and is never stretched (shown whole by
+    default, or filling the slide with its focal point).
+  Separate desktop and mobile images in one <picture>, so phones only
+  download the mobile image; each falls back to the other.
+
+  All slides share one height (the section's height settings) and are
+  stacked in one grid cell, so changing slides never shifts the page. Only
+  the first slide's image loads with high priority; the others are lazy.
+  <rons-hero-slider> in assets/rons-custom.js adds arrows, dots, swipe and
+  autoplay. With one visible slide there are no controls and no autoplay.
+
+  A slide is skipped on the storefront when it is hidden, has no image
+  (banner) or has neither an image nor text (other types). The Theme Editor
+  shows those slides with a hint instead.
 {% endcomment %}
 
 {%- liquid
-  assign image_desktop = section.settings.image_desktop
-  assign image_mobile = section.settings.image_mobile
-  assign main_image = image_desktop | default: image_mobile
-  assign mobile_image = image_mobile | default: image_desktop
-  assign has_image = false
-  if main_image != blank
-    assign has_image = true
-  endif
-
-  if section.index <= 2
-    assign loading = 'eager'
-    assign fetch_priority = 'high'
+  assign slides = section.blocks | where: 'type', 'slide'
+  assign visible_count = 0
+  for block in slides
+    if block.settings.enabled == false
+      continue
+    endif
+    assign b_image = block.settings.image_desktop | default: block.settings.image_mobile
+    if block.settings.slide_type == 'image'
+      if b_image != blank
+        assign visible_count = visible_count | plus: 1
+      endif
+    elsif b_image != blank or block.settings.heading != blank or block.settings.text != blank
+      assign visible_count = visible_count | plus: 1
+    endif
+  endfor
+  if request.design_mode
+    assign render_count = slides.size
   else
-    assign loading = 'lazy'
-    assign fetch_priority = 'auto'
-  endif
-
-  assign show_button_1 = false
-  if section.settings.button_label_1 != blank and section.settings.button_link_1 != blank
-    assign show_button_1 = true
-  endif
-  assign show_button_2 = false
-  if section.settings.button_label_2 != blank and section.settings.button_link_2 != blank
-    assign show_button_2 = true
+    assign render_count = visible_count
   endif
 
   assign show_badge = false
@@ -50,137 +52,267 @@
     endif
   endif
 
-  assign has_text = false
-  if show_badge or section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.text != blank or show_button_1 or show_button_2
-    assign has_text = true
+  assign slider = false
+  if render_count > 1
+    assign slider = true
   endif
-
-  capture hero_classes
-    echo 'rons-hero'
-    echo ' rons-hero--layout-' | append: section.settings.layout
-    echo ' rons-hero--image-' | append: section.settings.image_side
-    echo ' rons-hero--text-' | append: section.settings.text_color
-    echo ' rons-hero--desktop-' | append: section.settings.desktop_height
-    echo ' rons-hero--mobile-' | append: section.settings.mobile_height
-    echo ' rons-hero--overlay-' | append: section.settings.overlay_style
-    if section.settings.text_below_desktop
-      echo ' rons-hero--below-desktop'
-    endif
-    if section.settings.text_below_mobile
-      echo ' rons-hero--below-mobile'
-    endif
-    if has_image == false
-      if request.design_mode
-        echo ' rons-hero--placeholder'
-      else
-        echo ' rons-hero--no-image'
-      endif
-    endif
-  endcapture
+  assign autoplay_ms = section.settings.autoplay_speed | times: 1000
 -%}
 
-{%- if has_image or has_text or request.design_mode -%}
-  <div
-    class="{{ hero_classes | strip }}"
-    style="--rons-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};{% if has_image %} --rons-hero-ratio: {{ main_image.aspect_ratio }}; --rons-hero-ratio-mobile: {{ mobile_image.aspect_ratio }}; --rons-hero-focal: {{ main_image.presentation.focal_point }}; --rons-hero-focal-mobile: {{ mobile_image.presentation.focal_point }};{% endif %}"
+{%- if render_count > 0 -%}
+  <rons-hero-slider
+    class="rons-hero-slider{% if slider %} rons-hero-slider--multi{% endif %}"
+    {% if slider %}
+      role="region"
+      aria-roledescription="карусел"
+      aria-label="Акценти от Ron’s Pijamas"
+      data-autoplay="{{ section.settings.autoplay }}"
+      data-interval="{{ autoplay_ms }}"
+    {% endif %}
   >
-    {%- if has_image or request.design_mode -%}
-      <div class="rons-hero__media">
-        {%- if has_image -%}
-          <picture>
-            {%- if image_mobile != blank and image_desktop != blank -%}
-              <source
-                media="(max-width: 749px)"
-                srcset="
-                  {{ image_mobile | image_url: width: 450 }} 450w,
-                  {{ image_mobile | image_url: width: 750 }} 750w,
-                  {{ image_mobile | image_url: width: 1100 }} 1100w,
-                  {{ image_mobile | image_url: width: 1500 }} 1500w
-                "
-                sizes="100vw"
-                width="{{ image_mobile.width }}"
-                height="{{ image_mobile.height }}"
-              >
+    <div class="rons-hero-slider__track" data-track>
+      {%- assign slide_index = 0 -%}
+      {%- for block in slides -%}
+        {%- liquid
+          assign image_desktop = block.settings.image_desktop
+          assign image_mobile = block.settings.image_mobile
+          assign main_image = image_desktop | default: image_mobile
+          assign mobile_image = image_mobile | default: image_desktop
+          assign has_image = false
+          if main_image != blank
+            assign has_image = true
+          endif
+          assign is_banner = false
+          if block.settings.slide_type == 'image'
+            assign is_banner = true
+          endif
+
+          assign show_button = false
+          if block.settings.button_label != blank and block.settings.link != blank
+            assign show_button = true
+          endif
+          assign has_text = false
+          if is_banner == false
+            if block.settings.eyebrow != blank or block.settings.heading != blank or block.settings.text != blank or show_button
+              assign has_text = true
+            endif
+            if slide_index == 0 and show_badge
+              assign has_text = true
+            endif
+          endif
+
+          assign is_visible = true
+          if block.settings.enabled == false
+            assign is_visible = false
+          elsif is_banner and has_image == false
+            assign is_visible = false
+          elsif has_image == false and has_text == false
+            assign is_visible = false
+          endif
+          if is_visible == false and request.design_mode == false
+            continue
+          endif
+
+          if slide_index == 0 and section.index <= 2
+            assign loading = 'eager'
+            assign fetch_priority = 'high'
+          else
+            assign loading = 'lazy'
+            assign fetch_priority = 'low'
+          endif
+
+          assign alt = block.settings.image_alt | default: main_image.alt | default: block.settings.heading | strip_html
+
+          if is_banner
+            assign layout = 'banner'
+          else
+            assign layout = block.settings.slide_type
+          endif
+
+          capture hero_classes
+            echo 'rons-hero'
+            echo ' rons-hero--layout-' | append: layout
+            echo ' rons-hero--image-' | append: section.settings.image_side
+            echo ' rons-hero--text-' | append: section.settings.text_color
+            echo ' rons-hero--desktop-' | append: section.settings.desktop_height
+            echo ' rons-hero--mobile-' | append: section.settings.mobile_height
+            if is_banner
+              echo ' rons-hero--fit-' | append: block.settings.image_fit
+            else
+              echo ' rons-hero--overlay-' | append: section.settings.overlay_style
+              if section.settings.text_below_desktop
+                echo ' rons-hero--below-desktop'
+              endif
+              if section.settings.text_below_mobile
+                echo ' rons-hero--below-mobile'
+              endif
+            endif
+            if has_image == false
+              if request.design_mode
+                echo ' rons-hero--placeholder'
+              else
+                echo ' rons-hero--no-image'
+              endif
+            endif
+            if is_visible == false
+              echo ' rons-hero--editor-hidden'
+            endif
+          endcapture
+        -%}
+        <div
+          class="rons-hero-slider__slide{% if slide_index == 0 %} is-active{% endif %}"
+          data-slide
+          {% if slider %}
+            role="group" aria-roledescription="слайд" aria-label="{{ slide_index | plus: 1 }} от {{ render_count }}"
+            {% unless slide_index == 0 %}
+              aria-hidden="true" inert
+            {% endunless %}
+          {% endif %}
+          {{ block.shopify_attributes }}
+        >
+          {%- capture slide_media -%}
+            {%- if has_image -%}
+              <picture>
+                {%- if image_mobile != blank and image_desktop != blank -%}
+                  <source
+                    media="(max-width: 749px)"
+                    srcset="
+                      {{ image_mobile | image_url: width: 450 }} 450w,
+                      {{ image_mobile | image_url: width: 750 }} 750w,
+                      {{ image_mobile | image_url: width: 1100 }} 1100w,
+                      {{ image_mobile | image_url: width: 1500 }} 1500w
+                    "
+                    sizes="100vw"
+                    width="{{ image_mobile.width }}"
+                    height="{{ image_mobile.height }}"
+                  >
+                {%- endif -%}
+                {{
+                  main_image
+                  | image_url: width: 3000
+                  | image_tag:
+                    class: 'rons-hero__image',
+                    widths: '450, 750, 1100, 1500, 1920, 2400, 3000',
+                    sizes: '100vw',
+                    loading: loading,
+                    fetchpriority: fetch_priority,
+                    alt: alt
+                }}
+              </picture>
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg rons-hero__placeholder' }}
+              <p class="rons-editor-hint rons-hero__hint">
+                {%- if block.settings.enabled == false -%}
+                  Този слайд е скрит („Show this slide“ е изключено).
+                {%- elsif is_banner -%}
+                  Добави банер за десктоп и (по желание) мобилен банер. Без изображение слайдът не се показва на клиентите.
+                {%- else -%}
+                  Добави снимка за десктоп и мобилна снимка.
+                {%- endif -%}
+              </p>
             {%- endif -%}
-            {{
-              main_image
-              | image_url: width: 3000
-              | image_tag:
-                class: 'rons-hero__image',
-                widths: '450, 750, 1100, 1500, 1920, 2400, 3000',
-                sizes: '100vw',
-                loading: loading,
-                fetchpriority: fetch_priority,
-                alt: main_image.alt
-            }}
-          </picture>
-        {%- else -%}
-          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg rons-hero__placeholder' }}
-          <p class="rons-editor-hint rons-hero__hint">
-            Добави снимка за десктоп и мобилна снимка. Без снимка клиентите виждат само текста в компактен банер.
-          </p>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
+          {%- endcapture -%}
 
-    {%- if section.settings.layout == 'editorial' and section.settings.detail_image != blank -%}
-      <div class="rons-hero__detail" aria-hidden="true">
-        {{
-          section.settings.detail_image
-          | image_url: width: 900
-          | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 990px) 18vw, 1px', alt: ''
-        }}
-      </div>
-    {%- endif -%}
+          <div
+            class="{{ hero_classes | strip }}"
+            style="--rons-hero-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};{% if has_image %} --rons-hero-ratio: {{ main_image.aspect_ratio }}; --rons-hero-ratio-mobile: {{ mobile_image.aspect_ratio }}; --rons-hero-focal: {{ main_image.presentation.focal_point }}; --rons-hero-focal-mobile: {{ mobile_image.presentation.focal_point }};{% endif %}{% if is_banner %} --rons-hero-banner-bg: {{ block.settings.banner_background }};{% endif %}"
+          >
+            {%- if is_banner -%}
+              {%- if block.settings.link != blank and has_image -%}
+                <a href="{{ block.settings.link }}" class="rons-hero__media rons-hero__banner-link">
+                  {{- slide_media -}}
+                </a>
+              {%- else -%}
+                <div class="rons-hero__media">{{ slide_media }}</div>
+              {%- endif -%}
+            {%- else -%}
+              {%- if has_image or request.design_mode -%}
+                <div class="rons-hero__media">{{ slide_media }}</div>
+              {%- endif -%}
 
-    {%- if has_text -%}
-      <div class="rons-hero__content page-width rons-hero__content--{{ section.settings.desktop_position }} rons-hero__content--mobile-{{ section.settings.mobile_alignment }}">
-        <div class="rons-hero__box">
-          {%- liquid
-            if show_badge
-              capture badge
-                render 'rons-trust-badge', link: section.settings.badge_link, class: 'rons-hero__badge'
-              endcapture
-            endif
-            if section.settings.badge_position == 'above_heading'
-              echo badge
-            endif
-          -%}
-          {%- if section.settings.eyebrow != blank -%}
-            <p class="rons-hero__eyebrow rons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
-          {%- endif -%}
-          {%- if section.settings.heading != blank -%}
-            {%- liquid
-              assign rons_heading_tag = section.settings.heading_tag | default: 'h2'
-            -%}
-            <{{ rons_heading_tag }} class="rons-hero__heading {{ section.settings.heading_size }}">{{ section.settings.heading }}</{{ rons_heading_tag }}>
-          {%- endif -%}
-          {%- if section.settings.badge_position == 'below_heading' %}{{ badge }}{% endif -%}
-          {%- if section.settings.text != blank -%}
-            <p class="rons-hero__text">{{ section.settings.text }}</p>
-          {%- endif -%}
-          {%- if show_button_1 or show_button_2 -%}
-            <div class="rons-hero__buttons">
-              {%- if show_button_1 -%}
-                <a href="{{ section.settings.button_link_1 }}" class="button rons-hero__button rons-hero__button--primary">
-                  {{- section.settings.button_label_1 | escape -}}
-                </a>
+              {%- if layout == 'editorial' and block.settings.detail_image != blank -%}
+                <div class="rons-hero__detail" aria-hidden="true">
+                  {{
+                    block.settings.detail_image
+                    | image_url: width: 900
+                    | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 990px) 18vw, 1px', alt: ''
+                  }}
+                </div>
               {%- endif -%}
-              {%- if show_button_2 -%}
-                <a
-                  href="{{ section.settings.button_link_2 }}"
-                  class="button rons-hero__button rons-hero__button--secondary"
-                >
-                  {{- section.settings.button_label_2 | escape -}}
-                </a>
+
+              {%- if has_text -%}
+                <div class="rons-hero__content page-width rons-hero__content--{{ section.settings.desktop_position }} rons-hero__content--mobile-{{ section.settings.mobile_alignment }}">
+                  <div class="rons-hero__box">
+                    {%- liquid
+                      assign badge = ''
+                      if show_badge and slide_index == 0
+                        capture badge
+                          render 'rons-trust-badge', link: section.settings.badge_link, class: 'rons-hero__badge'
+                        endcapture
+                      endif
+                      if section.settings.badge_position == 'above_heading'
+                        echo badge
+                      endif
+                    -%}
+                    {%- if block.settings.eyebrow != blank -%}
+                      <p class="rons-hero__eyebrow rons-eyebrow">{{ block.settings.eyebrow | escape }}</p>
+                    {%- endif -%}
+                    {%- if block.settings.heading != blank -%}
+                      {%- liquid
+                        if slide_index == 0
+                          assign rons_heading_tag = section.settings.heading_tag | default: 'h2'
+                        else
+                          assign rons_heading_tag = 'h2'
+                        endif
+                      -%}
+                      <{{ rons_heading_tag }} class="rons-hero__heading {{ section.settings.heading_size }}">{{ block.settings.heading }}</{{ rons_heading_tag }}>
+                    {%- endif -%}
+                    {%- if section.settings.badge_position == 'below_heading' %}{{ badge }}{% endif -%}
+                    {%- if block.settings.text != blank -%}
+                      <p class="rons-hero__text">{{ block.settings.text }}</p>
+                    {%- endif -%}
+                    {%- if show_button -%}
+                      <div class="rons-hero__buttons">
+                        <a href="{{ block.settings.link }}" class="button rons-hero__button rons-hero__button--primary">
+                          {{- block.settings.button_label | escape -}}
+                        </a>
+                      </div>
+                    {%- endif -%}
+                    {%- if section.settings.badge_position == 'near_buttons' %}{{ badge }}{% endif -%}
+                  </div>
+                </div>
               {%- endif -%}
-            </div>
-          {%- endif -%}
-          {%- if section.settings.badge_position == 'near_buttons' %}{{ badge }}{% endif -%}
+            {%- endif -%}
+          </div>
         </div>
+        {%- assign slide_index = slide_index | plus: 1 -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if slider -%}
+      <div class="rons-hero-slider__controls" data-controls>
+        <button type="button" class="rons-hero-slider__arrow" data-prev aria-label="Предишен слайд">
+          <span class="svg-wrapper" aria-hidden="true">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
+        <div class="rons-hero-slider__dots" data-dots>
+          {%- for i in (1..render_count) -%}
+            <button
+              type="button"
+              class="rons-hero-slider__dot"
+              data-dot="{{ forloop.index0 }}"
+              aria-label="Слайд {{ i }} от {{ render_count }}"
+              {% if forloop.first %}
+                aria-current="true"
+              {% endif %}
+            ></button>
+          {%- endfor -%}
+        </div>
+        <button type="button" class="rons-hero-slider__arrow rons-hero-slider__arrow--next" data-next aria-label="Следващ слайд">
+          <span class="svg-wrapper" aria-hidden="true">{{- 'icon-caret.svg' | inline_asset_content -}}</span>
+        </button>
       </div>
     {%- endif -%}
-  </div>
+  </rons-hero-slider>
 {%- endif -%}
 
 {% schema %}
@@ -194,38 +326,36 @@
       "footer"
     ]
   },
+  "max_blocks": 8,
   "settings": [
     {
+      "type": "paragraph",
+      "content": "Each slide is a block: add, drag to reorder, hide or remove slides in the left sidebar. A slide without an image (and, for editorial slides, without text) is skipped on the storefront."
+    },
+    {
       "type": "header",
-      "content": "Images"
+      "content": "Slider"
     },
     {
-      "type": "image_picker",
-      "id": "image_desktop",
-      "label": "Desktop image",
-      "info": "Landscape, at least 2400 × 1350 px. Set the focal point in the image editor."
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true,
+      "info": "Pauses on hover, keyboard focus and when the visitor uses the slider. Off for visitors who prefer reduced motion and when only one slide is shown."
     },
     {
-      "type": "image_picker",
-      "id": "image_mobile",
-      "label": "Mobile image",
-      "info": "Portrait (4:5 or 3:4), at least 1100 px wide. Uses the desktop image when empty."
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay interval",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 6
     },
     {
-      "type": "select",
-      "id": "layout",
-      "label": "Desktop layout",
-      "options": [
-        {
-          "value": "editorial",
-          "label": "Editorial split (text beside photo)"
-        },
-        {
-          "value": "full",
-          "label": "Full-width photo with text on it"
-        }
-      ],
-      "default": "editorial"
+      "type": "header",
+      "content": "Layout"
     },
     {
       "type": "select",
@@ -242,12 +372,6 @@
         }
       ],
       "default": "right"
-    },
-    {
-      "type": "image_picker",
-      "id": "detail_image",
-      "label": "Detail image (editorial split, optional)",
-      "info": "A smaller close-up (fabric, lace, packaging) that overlaps the main photo on desktop."
     },
     {
       "type": "select",
@@ -413,55 +537,22 @@
     },
     {
       "type": "header",
-      "content": "Trust badge"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_badge",
-      "label": "Show trust badge",
-      "info": "Text and star colour are set once in Theme settings › Значка за доверие. Only turn on when the figures are accurate and can be backed up.",
-      "default": false
-    },
-    {
-      "type": "select",
-      "id": "badge_position",
-      "label": "Badge position",
-      "options": [
-        { "value": "above_heading", "label": "Above the heading" },
-        { "value": "below_heading", "label": "Below the heading" },
-        { "value": "near_buttons", "label": "Below the buttons" }
-      ],
-      "default": "above_heading"
-    },
-    {
-      "type": "url",
-      "id": "badge_link",
-      "label": "Badge link (optional)",
-      "info": "Overrides the link from Theme settings for this banner."
-    },
-    {
-      "type": "header",
-      "content": "Text"
-    },
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Small text above heading"
-    },
-    {
-      "type": "inline_richtext",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Красотата започва с комфорта."
+      "content": "Heading"
     },
     {
       "type": "select",
       "id": "heading_tag",
       "label": "Heading tag (SEO)",
-      "info": "Use H1 only for the main heading of the page, e.g. the first section.",
+      "info": "The first slide's heading uses this tag (use H1 on the homepage). Other slides use H2.",
       "options": [
-        { "value": "h2", "label": "H2" },
-        { "value": "h1", "label": "H1" }
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h1",
+          "label": "H1"
+        }
       ],
       "default": "h2"
     },
@@ -486,44 +577,168 @@
       "default": "h0"
     },
     {
-      "type": "inline_richtext",
-      "id": "text",
-      "label": "Subheading",
-      "default": "Открий пижами и домашно облекло, създадени за красивите моменти у дома."
-    },
-    {
       "type": "header",
-      "content": "Buttons"
+      "content": "Trust badge"
     },
     {
-      "type": "paragraph",
-      "content": "Each button only appears when it has both a label and a link."
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show trust badge",
+      "info": "Text and star colour are set once in Theme settings › Значка за доверие. Only turn on when the figures are accurate and can be backed up.",
+      "default": false
     },
     {
-      "type": "text",
-      "id": "button_label_1",
-      "label": "First button label",
-      "default": "Разгледай колекцията"
+      "type": "select",
+      "id": "badge_position",
+      "label": "Badge position",
+      "options": [
+        {
+          "value": "above_heading",
+          "label": "Above the heading"
+        },
+        {
+          "value": "below_heading",
+          "label": "Below the heading"
+        },
+        {
+          "value": "near_buttons",
+          "label": "Below the buttons"
+        }
+      ],
+      "default": "above_heading"
     },
     {
       "type": "url",
-      "id": "button_link_1",
-      "label": "First button link"
-    },
+      "id": "badge_link",
+      "label": "Badge link (optional)",
+      "info": "Overrides the link from Theme settings for this banner."
+    }
+  ],
+  "blocks": [
     {
-      "type": "text",
-      "id": "button_label_2",
-      "label": "Second button label"
-    },
-    {
-      "type": "url",
-      "id": "button_link_2",
-      "label": "Second button link"
+      "type": "slide",
+      "name": "Slide",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Show this slide",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "slide_type",
+          "label": "Slide type",
+          "default": "editorial",
+          "options": [
+            {
+              "value": "editorial",
+              "label": "Editorial split (text beside photo)"
+            },
+            {
+              "value": "full",
+              "label": "Full-width photo with text on it"
+            },
+            {
+              "value": "image",
+              "label": "Full-width image banner (no text, whole banner is a link)"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "Desktop image",
+          "info": "Editorial: landscape, at least 2400 × 1350 px. Banner: upload the finished campaign image. Set the focal point in the image editor."
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image",
+          "info": "Portrait (4:5 or 3:4), at least 1100 px wide. Uses the desktop image when empty."
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image description (alt text)",
+          "info": "What the image shows, e.g. “Black Pijama Friday – до -50% на пижами”. Uses the image's own alt text when empty."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Button link for text slides; for a banner slide, the whole banner links here."
+        },
+        {
+          "type": "header",
+          "content": "Banner (image banner slides)"
+        },
+        {
+          "type": "select",
+          "id": "image_fit",
+          "label": "Banner fit",
+          "default": "contain",
+          "options": [
+            {
+              "value": "contain",
+              "label": "Show the whole banner (never cropped)"
+            },
+            {
+              "value": "cover",
+              "label": "Fill the slide (edges may be cropped)"
+            }
+          ]
+        },
+        {
+          "type": "color",
+          "id": "banner_background",
+          "label": "Background behind the banner",
+          "default": "#000000",
+          "info": "Visible only when the banner's proportions differ from the slide."
+        },
+        {
+          "type": "header",
+          "content": "Text (editorial and full-width photo slides)"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Small text above heading"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Subheading"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "info": "The button shows only when it has a label and a link."
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image",
+          "label": "Detail image (editorial split, optional)",
+          "info": "A smaller close-up (fabric, lace, packaging) that overlaps the main photo on desktop."
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Editorial hero"
+      "name": "Editorial hero slider",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
     }
   ]
 }
