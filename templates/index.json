@@ -139,9 +139,9 @@
     "bestsellers": {
       "type": "featured-collection",
       "settings": {
-        "collection": "pizhami",
-        "products_to_show": 8,
-        "title": "Новите модели",
+        "collection": "колекция-теди",
+        "products_to_show": 12,
+        "title": "Новата ни колекция",
         "heading_size": "h1",
         "description": "",
         "show_description": false,
