@@ -27,9 +27,9 @@
             "image_fit": "contain",
             "banner_background": "#000000",
             "eyebrow": "BLACK PIJAMA FRIDAY",
-            "heading": "До -50% на избрани модели",
-            "text": "Специална селекция от любими пижами, нощници и халати – красиви материи и изящни детайли, на специални цени само за кратко.",
-            "button_label": "Разгледай"
+            "heading": "До -50% на всичко в RONS",
+            "text": "Специална селекция от любими пижами, нощници и халати – красиви материи и изящни детайли, на специални цени само за кратко. Намаление дори на новата колекция!",
+            "button_label": "КУПИ СЕГА"
           }
         },
         "slide_editorial": {
@@ -71,11 +71,11 @@
         "mobile_alignment": "left",
         "text_below_desktop": false,
         "text_below_mobile": false,
+        "heading_tag": "h1",
+        "heading_size": "h0",
         "show_badge": true,
         "badge_position": "above_heading",
-        "badge_link": "",
-        "heading_tag": "h1",
-        "heading_size": "h0"
+        "badge_link": ""
       }
     },
     "benefits": {
@@ -139,9 +139,9 @@
     "bestsellers": {
       "type": "featured-collection",
       "settings": {
-        "collection": "pizhami",
-        "products_to_show": 8,
-        "title": "Новите модели",
+        "collection": "колекция-теди",
+        "products_to_show": 12,
+        "title": "Новата ни колекция",
         "heading_size": "h1",
         "description": "",
         "show_description": false,
