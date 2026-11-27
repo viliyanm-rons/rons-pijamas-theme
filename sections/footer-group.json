@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "name": "t:sections.footer.name",
   "type": "footer",
@@ -51,26 +60,21 @@
         "color_scheme": "scheme-3",
         "newsletter_enable": true,
         "newsletter_heading": "Нещо красиво те очаква.",
-        "newsletter_text": "Абонирай се за нови колекции, специални предложения и малко вдъхновение.",
-        "newsletter_placeholder": "Твоят имейл адрес",
-        "newsletter_button_label": "Абонирай се",
-        "newsletter_success": "Благодарим ти! Успешно се абонира.",
-        "newsletter_error": "Моля, въведи валиден имейл адрес.",
+        "newsletter_consent": "С абонирането се съгласяваш да получаваш имейли от Ron’s Pijamas. Можеш да се отпишеш по всяко време.",
+        "newsletter_privacy_label": "Политика за поверителност",
         "enable_follow_on_shop": false,
         "show_social": false,
         "enable_country_selector": false,
         "enable_language_selector": false,
         "payment_enable": true,
         "show_policy": false,
-        "margin_top": 0,
-        "padding_top": 56,
-        "padding_bottom": 24,
-        "newsletter_consent": "С абонирането се съгласяваш да получаваш имейли от Ron’s Pijamas. Можеш да се отпишеш по всяко време.",
-        "newsletter_privacy_label": "Политика за поверителност",
         "copyright_text": "Ron’s Pijamas. Всички права запазени.",
         "show_powered_by": false,
         "show_cookie_preferences": true,
-        "cookie_preferences_label": "Настройки на бисквитките"
+        "cookie_preferences_label": "Настройки на бисквитките",
+        "margin_top": 0,
+        "padding_top": 56,
+        "padding_bottom": 24
       }
     }
   },

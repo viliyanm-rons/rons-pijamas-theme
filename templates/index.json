@@ -130,6 +130,15 @@
     "categories": {
       "type": "rons-category-grid",
       "blocks": {
+        "category_CURnjx": {
+          "type": "category",
+          "settings": {
+            "collection": "art-club",
+            "title": "",
+            "cta": "Разгледай",
+            "link": ""
+          }
+        },
         "category-1": {
           "type": "category",
           "settings": {
@@ -162,6 +171,7 @@
         }
       },
       "block_order": [
+        "category_CURnjx",
         "category-1",
         "category-2",
         "category-3"
