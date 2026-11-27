@@ -2,7 +2,8 @@
 {% comment %}
   Ron's Pijamas: menu columns become accordions on phones; editable
   copyright text; optional "Powered by Shopify"; "Настройки на бисквитките"
-  opens Shopify's own cookie preferences; consent note under the newsletter.
+  opens Shopify's own cookie preferences; newsletter card at the top of the
+  footer with a consent note.
 {% endcomment %}
 {{ 'section-footer.css' | asset_url | stylesheet_tag }}
 {{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
@@ -55,6 +56,116 @@
   -%}
     {%- unless only_empty_brand -%}
       <div class="footer__content-top page-width">
+        {%- if section.settings.newsletter_enable -%}
+          {%- comment -%}
+            Ron's Pijamas: newsletter card at the top of the footer (every page).
+            Shopify's native customer form: submitting creates or updates the
+            customer with email marketing consent and the "newsletter" tag.
+            Success and error states come from Shopify after the post; the
+            script in rons-custom.js only adds a Bulgarian email check and
+            blocks double submits.
+          {%- endcomment -%}
+          <div
+            class="rons-footer-newsletter{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+            {% endif %}
+          >
+            <div class="rons-footer-newsletter__intro">
+              {%- if section.settings.newsletter_heading != blank -%}
+                <h2 class="rons-footer-newsletter__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
+              {%- endif -%}
+              {%- if section.settings.newsletter_text != blank -%}
+                <p class="rons-footer-newsletter__text">{{ section.settings.newsletter_text }}</p>
+              {%- endif -%}
+            </div>
+
+            {%- form 'customer',
+              id: 'ContactFooter',
+              class: 'rons-footer-newsletter__form',
+              novalidate: 'novalidate',
+              data-rons-newsletter: ''
+            -%}
+              {%- liquid
+                assign nl_placeholder = section.settings.newsletter_placeholder | default: 'Твоят имейл адрес'
+                assign nl_error = section.settings.newsletter_error | default: 'Моля, въведи валиден имейл адрес.'
+                assign nl_success = section.settings.newsletter_success | default: 'Благодарим ти! Успешно се абонира.'
+                assign nl_button = section.settings.newsletter_button_label | default: 'Абонирай се'
+              -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div class="rons-footer-newsletter__field">
+                <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">{{ nl_placeholder | escape }}</label>
+                <input
+                  id="NewsletterForm--{{ section.id }}"
+                  class="rons-footer-newsletter__input"
+                  type="email"
+                  name="contact[email]"
+                  value="{{ form.email }}"
+                  placeholder="{{ nl_placeholder | escape }}"
+                  autocomplete="email"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  inputmode="email"
+                  required
+                  aria-required="true"
+                  aria-describedby="ContactFooter-error"
+                  {% if form.errors %}
+                    aria-invalid="true" autofocus
+                  {% endif %}
+                >
+                <button type="submit" class="rons-footer-newsletter__submit" aria-label="{{ nl_button | escape }}">
+                  <span class="svg-wrapper" aria-hidden="true">
+                    {{- 'icon-arrow.svg' | inline_asset_content -}}
+                  </span>
+                </button>
+              </div>
+
+              <p
+                class="rons-footer-newsletter__message rons-footer-newsletter__message--error"
+                id="ContactFooter-error"
+                role="alert"
+                data-message-invalid="{{ nl_error | escape }}"
+                {% unless form.errors %}
+                  hidden
+                {% endunless %}
+              >
+                {%- if form.errors -%}
+                  {%- if form.errors contains 'email' -%}
+                    {{ nl_error | escape }}
+                  {%- else -%}
+                    {{ form.errors | default_errors }}
+                  {%- endif -%}
+                {%- endif -%}
+              </p>
+
+              {%- if form.posted_successfully? -%}
+                <p
+                  class="rons-footer-newsletter__message rons-footer-newsletter__message--success"
+                  id="ContactFooter-success"
+                  role="status"
+                  tabindex="-1"
+                  autofocus
+                >
+                  <span class="svg-wrapper" aria-hidden="true">{{- 'icon-success.svg' | inline_asset_content -}}</span>
+                  {{ nl_success | escape }}
+                </p>
+              {%- endif -%}
+
+              {%- if section.settings.newsletter_consent != blank -%}
+                <p class="rons-newsletter-consent">
+                  {{ section.settings.newsletter_consent }}
+                  {%- if shop.privacy_policy and section.settings.newsletter_privacy_label != blank %}
+                    <a href="{{ shop.privacy_policy.url }}" class="link underlined-link">
+                      {{- section.settings.newsletter_privacy_label | escape -}}
+                    </a>
+                  {%- endif -%}
+                </p>
+              {%- endif -%}
+            {%- endform -%}
+          </div>
+        {%- endif -%}
+
         {%- if section.blocks.size > 0 -%}
           {%- liquid
             if section.blocks.size == 9
@@ -191,93 +302,22 @@
           </div>
         {%- endif -%}
 
+        {%- liquid
+          assign show_follow_block = false
+          if shop.features.follow_on_shop? and section.settings.enable_follow_on_shop
+            assign show_follow_block = true
+          endif
+          if section.settings.show_social and has_social_icons
+            assign show_follow_block = true
+          endif
+        -%}
+        {%- if show_follow_block -%}
         <div
           class="footer-block--newsletter{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
           {% if settings.animations_reveal_on_scroll %}
             data-cascade
           {% endif %}
         >
-          {%- if section.settings.newsletter_enable -%}
-            <div class="footer-block__newsletter">
-              {%- if section.settings.newsletter_heading != blank -%}
-                <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
-              {%- endif -%}
-              {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
-                <input type="hidden" name="contact[tags]" value="newsletter">
-                <div class="newsletter-form__field-wrapper">
-                  <div class="field">
-                    <input
-                      id="NewsletterForm--{{ section.id }}"
-                      type="email"
-                      name="contact[email]"
-                      class="field__input"
-                      value="{{ form.email }}"
-                      aria-required="true"
-                      autocorrect="off"
-                      autocapitalize="off"
-                      autocomplete="email"
-                      {% if form.errors %}
-                        autofocus
-                        aria-invalid="true"
-                        aria-describedby="ContactFooter-error"
-                      {% elsif form.posted_successfully? %}
-                        aria-describedby="ContactFooter-success"
-                      {% endif %}
-                      placeholder="{{ 'newsletter.label' | t }}"
-                      required
-                    >
-                    <label class="field__label" for="NewsletterForm--{{ section.id }}">
-                      {{ 'newsletter.label' | t }}
-                    </label>
-                    <button
-                      type="submit"
-                      class="newsletter-form__button field__button"
-                      name="commit"
-                      id="Subscribe"
-                      aria-label="{{ 'newsletter.button_label' | t }}"
-                    >
-                      <span class="svg-wrapper">
-                        {{- 'icon-arrow.svg' | inline_asset_content -}}
-                      </span>
-                    </button>
-                  </div>
-                  {%- if form.errors -%}
-                    <small class="newsletter-form__message form__message" id="ContactFooter-error">
-                      <span class="svg-wrapper">
-                        {{- 'icon-error.svg' | inline_asset_content -}}
-                      </span>
-                      {{- form.errors.translated_fields.email | capitalize }}
-                      {{ form.errors.messages.email -}}
-                    </small>
-                  {%- endif -%}
-                </div>
-                {%- if section.settings.newsletter_consent != blank -%}
-                  <p class="rons-newsletter-consent">
-                    {{ section.settings.newsletter_consent }}
-                    {%- if shop.privacy_policy and section.settings.newsletter_privacy_label != blank %}
-                      <a href="{{ shop.privacy_policy.url }}" class="link underlined-link">
-                        {{- section.settings.newsletter_privacy_label | escape -}}
-                      </a>
-                    {%- endif -%}
-                  </p>
-                {%- endif -%}
-                {%- if form.posted_successfully? -%}
-                  <h3
-                    class="newsletter-form__message newsletter-form__message--success form__message"
-                    id="ContactFooter-success"
-                    tabindex="-1"
-                    autofocus
-                  >
-                    <span class="svg-wrapper">
-                      {{- 'icon-success.svg' | inline_asset_content -}}
-                    </span>
-                    {{- 'newsletter.success' | t }}
-                  </h3>
-                {%- endif -%}
-              {%- endform -%}
-            </div>
-          {%- endif -%}
-
           {%- if shop.features.follow_on_shop? and section.settings.enable_follow_on_shop -%}
             <div class="footer__follow-on-shop">
               {{ shop | login_button: action: 'follow' }}
@@ -288,6 +328,7 @@
             {%- render 'social-icons', class: 'footer__list-social' -%}
           {%- endif -%}
         </div>
+        {%- endif -%}
       </div>
     {%- endunless -%}
   {%- endif -%}
@@ -505,6 +546,36 @@
       "id": "newsletter_heading",
       "default": "t:sections.footer.settings.newsletter_heading.default",
       "label": "t:sections.footer.settings.newsletter_heading.label"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "newsletter_text",
+      "label": "Текст под заглавието на абонамента",
+      "default": "Абонирай се за нови колекции, специални предложения и малко вдъхновение."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Подсказка в полето за имейл",
+      "default": "Твоят имейл адрес"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button_label",
+      "label": "Достъпен етикет на бутона (за екранни четци)",
+      "default": "Абонирай се"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_success",
+      "label": "Съобщение при успешен абонамент",
+      "default": "Благодарим ти! Успешно се абонира."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_error",
+      "label": "Съобщение при невалиден имейл",
+      "default": "Моля, въведи валиден имейл адрес."
     },
     {
       "type": "inline_richtext",

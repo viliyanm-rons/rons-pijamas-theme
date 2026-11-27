@@ -922,3 +922,59 @@ if (!customElements.get('rons-reviews-carousel')) {
 
   customElements.define('rons-reviews-carousel', RonsReviewsCarousel);
 }
+
+/*
+ * Footer newsletter (sections/footer.liquid)
+ *
+ * The form is Shopify's native customer form and posts normally; Shopify
+ * renders the success or error message after the page reloads. This only
+ * checks the email format first (with the Bulgarian message from the theme
+ * settings) and blocks a second submit while the first one is in flight.
+ */
+(() => {
+  const form = document.querySelector('form[data-rons-newsletter]');
+  if (!form) return;
+  const input = form.querySelector('input[type="email"]');
+  const button = form.querySelector('button[type="submit"]');
+  const error = form.querySelector('#ContactFooter-error');
+  if (!input || !button || !error) return;
+  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  let submitting = false;
+
+  const showError = (show) => {
+    if (show) {
+      error.textContent = error.dataset.messageInvalid;
+      error.hidden = false;
+      input.setAttribute('aria-invalid', 'true');
+    } else if (input.getAttribute('aria-invalid') === 'true') {
+      error.hidden = true;
+      input.removeAttribute('aria-invalid');
+    }
+  };
+
+  input.addEventListener('input', () => showError(false));
+
+  form.addEventListener('submit', (event) => {
+    if (submitting) {
+      event.preventDefault();
+      return;
+    }
+    input.value = input.value.trim();
+    if (!pattern.test(input.value)) {
+      event.preventDefault();
+      showError(true);
+      input.focus();
+      return;
+    }
+    submitting = true;
+    button.setAttribute('aria-busy', 'true');
+    button.setAttribute('aria-disabled', 'true');
+  });
+
+  // Coming back via the browser's back button restores the page: allow submitting again.
+  window.addEventListener('pageshow', () => {
+    submitting = false;
+    button.removeAttribute('aria-busy');
+    button.removeAttribute('aria-disabled');
+  });
+})();

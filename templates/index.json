@@ -341,40 +341,6 @@
         "padding_bottom": 64
       }
     },
-    "newsletter": {
-      "type": "newsletter",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Нека останем свързани",
-            "heading_size": "h1"
-          }
-        },
-        "paragraph": {
-          "type": "paragraph",
-          "settings": {
-            "text": "<p>Абонирай се за новини за новите колекции и вдъхновение от Ron's Pijamas.</p>"
-          }
-        },
-        "email_form": {
-          "type": "email_form",
-          "name": "Имейл",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "heading",
-        "paragraph",
-        "email_form"
-      ],
-      "settings": {
-        "color_scheme": "scheme-1",
-        "full_width": true,
-        "padding_top": 64,
-        "padding_bottom": 72
-      }
-    },
     "customer_reviews": {
       "type": "rons-customer-reviews",
       "blocks": {
@@ -488,7 +454,6 @@
     "new_arrivals",
     "gifts",
     "faq",
-    "newsletter",
     "customer_reviews",
     "instagram"
   ]

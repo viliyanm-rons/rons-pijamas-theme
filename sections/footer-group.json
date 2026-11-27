@@ -50,7 +50,12 @@
       "settings": {
         "color_scheme": "scheme-3",
         "newsletter_enable": true,
-        "newsletter_heading": "Новини от Ron’s Pijamas",
+        "newsletter_heading": "Нещо красиво те очаква.",
+        "newsletter_text": "Абонирай се за нови колекции, специални предложения и малко вдъхновение.",
+        "newsletter_placeholder": "Твоят имейл адрес",
+        "newsletter_button_label": "Абонирай се",
+        "newsletter_success": "Благодарим ти! Успешно се абонира.",
+        "newsletter_error": "Моля, въведи валиден имейл адрес.",
         "enable_follow_on_shop": false,
         "show_social": false,
         "enable_country_selector": false,

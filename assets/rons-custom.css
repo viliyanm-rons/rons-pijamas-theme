@@ -1282,14 +1282,6 @@ body .policies li a {
   opacity: 0.7;
 }
 
-body .footer-block--newsletter .footer-block__heading {
-  font-family: var(--font-heading-family);
-  font-size: calc(var(--font-heading-scale) * 2.2rem);
-  letter-spacing: var(--rons-tracking-heading);
-  text-transform: none;
-  font-weight: var(--font-heading-weight);
-}
-
 /* ---------------------------------------------------------------------------
  * 15. Cart drawer
  * ------------------------------------------------------------------------- */
@@ -4862,6 +4854,171 @@ body .footer-block__brand-info .footer__list-social {
   justify-content: flex-start;
   margin-top: 1.6rem;
   margin-left: -1rem;
+}
+
+/* Newsletter card at the top of the footer (sections/footer.liquid).
+   Charcoal panel on the black footer: text left, email field right on
+   desktop; stacked on phones. */
+body .rons-footer-newsletter {
+  display: grid;
+  gap: 2.4rem;
+  margin: 0 0 4.8rem;
+  padding: 2.8rem 2.4rem;
+  background: rgba(var(--color-foreground), 0.05);
+  border: 0.1rem solid rgba(var(--color-foreground), 0.16);
+  border-radius: 1.4rem;
+}
+
+body .rons-footer-newsletter__heading {
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-size: calc(var(--font-heading-scale) * 2.6rem);
+  font-weight: var(--font-heading-weight);
+  line-height: 1.2;
+  letter-spacing: var(--rons-tracking-heading);
+}
+
+body .rons-footer-newsletter__text {
+  max-width: 46rem;
+  margin: 1rem 0 0;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  opacity: 0.78;
+}
+
+body .rons-footer-newsletter__form {
+  width: 100%;
+}
+
+body .rons-footer-newsletter__field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+body .rons-footer-newsletter__input {
+  width: 100%;
+  min-height: 5.6rem;
+  margin: 0;
+  padding: 0 6.4rem 0 2.2rem;
+  font-family: var(--font-body-family);
+  font-size: 1.6rem;
+  color: rgb(var(--color-foreground));
+  background: rgb(var(--color-background));
+  border: 0.1rem solid rgba(var(--color-foreground), 0.28);
+  border-radius: 99rem;
+  outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color var(--duration-short) ease;
+}
+
+body .rons-footer-newsletter__input::placeholder {
+  color: rgba(var(--color-foreground), 0.55);
+  opacity: 1;
+}
+
+body .rons-footer-newsletter__input:hover {
+  border-color: rgba(var(--color-foreground), 0.5);
+}
+
+body .rons-footer-newsletter__input:focus-visible {
+  border-color: rgb(var(--color-foreground));
+  box-shadow: 0 0 0 0.1rem rgb(var(--color-foreground));
+}
+
+body .rons-footer-newsletter__input[aria-invalid='true'] {
+  border-color: rgba(var(--color-foreground), 0.85);
+}
+
+body .rons-footer-newsletter__submit {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  padding: 0;
+  color: rgb(var(--color-background));
+  background: rgb(var(--color-foreground));
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: opacity var(--duration-short) ease;
+}
+
+body .rons-footer-newsletter__submit:hover {
+  opacity: 0.85;
+}
+
+body .rons-footer-newsletter__submit:focus-visible {
+  outline: 0.2rem solid rgb(var(--color-foreground));
+  outline-offset: 0.3rem;
+}
+
+body .rons-footer-newsletter__submit[aria-busy='true'] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+body .rons-footer-newsletter__submit .svg-wrapper {
+  display: inline-flex;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+body .rons-footer-newsletter__submit svg {
+  width: 100%;
+  height: 100%;
+}
+
+body .rons-footer-newsletter__message {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1.2rem 0 0;
+  font-size: 1.4rem;
+  line-height: 1.5;
+}
+
+body .rons-footer-newsletter__message[hidden] {
+  display: none;
+}
+
+body .rons-footer-newsletter__message .svg-wrapper {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+body .rons-footer-newsletter .rons-newsletter-consent {
+  max-width: none;
+  margin-top: 1.2rem;
+}
+
+@media screen and (min-width: 750px) {
+  body .rons-footer-newsletter {
+    padding: 3.6rem 4rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  body .rons-footer-newsletter {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 4.8rem;
+    margin-bottom: 5.6rem;
+    padding: 4rem 4.8rem;
+  }
+
+  body .rons-footer-newsletter__heading {
+    font-size: calc(var(--font-heading-scale) * 3rem);
+  }
 }
 
 /* Newsletter consent note */
