@@ -183,6 +183,7 @@
           "type": "category",
           "settings": {
             "collection": "art-club",
+            "image": "shopify://shop_images/TJ78938.jpg",
             "title": "Лимитирана колекция Art Club",
             "cta": "Разгледай",
             "link": ""
