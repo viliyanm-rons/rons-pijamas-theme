@@ -11,10 +11,56 @@
   "sections": {
     "hero": {
       "type": "rons-hero",
+      "blocks": {
+        "slide_black_friday": {
+          "type": "slide",
+          "settings": {
+            "enabled": true,
+            "slide_type": "editorial",
+            "main_slide": false,
+            "image_side": "left",
+            "text_color": "dark",
+            "image_desktop": "shopify://shop_images/Black_Friday_Bedroom_Glow_09d30866-b230-422d-9d2a-8d77ecf50689.png",
+            "image_crop": "right",
+            "image_alt": "Уютна спалня на свещи със сатенено спално бельо",
+            "link": "shopify://collections/all",
+            "image_fit": "contain",
+            "banner_background": "#000000",
+            "eyebrow": "BLACK PIJAMA FRIDAY",
+            "heading": "До -50% на избрани модели",
+            "text": "Специална селекция от любими пижами, нощници и халати – красиви материи и изящни детайли, на специални цени само за кратко.",
+            "button_label": "Разгледай"
+          }
+        },
+        "slide_editorial": {
+          "type": "slide",
+          "settings": {
+            "enabled": true,
+            "slide_type": "editorial",
+            "main_slide": true,
+            "image_side": "section",
+            "text_color": "section",
+            "image_desktop": "shopify://shop_images/TJ78642.jpg",
+            "image_mobile": "shopify://shop_images/DSC6398.jpg",
+            "image_crop": "none",
+            "image_alt": "",
+            "link": "shopify://collections/all",
+            "image_fit": "contain",
+            "banner_background": "#000000",
+            "eyebrow": "",
+            "heading": "Красотата започва с комфорта.",
+            "text": "Открий пижами и домашно облекло, създадени за красивите моменти у дома.",
+            "button_label": "Разгледай колекцията"
+          }
+        }
+      },
+      "block_order": [
+        "slide_black_friday",
+        "slide_editorial"
+      ],
       "settings": {
-        "image_desktop": "shopify://shop_images/TJ78642.jpg",
-        "image_mobile": "shopify://shop_images/DSC6398.jpg",
-        "layout": "editorial",
+        "autoplay": true,
+        "autoplay_speed": 6,
         "image_side": "right",
         "desktop_height": "large",
         "mobile_height": "large",
@@ -28,15 +74,8 @@
         "show_badge": true,
         "badge_position": "above_heading",
         "badge_link": "",
-        "eyebrow": "",
-        "heading": "Красотата започва с комфорта.",
         "heading_tag": "h1",
-        "heading_size": "h0",
-        "text": "Открий пижами и домашно облекло, създадени за красивите моменти у дома.",
-        "button_label_1": "Разгледай колекцията",
-        "button_link_1": "shopify://collections/all",
-        "button_label_2": "",
-        "button_link_2": ""
+        "heading_size": "h0"
       }
     },
     "benefits": {
