@@ -5516,3 +5516,27 @@ body .menu-drawer__menu .rons-campaign-nav--drawer .rons-campaign-nav__pill {
     transition: none;
   }
 }
+
+/* Small desktops (990–1279px) with the campaign button: the extra item would
+   squeeze the logo in the centred 1fr–auto–1fr grid, so the logo and icons
+   keep their natural width and the menu centres in the space between them. */
+@media screen and (min-width: 990px) and (max-width: 1279px) {
+  body .header.header--middle-left.header--has-menu:not(.drawer-menu):has(.rons-campaign-nav) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: 1.6rem;
+  }
+
+  body .header--middle-left:not(.drawer-menu) .header__inline-menu:has(.rons-campaign-nav) .header__menu-item {
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+  }
+
+  body .header--middle-left:not(.drawer-menu) .header__inline-menu:has(.rons-campaign-nav) summary.header__menu-item {
+    padding-right: 2.2rem;
+  }
+
+  body .header__inline-menu .rons-campaign-nav__pill {
+    padding: 0.6rem 1rem;
+    font-size: 1.2rem;
+  }
+}
