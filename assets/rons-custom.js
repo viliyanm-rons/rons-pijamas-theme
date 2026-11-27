@@ -927,9 +927,12 @@ if (!customElements.get('rons-reviews-carousel')) {
  * Footer newsletter (sections/footer.liquid)
  *
  * The form is Shopify's native customer form and posts normally; Shopify
- * renders the success or error message after the page reloads. This only
- * checks the email format first (with the Bulgarian message from the theme
- * settings) and blocks a second submit while the first one is in flight.
+ * renders the success or error message after the page reloads. Shopify's
+ * bot protection (hCaptcha) listens for the form's submit event and posts
+ * the form itself once the check passes. This script runs first (capture
+ * phase on the document): it stops an invalid email before the captcha
+ * starts, shows the Bulgarian message from the theme settings, and ignores
+ * repeated clicks for a few seconds so the email is not submitted twice.
  */
 (() => {
   const form = document.querySelector('form[data-rons-newsletter]');
@@ -939,7 +942,18 @@ if (!customElements.get('rons-reviews-carousel')) {
   const error = form.querySelector('#ContactFooter-error');
   if (!input || !button || !error) return;
   const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  let submitting = false;
+  const LOCK_MS = 4000;
+  let lockedUntil = 0;
+
+  const setBusy = (busy) => {
+    if (busy) {
+      button.setAttribute('aria-busy', 'true');
+      button.setAttribute('aria-disabled', 'true');
+    } else {
+      button.removeAttribute('aria-busy');
+      button.removeAttribute('aria-disabled');
+    }
+  };
 
   const showError = (show) => {
     if (show) {
@@ -954,27 +968,35 @@ if (!customElements.get('rons-reviews-carousel')) {
 
   input.addEventListener('input', () => showError(false));
 
-  form.addEventListener('submit', (event) => {
-    if (submitting) {
-      event.preventDefault();
-      return;
-    }
-    input.value = input.value.trim();
-    if (!pattern.test(input.value)) {
-      event.preventDefault();
-      showError(true);
-      input.focus();
-      return;
-    }
-    submitting = true;
-    button.setAttribute('aria-busy', 'true');
-    button.setAttribute('aria-disabled', 'true');
-  });
+  document.addEventListener(
+    'submit',
+    (event) => {
+      if (event.target !== form) return;
+      const stop = () => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      };
+      if (Date.now() < lockedUntil) {
+        stop();
+        return;
+      }
+      input.value = input.value.trim();
+      if (!pattern.test(input.value)) {
+        stop();
+        showError(true);
+        input.focus();
+        return;
+      }
+      lockedUntil = Date.now() + LOCK_MS;
+      setBusy(true);
+      setTimeout(() => setBusy(false), LOCK_MS);
+    },
+    true
+  );
 
   // Coming back via the browser's back button restores the page: allow submitting again.
   window.addEventListener('pageshow', () => {
-    submitting = false;
-    button.removeAttribute('aria-busy');
-    button.removeAttribute('aria-disabled');
+    lockedUntil = 0;
+    setBusy(false);
   });
 })();
