@@ -72,6 +72,8 @@
   >
     <div class="rons-hero-slider__track" data-track>
       {%- assign slide_index = 0 -%}
+      {%- assign heading_tag_used = false -%}
+      {%- assign badge_used = false -%}
       {%- for block in slides -%}
         {%- liquid
           assign image_desktop = block.settings.image_desktop
@@ -96,7 +98,7 @@
             if block.settings.eyebrow != blank or block.settings.heading != blank or block.settings.text != blank or show_button
               assign has_text = true
             endif
-            if slide_index == 0 and show_badge
+            if show_badge and badge_used == false
               assign has_text = true
             endif
           endif
@@ -245,10 +247,11 @@
                   <div class="rons-hero__box">
                     {%- liquid
                       assign badge = ''
-                      if show_badge and slide_index == 0
+                      if show_badge and badge_used == false
                         capture badge
                           render 'rons-trust-badge', link: section.settings.badge_link, class: 'rons-hero__badge'
                         endcapture
+                        assign badge_used = true
                       endif
                       if section.settings.badge_position == 'above_heading'
                         echo badge
@@ -258,11 +261,16 @@
                       <p class="rons-hero__eyebrow rons-eyebrow">{{ block.settings.eyebrow | escape }}</p>
                     {%- endif -%}
                     {%- if block.settings.heading != blank -%}
+                      {%- comment -%}
+                        The first slide with a heading gets the section's heading tag
+                        (H1 on the homepage), even when a banner slide comes first.
+                      {%- endcomment -%}
                       {%- liquid
-                        if slide_index == 0
-                          assign rons_heading_tag = section.settings.heading_tag | default: 'h2'
-                        else
+                        if heading_tag_used
                           assign rons_heading_tag = 'h2'
+                        else
+                          assign rons_heading_tag = section.settings.heading_tag | default: 'h2'
+                          assign heading_tag_used = true
                         endif
                       -%}
                       <{{ rons_heading_tag }} class="rons-hero__heading {{ section.settings.heading_size }}">{{ block.settings.heading }}</{{ rons_heading_tag }}>
@@ -543,7 +551,7 @@
       "type": "select",
       "id": "heading_tag",
       "label": "Heading tag (SEO)",
-      "info": "The first slide's heading uses this tag (use H1 on the homepage). Other slides use H2.",
+      "info": "The first slide that has a heading uses this tag (use H1 on the homepage). Other slides use H2.",
       "options": [
         {
           "value": "h2",
