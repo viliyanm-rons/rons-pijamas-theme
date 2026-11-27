@@ -2064,6 +2064,13 @@ body .rons-hero-slider__track {
   touch-action: pan-y;
 }
 
+/* Phones: keep the dots clear of the slide's button */
+@media screen and (max-width: 749px) {
+  body .rons-hero-slider--multi .rons-hero__content {
+    padding-bottom: calc(6.4rem + env(safe-area-inset-bottom));
+  }
+}
+
 @media screen and (min-width: 750px) {
   body .rons-hero-slider .rons-hero--desktop-medium .rons-hero__media {
     min-height: clamp(44rem, 60vh, 68rem);
