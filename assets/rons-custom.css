@@ -5453,10 +5453,15 @@ body .product-card-wrapper .card__inner .card__badge.rons-card-campaign {
   z-index: 2;
 }
 
-/* Product page: campaign badge before the discount badge, next to the price */
+/* Product page: the price on its own line, then the campaign badge and the
+   discount badge side by side below it (same on mobile and desktop). */
+body .price:has(.price__badge-campaign) > .price__container {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
 body .price .price__badge-campaign {
   margin-right: 0.6rem;
-  vertical-align: middle;
 }
 
 /* Header menu button */
