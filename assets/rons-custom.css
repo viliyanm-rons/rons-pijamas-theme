@@ -2074,7 +2074,7 @@ body .rons-hero-slider__track {
   }
 }
 
-/* Phones: dark text on a photo gets a soft light fade behind it, so the
+/* Phones (hero slider): dark text on a photo gets a soft light fade behind it, so the
    copy stays readable over dark details in the image */
 @media screen and (max-width: 749px) {
   body .rons-hero-slider .rons-hero--text-dark.rons-hero--overlay-gradient .rons-hero__media::after {
