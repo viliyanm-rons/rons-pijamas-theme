@@ -2064,6 +2064,16 @@ body .rons-hero-slider__track {
   touch-action: pan-y;
 }
 
+/* Phones: a banner without its own mobile image is always shown whole, so
+   the campaign text is never cut off */
+@media screen and (max-width: 749px) {
+  body .rons-hero--banner-no-mobile .rons-hero__media picture,
+  body .rons-hero--banner-no-mobile .rons-hero__media img {
+    object-fit: contain;
+    object-position: center;
+  }
+}
+
 /* Phones: keep the dots clear of the slide's button */
 @media screen and (max-width: 749px) {
   body .rons-hero-slider--multi .rons-hero__content {
