@@ -2074,6 +2074,19 @@ body .rons-hero-slider__track {
   }
 }
 
+/* Phones: dark text on a photo gets a soft light fade behind it, so the
+   copy stays readable over dark details in the image */
+@media screen and (max-width: 749px) {
+  body .rons-hero-slider .rons-hero--text-dark.rons-hero--overlay-gradient .rons-hero__media::after {
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0.78) 45%,
+      rgba(255, 255, 255, 0) 78%
+    );
+  }
+}
+
 /* Phones: keep the dots clear of the slide's button */
 @media screen and (max-width: 749px) {
   body .rons-hero-slider--multi .rons-hero__content {
