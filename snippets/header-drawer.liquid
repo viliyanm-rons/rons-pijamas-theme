@@ -25,6 +25,7 @@
         <div class="menu-drawer__navigation-container">
           <nav class="menu-drawer__navigation">
             <ul class="menu-drawer__menu has-submenu list-menu" role="list">
+              {%- render 'rons-campaign-nav', context: 'drawer' -%}
               {%- for link in section.settings.menu.links -%}
                 {%- liquid
                   assign split = false

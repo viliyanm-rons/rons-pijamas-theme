@@ -1629,6 +1629,60 @@
     ]
   },
   {
+    "name": "Black Friday кампания",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Значка „BLACK FRIDAY“ върху продуктите от избраната колекция и бутон в главното меню. Цените не се променят оттук. Значката се показва само при продукт от колекцията с валидна намалена цена (Compare-at > Price)."
+      },
+      {
+        "type": "collection",
+        "id": "rons_campaign_collection",
+        "label": "Колекция на кампанията",
+        "info": "Напр. PIJAMA FRIDAY. Без избрана колекция значката не се показва."
+      },
+      {
+        "type": "header",
+        "content": "Значка върху продуктите"
+      },
+      {
+        "type": "checkbox",
+        "id": "rons_campaign_badge_enable",
+        "label": "Показвай значката на кампанията",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "rons_campaign_badge_label",
+        "label": "Текст на значката",
+        "default": "BLACK FRIDAY"
+      },
+      {
+        "type": "header",
+        "content": "Бутон в менюто"
+      },
+      {
+        "type": "checkbox",
+        "id": "rons_campaign_nav_enable",
+        "label": "Показвай бутона в менюто",
+        "info": "Първи елемент в менюто (и в мобилното меню).",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "rons_campaign_nav_label",
+        "label": "Текст на бутона",
+        "default": "BLACK FRIDAY"
+      },
+      {
+        "type": "url",
+        "id": "rons_campaign_nav_link",
+        "label": "Връзка (по избор)",
+        "info": "Празно = колекцията на кампанията. Бутонът се скрива, ако няма връзка или колекцията е празна."
+      }
+    ]
+  },
+  {
     "name": "Бързо добавяне",
     "settings": [
       {

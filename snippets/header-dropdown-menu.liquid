@@ -7,6 +7,7 @@
 
 <nav class="header__inline-menu">
   <ul class="list-menu list-menu--inline" role="list">
+    {%- render 'rons-campaign-nav', context: 'header' -%}
     {%- for link in section.settings.menu.links -%}
       {%- comment -%}
         Ron's Pijamas: a parent item with its own URL is a real link (e.g. Продукти →

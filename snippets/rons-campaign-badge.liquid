@@ -1,0 +1,55 @@
+{% comment %}
+  Ron's Pijamas – campaign badge ("BLACK FRIDAY"), controlled in
+  Theme settings › Black Friday кампания.
+
+  Shown only when ALL of these are true:
+  - the campaign badge is enabled,
+  - a campaign collection is selected and the product belongs to it
+    (participation is never inferred from the discount alone),
+  - the product (or the given size) has a valid sale price: Compare-at price
+    higher than Price, on a size that is in stock.
+
+  Accepts:
+  - product: {Object} required
+  - variant: {Object} optional – check only this size (product page)
+  - class: {String} optional extra classes
+
+  Usage:
+  {% render 'rons-campaign-badge', product: card_product %}
+  {% render 'rons-campaign-badge', product: product, variant: product.selected_or_first_available_variant %}
+{% endcomment %}
+
+{%- liquid
+  assign show_campaign = false
+  assign campaign_collection = settings.rons_campaign_collection
+  if settings.rons_campaign_badge_enable and campaign_collection != blank and product != blank
+    assign in_campaign = false
+    for c in product.collections
+      if c.id == campaign_collection.id
+        assign in_campaign = true
+        break
+      endif
+    endfor
+
+    if in_campaign
+      if variant
+        if variant.available and variant.compare_at_price > variant.price
+          assign show_campaign = true
+        endif
+      else
+        for v in product.variants
+          if v.available and v.compare_at_price > v.price
+            assign show_campaign = true
+            break
+          endif
+        endfor
+      endif
+    endif
+  endif
+-%}
+
+{%- if show_campaign -%}
+  <span class="badge rons-campaign-badge{% if class != blank %} {{ class }}{% endif %}">
+    {{- settings.rons_campaign_badge_label | default: 'BLACK FRIDAY' | escape -}}
+  </span>
+{%- endif -%}

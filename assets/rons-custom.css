@@ -5434,3 +5434,85 @@ body .header__heading-logo {
 body .footer-block__brand-info .footer-block__image-wrapper {
   margin-bottom: 0.4rem;
 }
+
+/* ------------------------------------------------------------------
+   Black Friday campaign (Theme settings › Black Friday кампания)
+   Black badge on campaign product images and a black menu button.
+   ------------------------------------------------------------------ */
+body .badge.rons-campaign-badge {
+  background: #111111;
+  color: #ffffff;
+  border: 0.1rem solid #111111;
+  border-radius: 0.2rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* The campaign badge sits top left; the discount badge moves bottom left. */
+body .product-card-wrapper .card__inner .card__badge.rons-card-campaign {
+  z-index: 2;
+}
+
+/* Product page: campaign badge before the discount badge, next to the price */
+body .price .price__badge-campaign {
+  margin-right: 0.6rem;
+  vertical-align: middle;
+}
+
+/* Header menu button */
+body .header__inline-menu .rons-campaign-nav {
+  display: flex;
+  align-items: center;
+}
+
+body .header .header__inline-menu .rons-campaign-nav__link {
+  padding-top: 0;
+  padding-bottom: 0;
+  text-decoration: none;
+}
+
+body .rons-campaign-nav__pill {
+  display: inline-block;
+  padding: 0.7rem 1.2rem;
+  border: 0.1rem solid #111111;
+  border-radius: 0.3rem;
+  background: #111111;
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+body .rons-campaign-nav__link:hover .rons-campaign-nav__pill,
+body .rons-campaign-nav__link:focus-visible .rons-campaign-nav__pill {
+  background: transparent;
+  color: #111111;
+}
+
+body .rons-campaign-nav__link:hover span.rons-campaign-nav__pill,
+body .rons-campaign-nav__link[aria-current='page'] .rons-campaign-nav__pill {
+  text-decoration: none;
+}
+
+/* Mobile drawer: first item, same black button */
+body .menu-drawer__menu .rons-campaign-nav--drawer .rons-campaign-nav__link {
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+}
+
+body .menu-drawer__menu .rons-campaign-nav--drawer .rons-campaign-nav__pill {
+  font-size: 1.4rem;
+  padding: 0.9rem 1.4rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .rons-campaign-nav__pill {
+    transition: none;
+  }
+}

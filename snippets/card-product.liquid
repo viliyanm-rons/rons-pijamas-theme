@@ -43,6 +43,14 @@
     if ratio == 0 or ratio == null
       assign ratio = 1
     endif
+    # Ron's Pijamas: campaign badge top left; the discount badge then moves bottom left.
+    capture rons_campaign_badge
+      render 'rons-campaign-badge', product: card_product
+    endcapture
+    assign rons_badge_position = settings.badge_position
+    if rons_campaign_badge != blank
+      assign rons_badge_position = 'bottom left'
+    endif
     # Ron's Pijamas quick add replaces Dawn's standard quick add below the card.
     assign rons_qa = false
     if settings.rons_card_quick_add and quick_add != 'bulk'
@@ -139,7 +147,10 @@
                 </a>
               </h3>
             </div>
-            <div class="card__badge {{ settings.badge_position }}">
+            {%- if rons_campaign_badge != blank -%}
+              <div class="card__badge top left rons-card-campaign">{{ rons_campaign_badge }}</div>
+            {%- endif -%}
+            <div class="card__badge {{ rons_badge_position }}">
               {%- if card_product.available == false -%}
                 <span
                   id="NoMediaStandardBadge-{{ section_id }}-{{ card_product.id }}"
@@ -564,7 +575,10 @@
               </div>
             {% endif %}
           {% endif %}
-          <div class="card__badge {{ settings.badge_position }}">
+          {%- if rons_campaign_badge != blank -%}
+            <div class="card__badge top left rons-card-campaign">{{ rons_campaign_badge }}</div>
+          {%- endif -%}
+          <div class="card__badge {{ rons_badge_position }}">
             {%- if card_product.available == false -%}
               <span
                 id="Badge-{{ section_id }}-{{ card_product.id }}"

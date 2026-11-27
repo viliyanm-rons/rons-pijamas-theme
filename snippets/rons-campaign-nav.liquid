@@ -1,0 +1,63 @@
+{% comment %}
+  Ron's Pijamas – campaign menu item ("BLACK FRIDAY"), shown as the first item of
+  the header menu and of the mobile menu drawer. Controlled in
+  Theme settings › Black Friday кампания.
+
+  Destination: the "Link" setting if filled in, otherwise the campaign
+  collection. Nothing is rendered when the item is disabled, has no label or
+  has no destination, or when the campaign collection it would link to has no
+  products, so a broken or empty link never goes live.
+
+  Accepts:
+  - context: {String} 'header' (desktop inline menu) or 'drawer' (mobile menu)
+
+  Usage:
+  {% render 'rons-campaign-nav', context: 'header' %}
+{% endcomment %}
+
+{%- liquid
+  assign campaign_url = blank
+  assign campaign_label = settings.rons_campaign_nav_label | strip
+  if settings.rons_campaign_nav_enable and campaign_label != blank
+    if settings.rons_campaign_nav_link != blank
+      assign campaign_url = settings.rons_campaign_nav_link
+    elsif settings.rons_campaign_collection != blank and settings.rons_campaign_collection.products_count > 0
+      assign campaign_url = settings.rons_campaign_collection.url
+    endif
+  endif
+
+  assign campaign_current = false
+  if campaign_url != blank and request.path == campaign_url
+    assign campaign_current = true
+  endif
+-%}
+
+{%- if campaign_url != blank -%}
+  {%- if context == 'drawer' -%}
+    <li class="rons-campaign-nav rons-campaign-nav--drawer">
+      <a
+        id="HeaderDrawer-rons-campaign"
+        href="{{ campaign_url }}"
+        class="menu-drawer__menu-item list-menu__item link link--text focus-inset rons-campaign-nav__link"
+        {% if campaign_current %}
+          aria-current="page"
+        {% endif %}
+      >
+        <span class="rons-campaign-nav__pill">{{ campaign_label | escape }}</span>
+      </a>
+    </li>
+  {%- else -%}
+    <li class="rons-campaign-nav">
+      <a
+        id="HeaderMenu-rons-campaign"
+        href="{{ campaign_url }}"
+        class="header__menu-item list-menu__item link focus-inset rons-campaign-nav__link"
+        {% if campaign_current %}
+          aria-current="page"
+        {% endif %}
+      >
+        <span class="rons-campaign-nav__pill">{{ campaign_label | escape }}</span>
+      </a>
+    </li>
+  {%- endif -%}
+{%- endif -%}
