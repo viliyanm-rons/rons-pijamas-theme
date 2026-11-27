@@ -142,6 +142,10 @@
     "rons_cart_upsell_heading": "Комбинирай с",
     "rons_cart_upsell_add_label": "Добави",
     "rons_cart_upsell_choose_label": "Избери",
+    "rons_campaign_collection": "pijama-friday",
+    "rons_campaign_badge_enable": true,
+    "rons_campaign_nav_enable": true,
+    "rons_campaign_nav_link": "shopify://collections/pijama-friday",
     "customer_account_menu": "customer-account-main-menu",
     "sections": {
       "main-password-header": {
