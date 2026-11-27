@@ -35,10 +35,9 @@
             "enabled": true,
             "slide_type": "image",
             "image_alt": "Black Pijama Friday – до -50%",
-            "link": "shopify://collections/all",
+            "link": "",
             "image_fit": "contain",
-            "banner_background": "#000000",
-            "image_desktop": "shopify://shop_images/902020400_2156594125730689_7203295588679684970_n.jpg"
+            "banner_background": "#000000"
           }
         }
       },
